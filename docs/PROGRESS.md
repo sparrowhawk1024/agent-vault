@@ -1,31 +1,34 @@
 # AgentVault Build Progress
 
-- **Current Phase**: Phase 0 (Environment and SDK execution probes) — **GATE PASSED**
+- **Current Phase**: Phase 1 (Smart contract and verifier) — **GATE PASSED**
 - **Done**:
   - Saved complete master prompt (§0 through §15, Appendix A, Appendix B) to `docs/MASTER_PROMPT.md`.
-  - Registered Appendix A as always-on workspace rule in `.agents/rules/agentvault.md` and `AGENTS.md`.
-  - Pinned and verified Foundry v1.8.6 (`forge`, `anvil`, `cast`).
-  - Discovered real APIs and signatures of `qpiai_opt` v0.0.9 and `qpiai_quantum` v0.7.5.
-  - Executed Phase 0 probe (`scripts/phase0_probe.py`):
-    - Formulated real procurement model with `qpiai_opt.opt_modeller.Model`.
-    - Captured exact authentication blocker for `qpiai_opt.opt_solvers.solve` (`Local solving requires client=Client(api_key=...)`).
-    - Evaluated classical reference benchmark (37 USDC).
-    - Constructed 4-qubit QAOA variational circuit with $H, R_Z, R_{ZZ}, R_X$ and `measure_all()`.
-    - Successfully executed circuit on `qpiai_quantum.simulator.StatevectorSimulator` in 1.29s (1024 shots).
-    - Documented QCloud remote API key requirement.
-  - Verified local Anvil node startup with `--chain-id 31337 --block-time 1` and `cast` queries.
-  - Saved evidence to `evidence/runs/phase0_probe.json`.
-  - Updated `docs/SDK_NOTES.md` and `docs/ASSUMPTIONS.md`.
+  - Registered Appendix A workspace rule in `.agents/rules/agentvault.md` and `AGENTS.md`.
+  - Completed Phase 0 (Environment and SDK execution probes, recorded in `evidence/runs/phase0_probe.json`).
+  - Completed Phase 1 (Smart contract and verifier):
+    - Implemented `MockUSDC.sol` (6 decimals, test mint) and `PolicyVault.sol` (EIP-712, OpenZeppelin v5, nonReentrant, allowlists, daily/per-purchase caps, atomic transfers).
+    - Implemented `FailingToken.sol` mock to test full revert atomicity.
+    - Wrote comprehensive unit tests in `PolicyVault.t.sol` (19/19 tests passing).
+    - Wrote handler invariant tests in `PolicyVault.invariant.t.sol` (256 runs, 128,000 calls, 0 violations).
+    - Generated golden vectors via `GoldenVectors.s.sol` and proved byte-for-byte parity with Python in `test_typed_data_parity.py`.
+    - Implemented `ChainClient` (`backend/app/chain/client.py`) and `VerifierService` (`backend/app/verifier/service.py`).
+    - Executed Phase 1 gate (`scripts/run_phase1_gate.py`):
+      - Deployed to local Anvil (`31337`).
+      - Created on-chain mandate with owner signature (ID `0x98930f...`).
+      - Executed authorized multi-vendor purchase ($27 USDC, tx `8783a9a1...`).
+      - Validated token transfers (15 USDC to Vendor 1, 12 USDC to Vendor 2).
+      - Verified real rejections: Verifier rejected non-allowlisted vendor (`VENDOR_NOT_ALLOWED`), contract reverted forged approval.
+      - Saved proof artifact to `evidence/runs/phase1_gate.json`.
 - **In Progress**:
-  - Transitioning to Phase 1: Smart contracts (Foundry) & Verifier core.
+  - Transitioning to Phase 2: Catalog and classical optimization.
 - **Blockers**:
-  - `QPIAI_OPT_API_KEY` and `QCLOUD_API_KEY` are not set in `.env`.
-    - As per Section 4 & Section 15: Exact external blocker is documented, local `StatevectorSimulator` executes quantum circuits as `LIVE_QPIAI`, and classical fallback (`CLASSICAL_FALLBACK` / OR-Tools) will serve as fallback when API key is missing.
+  - None for Phase 2.
 - **Decisions**:
-  - QpiAI Quantum gate operations use exact parameter orders: `rz(qubit, theta)`, `rzz(qubit1, qubit2, theta)`, `rx(qubit, theta)`.
-  - Opt solving requires handling `AuthenticationError` gracefully by defaulting to transparent classical optimization while marking the execution mode honestly.
-- **Hours Used**: 1.0 hours.
+  - Enabled `via_ir = true` in Foundry to resolve stack depth while optimizing gas.
+  - Used explicit `newTime = block.timestamp + 1 days` in rollover tests to prevent Yul compiler CSE on cheatcodes.
+  - Verifier uses independent signing key and performs all on-chain and policy checks fail-closed.
+- **Hours Used**: 2.0 hours.
 - **Next Three Actions**:
-  1. Initialize Foundry project under `contracts/` with pinned OpenZeppelin v5.1.0 contracts.
-  2. Implement `MockUSDC.sol` and `PolicyVault.sol` (EIP-712 domain, vendor registry, createMandate, executeBasket with single-use quotes, verifier signature verification, daily/per-purchase caps, nonReentrant).
-  3. Write comprehensive Foundry tests (`contracts/test/PolicyVault.t.sol`) covering happy path, authority, budget caps, replay, revocation, and failure modes.
+  1. Build the seeded multi-vendor catalog generator (`backend/app/catalog/generator.py` and `vendors.py`).
+  2. Implement QpiAI Opt MILP procurement formulation with greedy baseline, OR-Tools CP-SAT benchmark, and fallbacks.
+  3. Implement verifier-side waste guard (`waste_guard.py`) and exact integer monetary recalculation.

@@ -1,0 +1,42 @@
+{
+  "phase": "Phase 1: Smart contract and verifier",
+  "gate_status": "PASSED",
+  "timestamp": "2026-10-28T17:33:29Z",
+  "contracts": {
+    "policyVault": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "mockUsdc": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "chainId": 31337
+  },
+  "happy_path_execution": {
+    "mandateId": "0x98930fe9af09dbe8659f1edab248e47133fea8e92d0c35283600c9d2aaacd851",
+    "approvalId": "0x157931c1b21f3f637f76819267c86ff865cd79033929a6802aead28437c09f52",
+    "basketHash": "0x5c78fd548d8236b801bbd2f3576abfc8fff3f03e590ea8cfef8998627bedcfd0",
+    "totalPaidMicroUsdc": 27000000,
+    "txHash": "8783a9a1c274c0ffaaffbb5d98bcc4e9d054191a74fe06ac695acb26b4df79b1",
+    "blockNumber": 10,
+    "gasUsed": 267793,
+    "status": "SUCCESS",
+    "balances": {
+      "ownerBefore": 10000000000,
+      "ownerAfter": 9973000000,
+      "vendor1PayeeBefore": 0,
+      "vendor1PayeeAfter": 15000000,
+      "vendor2PayeeBefore": 0,
+      "vendor2PayeeAfter": 12000000
+    }
+  },
+  "unauthorized_rejections": [
+    {
+      "attack": "Non-allowlisted vendor",
+      "layer": "Verifier",
+      "reasonCode": "VENDOR_NOT_ALLOWED",
+      "status": "REJECTED"
+    },
+    {
+      "attack": "Forged approval direct contract call",
+      "layer": "PolicyVault Contract",
+      "error": "UnknownRevert",
+      "status": "REVERTED"
+    }
+  ]
+}

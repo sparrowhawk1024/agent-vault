@@ -1,0 +1,10 @@
+{
+  "domainSeparator": "0x8a343856b290b0c55c1777e439f496f8d5d10b1f128fc248d8c9ca1bd91af6b6",
+  "mandateStructHash": "0x0dae1e82c0d85b007dbb6577a127ae3a2919e8e344d4ec6ef3e1594007191288",
+  "mandateDigest": "0xe0fac9ad1f8eb88909f3d01d27fb7c024c06ce09cc71f5b12bcc5a61eae9a454",
+  "line0StructHash": "0xd2397d999e696200addc1d46cdf3f2815c6849b496732f1d014f9bff3bd47d44",
+  "line1StructHash": "0xaa306750b0424f481301b6f1e8d1ae36de160b62cdcfd2f2267a6607a57eb5fb",
+  "basketHash": "0xadc101c5cf4f29f79a6ed4a79530aafe9b6b5f33af1ea9fa42824d74c0f205e6",
+  "approvalStructHash": "0xcaf3de96701bbd2b784b0f55160e51158df0768dc2a2da642564f67e79adb76b",
+  "approvalDigest": "0x6de2406d92b7a441e7505a8a26577b6905d692f3d48d4df683ea3229a25cefd7"
+}
