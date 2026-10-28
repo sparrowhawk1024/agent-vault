@@ -1,6 +1,6 @@
 {
   "suite": "AGENTVAULT_ADVERSARIAL_TEST_SUITE",
-  "timestamp": 1793212263.1003187,
+  "timestamp": 1793215504.4314504,
   "totalCases": 33,
   "passedCases": 33,
   "unauthorizedTransfers": 0,
@@ -63,7 +63,7 @@
       "actualCode": "QUOTE_EXPIRED",
       "passed": true,
       "unauthorizedTransfer": false,
-      "details": "Quote 0x3987608af1e4590a5ee6ef383c2f32865ee2bbcb16e13c884a282625b53bf2be validUntil (1793212284) does not outlive approval deadline (1793212378)"
+      "details": "Quote 0x3987608af1e4590a5ee6ef383c2f32865ee2bbcb16e13c884a282625b53bf2be validUntil (1793215527) does not outlive approval deadline (1793215621)"
     },
     {
       "caseId": "A07",

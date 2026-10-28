@@ -1,0 +1,55 @@
+{
+  "manifestVersion": "1.0.0",
+  "generatedAt": "2026-10-28T19:30:49Z",
+  "totalFiles": 6,
+  "files": [
+    {
+      "path": "evidence/attacks.json",
+      "contentType": "application/json",
+      "sha256": "5cf715f3ac33f22d2df95dabcc7445f73a27537f74726da167524832902b0c7b",
+      "sizeBytes": 11832,
+      "description": "Automated 33-case adversarial test suite results",
+      "lastModified": "2026-10-28T19:25:04Z"
+    },
+    {
+      "path": "evidence/summary.md",
+      "contentType": "text/markdown",
+      "sha256": "8ed53428277bff909733af5f8d2a3621576060bc8ab0a61192a0bfc56be3ae65",
+      "sizeBytes": 12080,
+      "description": "Comprehensive benchmark and security verification summary",
+      "lastModified": "2026-10-28T19:30:49Z"
+    },
+    {
+      "path": "evidence/runs/phase0_probe.json",
+      "contentType": "application/json",
+      "sha256": "77e558712272b707cb78ed4edd20cd9b3c1b7e54747014da71756bd96e39b126",
+      "sizeBytes": 2006,
+      "description": "Phase 0 environment discovery and SDK execution probe results",
+      "lastModified": "2026-10-28T17:02:59Z"
+    },
+    {
+      "path": "evidence/runs/phase1_gate.json",
+      "contentType": "application/json",
+      "sha256": "87edb0c7f2cd9049c9f5e0ea6a053470cc8838b0ad6eaa05d6eee72d3536f580",
+      "sizeBytes": 1393,
+      "description": "Phase 1 smart contract deployment and payment gate evidence",
+      "lastModified": "2026-10-28T17:33:29Z"
+    },
+    {
+      "path": "evidence/runs/phase2_gate.json",
+      "contentType": "application/json",
+      "sha256": "0d76516c8e9ae906f4043faafc0f317521d0ebbecf17a1a73bd27d648072cbe9",
+      "sizeBytes": 1540,
+      "description": "Phase 2 multi-solver procurement benchmark results",
+      "lastModified": "2026-10-28T18:05:10Z"
+    },
+    {
+      "path": "evidence/runs/phase3_gate.json",
+      "contentType": "application/json",
+      "sha256": "faf365908e6bbe5f8a22aa35c85954a26e9f03cfafce05a2516cd614d360046f",
+      "sizeBytes": 6679,
+      "description": "Phase 3 4-qubit QAOA variational circuit execution telemetry",
+      "lastModified": "2026-10-28T18:09:17Z"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # AgentVault Build Progress
 
-- **Current Phase**: Phase 5 (Frontend and API Integration) — **GATE PASSED**
+- **Current Phase**: Phase 6 (Final Verification, Evidence Generation and Freeze) — **GATE PASSED & CODE FROZEN**
 - **Done**:
   - Saved complete master prompt (§0 through §15, Appendix A, Appendix B) to `docs/MASTER_PROMPT.md`.
   - Registered Appendix A workspace rule in `.agents/rules/agentvault.md` and `AGENTS.md`.
@@ -9,22 +9,24 @@
   - Completed Phase 2 (Catalog and classical optimization, recorded in `evidence/runs/phase2_gate.json`).
   - Completed Phase 3 (Quantum procurement experiment, recorded in `evidence/runs/phase3_gate.json`).
   - Completed Phase 4 (Adversarial testing and failure modes, 33/33 cases passed with 0 unauthorized transfers, recorded in `evidence/attacks.json`).
-  - Completed Phase 5 (Frontend and API Integration):
-    - Implemented full FastAPI REST API in `backend/app/main.py` covering health, mandates, catalog, optimizer benchmarks, quantum QAOA, verifier approval, agent pipeline execution, admin controls, proof bundles, and audit verification.
-    - Implemented SHA-256 tamper-evident hash-chained audit store in `backend/app/audit/store.py`.
-    - Implemented cryptographic purchase proof bundle builder in `backend/app/proofs/builder.py`.
-    - Built comprehensive 6-view React + TypeScript frontend with glassmorphism design system in `frontend/` (MandateView, AgentRunView, PaymentsView, SecurityConsoleView, QpiAIEvidenceView, AuditLogView). Vite build verified clean (0 errors).
-    - Executed end-to-end integration gate script `scripts/run_phase5_gate.py` verifying all 10 steps (health, on-chain mandate, 28.47% optimizer savings, 4-qubit QAOA on StatevectorSimulator, honest on-chain payment execution, gullible prompt injection containment, and SHA-256 audit chain validation).
+  - Completed Phase 5 (Frontend and API Integration, all 10 release gate steps passed, clean Vite production build).
+  - Completed Phase 6 (Final Verification, Evidence Generation, and Freeze):
+    - Implemented reproducible evidence suite generator `scripts/make_evidence.py`.
+    - Generated comprehensive benchmark and security summary in `evidence/summary.md`.
+    - Generated cryptographic manifest `evidence/MANIFEST.json` with SHA-256 hashes of all artifacts.
+    - Verified full regression suite: 19/19 Foundry unit tests passed, 128,000-call invariant fuzz tests passed (0 reverts, 0 violations), 12/12 Python backend tests passed, 33/33 attack suite cases passed with 0 unauthorized transfers, 10/10 Phase 5 gate steps passed on clean Anvil, and clean frontend build (409ms).
+    - Authored comprehensive documentation in `README.md` and evaluator walkthrough script in `docs/DEMO_SCRIPT.md`.
+    - Verified chain ID 31337 safety guardrails, clean git state, and zero secret exposure.
 - **In Progress**:
-  - Phase 6: Final Verification, Evidence Generation, and Freeze.
+  - None (Ready for Hackathon Evaluation & Demonstration).
 - **Blockers**:
-  - None. QCloud API key is not configured for remote cloud hardware; local execution uses real `qpiai_quantum.simulator.StatevectorSimulator` with honest `LIVE_QPIAI` execution mode.
+  - None for local execution. Remote QpiAI QCloud hardware execution requires a `QCLOUD_API_KEY` registered at https://qcloud.qpiai.tech/ and is honestly labeled as blocked; local execution uses real `qpiai_quantum.simulator.StatevectorSimulator`.
 - **Decisions**:
-  - Defaulted `allowedVendorIds` and `allowedCategoryIds` in `MandatePrepareRequest` to canonical catalog identities to ensure out-of-the-box compatibility with seeded catalog quotes.
-  - Bounded agent run optimizer problem budget by `min(totalBudget - spentTotal, perPurchaseCap)` to guarantee generated candidate baskets never exceed per-purchase caps.
-- **Hours Used**: 4.8 hours.
+  - Bounded agent problem budget by `min(totalBudget - spentTotal, perPurchaseCap)` to guarantee generated candidate baskets never exceed per-purchase caps.
+  - Manifest excludes itself to prevent self-referential hash loops.
+- **Hours Used**: 5.2 hours.
 - **Next Three Actions**:
-  1. Generate reproducible evidence suite script (`scripts/make_evidence.py`), creating `evidence/summary.md` and `evidence/MANIFEST.json`.
-  2. Run full test freeze across contracts (`forge test`), backend (`pytest`), attacks (`python scripts/run_attacks.py`), and frontend (`npm run build`).
-  3. Finalize README.md with clear start-up instructions and rehearse the end-to-end demo sequence.
+  1. Present AgentVault live demo using `docs/DEMO_SCRIPT.md`.
+  2. Inspect on-chain execution proofs and audit chain integrity via `GET /audit/verify`.
+  3. Deliver evidence bundle and GitHub repository to evaluators.
 
