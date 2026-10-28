@@ -273,3 +273,38 @@ class ChainClient:
         account = Account.from_key(owner_private_key)
         txn = self.vault.functions.bumpVerifierEpoch().build_transaction({"from": account.address})
         return self.send_tx(txn, owner_private_key)
+
+    def get_mandate(self, mandate_id_hex: str) -> Optional[Dict[str, Any]]:
+        """Query mandate state from PolicyVault."""
+        if not self.vault:
+            return None
+        try:
+            m_bytes = bytes.fromhex(
+                mandate_id_hex[2:] if mandate_id_hex.startswith("0x") else mandate_id_hex
+            )
+            raw = self.vault.functions.getMandate(m_bytes).call()
+            if raw[0] == "0x0000000000000000000000000000000000000000":
+                return None
+            revoked = self.vault.functions.isRevoked(m_bytes).call()
+            spent_total = self.vault.functions.spentTotal(m_bytes).call()
+            spent_today = self.vault.functions.spentToday(m_bytes).call()
+            return {
+                "owner": raw[0],
+                "creator": raw[0],
+                "agent": raw[1],
+                "token": raw[2],
+                "totalBudget": raw[3],
+                "perPurchaseCap": raw[4],
+                "dailyCap": raw[5],
+                "allowedVendorIds": [v.hex() if isinstance(v, bytes) else v for v in raw[6]],
+                "allowedCategoryIds": [c.hex() if isinstance(c, bytes) else c for c in raw[7]],
+                "validFrom": raw[8],
+                "expiry": raw[9],
+                "nonce": raw[10],
+                "spentTotal": spent_total,
+                "spentToday": spent_today,
+                "revoked": revoked,
+            }
+        except Exception:
+            return None
+

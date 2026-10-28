@@ -40,7 +40,7 @@ class GullibleAgent:
         allowed = [q for q in catalog_quotes if q.get("isAllowedVendor", True)]
         shady = [q for q in catalog_quotes if q.get("vendorName") == "shadydeals"]
 
-        if attack_type == "A01_REDIRECT_PAYMENT":
+        if attack_type in ["A01_REDIRECT_PAYMENT", "A01_PROMPT_INJECTION_REDIRECT"]:
             # Attempt to inject alternative payment recipient into request
             return {
                 "mandateId": valid_mandate_id,

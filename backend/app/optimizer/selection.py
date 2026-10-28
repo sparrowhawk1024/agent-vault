@@ -74,3 +74,55 @@ def run_solver_comparison(problem: ProcurementProblem) -> SolverComparisonReport
         savings_vs_vendor_rule_pct=round(savings_vs_vendor_rule, 2),
         optimal_basket=ref_result.selected_quotes,
     )
+
+
+def run_procurement_benchmark(
+    catalog: List[Dict[str, Any]],
+    requirements: Dict[str, int],
+    max_budget: int = 50_000_000,
+    seed: int = 1,
+) -> Dict[str, Any]:
+    """Helper for FastAPI API endpoint returning serialized benchmark results."""
+    eligible_quotes = [q for q in catalog if q.get("isAllowedVendor", True)]
+    problem = ProcurementProblem(
+        quotes=eligible_quotes,
+        requirements=requirements,
+        max_budget=max_budget,
+        max_lines=16,
+    )
+    report = run_solver_comparison(problem)
+
+    def serialize_res(res: SolverResult):
+        lines = [
+            {
+                "quoteId": q["quoteId"],
+                "vendorId": q["vendorId"],
+                "categoryId": q["categoryId"],
+                "skuId": q["skuId"],
+                "units": q["units"],
+                "amount": q["price"],
+            }
+            for q in res.selected_quotes
+        ]
+        return {
+            "solverName": res.solver_name,
+            "executionMode": res.execution_mode,
+            "feasible": res.feasible,
+            "totalCost": res.total_cost,
+            "coverage": res.coverage,
+            "lineCount": len(res.selected_quotes),
+            "basketLines": lines,
+            "timingMs": round(res.runtime_ms, 2),
+            "errorMessage": res.error_detail,
+        }
+
+    return {
+        "summary": {
+            "referenceOptimumCost": report.reference_optimum_cost,
+            "savingsVsGreedyPct": report.savings_vs_greedy_pct,
+            "savingsVsVendorRulePct": report.savings_vs_vendor_rule_pct,
+            "seed": seed,
+        },
+        "solvers": {name: serialize_res(r) for name, r in report.results.items()},
+    }
+

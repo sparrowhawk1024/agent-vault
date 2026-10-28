@@ -17,6 +17,7 @@ build/
 contracts/cache/
 contracts/out/
 contracts/lib/
+contracts/broadcast/
 deployments/
 
 # Node / Frontend

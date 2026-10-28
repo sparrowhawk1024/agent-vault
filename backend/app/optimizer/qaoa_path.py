@@ -163,7 +163,7 @@ def build_qaoa_circuit(
 
 def run_qaoa_procurement_experiment(
     catalog_quotes: List[Dict[str, Any]],
-    requirements: Dict[str, int],
+    requirements: Optional[Dict[str, int]] = None,
     shots: int = 1024,
 ) -> QAOAExecutionRecord:
     """Run genuine QAOA procurement experiment using QpiAI Quantum SDK."""
