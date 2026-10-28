@@ -2,7 +2,7 @@
 
 **Project**: AgentVault (WEB3-05: Policy-Bound Autonomous Procurement and Machine-to-Machine Payments)  
 **Hackathon**: QpiAI x Q-BITS Quant-a-Maze 3.0  
-**Generated At**: 2026-10-28T19:30:49Z  
+**Generated At**: 2026-10-28T19:49:38Z  
 **Chain Context**: Local Anvil Node (Chain ID `31337`, Safe Local Sandboxed Chain)  
 **Smart Contract**: `PolicyVault.sol` (`0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512`)  
 **Settlement Token**: `MockUSDC.sol` (`0x5FbDB2315678afecb367f032d93F642f64180aa3`)  

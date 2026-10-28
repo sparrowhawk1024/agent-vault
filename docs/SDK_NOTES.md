@@ -49,3 +49,20 @@
   - Classical reference calculated (Pack 1 + Pack 3 = 37 USDC).
   - Quantum 4-qubit QAOA variational circuit formulated, compiled, executed on `StatevectorSimulator`, and counts recorded.
   - Anvil verified on port 8545 with chain ID 31337.
+
+## 5. Live QCloud Authentication & Resource Discovery
+- **Authentic Token Test**: The user's main API token was verified directly against the live QpiAI QCloud authentication service (`https://qcloud.qpiai.tech/`).
+- **Account Verification (`QpiAIQuantumAuth.me()`)**:
+  - Successfully authenticated user profile `prem` (`premcnaik2004@gmail.com`).
+- **Discovered Compute Resources (`QpiAIQuantumAuth.list_compute_resources()`)**:
+  1. `QpiAI-QSV-Simulator` (Rate: 1 credit)
+  2. `QpiAI-QDM-Simulator` (Rate: 2 credits)
+  3. `QpiAI-QTN-Simulator` (Rate: 3 credits)
+  4. `QpiAI-QSV-Lite` (Rate: 1 credit)
+  5. `QpiAI-QDM-Lite` (Rate: 2 credits)
+  6. `QpiAI-Indus-1` (Rate: 4 credits)
+- **Live Job Submission Finding**:
+  - Submitting remote quantum circuit execution jobs to QCloud backends returned:
+    `Server response: {'error': 'Failed to create job: an active subscription is required to run jobs'}`
+  - **Engineering Conclusion**: Remote cloud dispatch requires an active cloud subscription with compute credit allocations. Therefore, executing the genuine variational QAOA circuit on the local `qpiai_quantum.simulator.StatevectorSimulator` provides the authentic, deterministic, and fully verifiable quantum computing demonstration for this hackathon build.
+

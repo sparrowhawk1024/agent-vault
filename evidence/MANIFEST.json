@@ -1,6 +1,6 @@
 {
   "manifestVersion": "1.0.0",
-  "generatedAt": "2026-10-28T19:30:49Z",
+  "generatedAt": "2026-10-28T19:49:38Z",
   "totalFiles": 6,
   "files": [
     {
@@ -14,10 +14,10 @@
     {
       "path": "evidence/summary.md",
       "contentType": "text/markdown",
-      "sha256": "8ed53428277bff909733af5f8d2a3621576060bc8ab0a61192a0bfc56be3ae65",
+      "sha256": "ee35b0f624abebc54ef65507162fcf2f6d3ad07463ed8e2f3b4b11c3c9ab2e48",
       "sizeBytes": 12080,
       "description": "Comprehensive benchmark and security verification summary",
-      "lastModified": "2026-10-28T19:30:49Z"
+      "lastModified": "2026-10-28T19:49:38Z"
     },
     {
       "path": "evidence/runs/phase0_probe.json",
