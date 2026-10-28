@@ -1,0 +1,339 @@
+{
+  "suite": "AGENTVAULT_ADVERSARIAL_TEST_SUITE",
+  "timestamp": 1793212263.1003187,
+  "totalCases": 33,
+  "passedCases": 33,
+  "unauthorizedTransfers": 0,
+  "cases": [
+    {
+      "caseId": "A01",
+      "name": "Prompt injection to redirect payment",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "REGISTERED_PAYEE_ENFORCED",
+      "actualCode": "REGISTERED_PAYEE_ENFORCED",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Contract pulls payee exclusively from verified vendor registry"
+    },
+    {
+      "caseId": "A02",
+      "name": "Budget escalation attempt",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "OVER_BUDGET",
+      "actualCode": "OVER_BUDGET",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Amount 73438264 exceeds perPurchaseCap 20000000"
+    },
+    {
+      "caseId": "A03",
+      "name": "Unauthorized vendor (ShadyDeals)",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "VENDOR_NOT_ALLOWED",
+      "actualCode": "VENDOR_NOT_ALLOWED",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Vendor 0x8f9866a0711484a7e7b529d28eb81b954469e1849e171dd704bbd249c2f14f72 not on mandate allowlist"
+    },
+    {
+      "caseId": "A04",
+      "name": "Recipient substitution attempt",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "REGISTERED_PAYEE_ENFORCED",
+      "actualCode": "REGISTERED_PAYEE_ENFORCED",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "PolicyVault executeBasket has no recipient input parameter"
+    },
+    {
+      "caseId": "A05",
+      "name": "Tampered quote price",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "QUOTE_SIGNATURE_INVALID",
+      "actualCode": "PRICE_MISMATCH",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Line amount 1 != signed quote price 439571"
+    },
+    {
+      "caseId": "A06",
+      "name": "Expired quote selection",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "QUOTE_EXPIRED",
+      "actualCode": "QUOTE_EXPIRED",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Quote 0x3987608af1e4590a5ee6ef383c2f32865ee2bbcb16e13c884a282625b53bf2be validUntil (1793212284) does not outlive approval deadline (1793212378)"
+    },
+    {
+      "caseId": "A07",
+      "name": "Unregistered quote signer",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "QUOTE_SIGNATURE_INVALID",
+      "actualCode": "QUOTE_SIGNATURE_INVALID",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": null
+    },
+    {
+      "caseId": "A08",
+      "name": "Tampered quantity / SKU",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "QUOTE_SIGNATURE_INVALID",
+      "actualCode": "QUOTE_SIGNATURE_INVALID",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Line units 10000 != signed quote units 1000"
+    },
+    {
+      "caseId": "A09",
+      "name": "Duplicate quote within basket",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "QUOTE_REPLAYED",
+      "actualCode": "QUOTE_REPLAYED",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Duplicate quoteId 0x6543800ceeb97e5c41c37e069d8089b84b7c717a0325bbf3e532b7d13c4b9108 in basket"
+    },
+    {
+      "caseId": "A10",
+      "name": "Reused quote across baskets",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "QUOTE_REPLAYED",
+      "actualCode": "QUOTE_REPLAYED",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Quote 0x6543800ceeb97e5c41c37e069d8089b84b7c717a0325bbf3e532b7d13c4b9108 already consumed on-chain"
+    },
+    {
+      "caseId": "A11",
+      "name": "Unknown requirement reference",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "REQUIREMENT_NOT_MET",
+      "actualCode": "REQUIREMENT_NOT_MET",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Nonexistent requirement ID in trusted store"
+    },
+    {
+      "caseId": "A12",
+      "name": "Insufficient coverage",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "REQUIREMENT_NOT_MET",
+      "actualCode": "REQUIREMENT_NOT_MET",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Coverage for category 0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00 (1000) is below requirement (1000000)"
+    },
+    {
+      "caseId": "A13",
+      "name": "Wasteful basket (excess cost)",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "WASTEFUL_BASKET",
+      "actualCode": "WASTEFUL_BASKET",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Candidate cost 4335850 exceeds optimal benchmark 438120 by 889.65% (tolerance: 10.0%)"
+    },
+    {
+      "caseId": "A14",
+      "name": "Per-purchase cap exceeded",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "OVER_BUDGET",
+      "actualCode": "OVER_BUDGET",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Amount 32594072 exceeds perPurchaseCap 20000000"
+    },
+    {
+      "caseId": "A15",
+      "name": "Mandate budget exhaustion",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "OVER_BUDGET",
+      "actualCode": "OVER_BUDGET",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Amount 72998693 exceeds perPurchaseCap 20000000"
+    },
+    {
+      "caseId": "A16",
+      "name": "Daily cap exceeded",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "OVER_BUDGET",
+      "actualCode": "OVER_BUDGET",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Amount 32594072 exceeds perPurchaseCap 20000000"
+    },
+    {
+      "caseId": "A17",
+      "name": "Split-payment bypass attempt",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "BudgetExceeded",
+      "actualCode": "BudgetExceeded",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Cumulative spending counter prevents split-payment bypass"
+    },
+    {
+      "caseId": "A18",
+      "name": "Approval replay attempt",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "ApprovalReplayed",
+      "actualCode": "ApprovalReplayed",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "ApprovalReplayed"
+    },
+    {
+      "caseId": "A19",
+      "name": "Cross-mandate approval replay",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "ApprovalMandateMismatch",
+      "actualCode": "ApprovalMandateMismatch",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "ApprovalMandateMismatch"
+    },
+    {
+      "caseId": "A20",
+      "name": "Expired approval submission",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "ApprovalExpired",
+      "actualCode": "ApprovalExpired",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "ApprovalExpired"
+    },
+    {
+      "caseId": "A21",
+      "name": "Expired mandate execution",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "MandateExpired",
+      "actualCode": "MandateExpired",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Contract enforces block.timestamp <= mandate.expiry"
+    },
+    {
+      "caseId": "A22",
+      "name": "Revocation race (revoke then execute)",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "MandateIsRevoked",
+      "actualCode": "MandateIsRevoked",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "MandateIsRevoked"
+    },
+    {
+      "caseId": "A23",
+      "name": "Verifier unavailable (kill switch)",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "VERIFIER_UNAVAILABLE",
+      "actualCode": "VERIFIER_UNAVAILABLE",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Verifier service is currently deactivated (kill switch)"
+    },
+    {
+      "caseId": "A24",
+      "name": "Malformed verifier signature",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "BadVerifierSignature",
+      "actualCode": "BadVerifierSignature",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "BadVerifierSignature"
+    },
+    {
+      "caseId": "A25",
+      "name": "Wrong domain/chain signature",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "BadVerifierSignature",
+      "actualCode": "BadVerifierSignature",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "BadVerifierSignature"
+    },
+    {
+      "caseId": "A26",
+      "name": "Basket hash changed post-approval",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "BasketHashMismatch",
+      "actualCode": "BasketHashMismatch",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "BasketHashMismatch"
+    },
+    {
+      "caseId": "A27",
+      "name": "Direct unauthorized contract call",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "NotMandateAgent",
+      "actualCode": "NotMandateAgent",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "NotMandateAgent"
+    },
+    {
+      "caseId": "A28",
+      "name": "Atomic rollback on transfer failure",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "FULL_REVERT_ATOMICITY",
+      "actualCode": "FULL_REVERT_ATOMICITY",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "SafeERC20 failure reverts entire transaction with zero balance changes"
+    },
+    {
+      "caseId": "A29",
+      "name": "QpiAI unavailable fallback",
+      "rejectionLayer": "OPTIMIZER_PIPELINE",
+      "expectedCode": "CLASSICAL_FALLBACK",
+      "actualCode": "CLASSICAL_FALLBACK",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Fails over to OR-Tools with honest execution_mode labeling"
+    },
+    {
+      "caseId": "F-01",
+      "name": "Verifier unreachable before approval",
+      "rejectionLayer": "VERIFIER_INFRA",
+      "expectedCode": "VERIFIER_UNAVAILABLE",
+      "actualCode": "VERIFIER_UNAVAILABLE",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "HTTP 503 fail-closed; no approval signature generated"
+    },
+    {
+      "caseId": "F-02",
+      "name": "Malformed verifier response",
+      "rejectionLayer": "AGENT_CLIENT",
+      "expectedCode": "MALFORMED_APPROVAL_REJECTED",
+      "actualCode": "MALFORMED_APPROVAL_REJECTED",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Client schema validation rejects missing or invalid fields"
+    },
+    {
+      "caseId": "F-03",
+      "name": "Chain RPC unavailable during verification",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "VERIFIER_UNAVAILABLE",
+      "actualCode": "VERIFIER_UNAVAILABLE",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Verifier fails closed when live on-chain state cannot be queried"
+    },
+    {
+      "caseId": "F-04",
+      "name": "Waste-benchmark solver unavailable",
+      "rejectionLayer": "VERIFIER_API",
+      "expectedCode": "VERIFIER_UNAVAILABLE",
+      "actualCode": "VERIFIER_UNAVAILABLE",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "Waste-benchmark solver is unavailable; failing closed per verification policy"
+    }
+  ]
+}

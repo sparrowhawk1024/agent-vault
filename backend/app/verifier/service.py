@@ -182,13 +182,35 @@ class VerifierService:
                 decision_record["detail"] = f"Category {category_id} not on mandate allowlist"
                 return False, None, None, decision_record
 
-            # If signed quote metadata provided, verify quote signature & expiry
+            # If signed quote metadata provided, verify quote signature & expiry & match
             if quotes_metadata and quote_id in quotes_metadata:
                 qmeta = quotes_metadata[quote_id]
                 valid_until = int(qmeta["validUntil"])
-                if chain_time > valid_until:
+                
+                # Quote must not be expired and must outlive the approval deadline
+                if valid_until <= chain_time + self.approval_ttl_seconds:
                     decision_record["status"] = "REJECTED"
                     decision_record["reasonCode"] = "QUOTE_EXPIRED"
+                    decision_record["detail"] = f"Quote {quote_id} validUntil ({valid_until}) does not outlive approval deadline ({chain_time + self.approval_ttl_seconds})"
+                    return False, None, None, decision_record
+
+                # Line fields must match signed quote fields
+                if amount != int(qmeta["price"]):
+                    decision_record["status"] = "REJECTED"
+                    decision_record["reasonCode"] = "PRICE_MISMATCH"
+                    decision_record["detail"] = f"Line amount {amount} != signed quote price {qmeta['price']}"
+                    return False, None, None, decision_record
+
+                if "units" in line and int(line["units"]) != int(qmeta["units"]):
+                    decision_record["status"] = "REJECTED"
+                    decision_record["reasonCode"] = "QUOTE_SIGNATURE_INVALID"
+                    decision_record["detail"] = f"Line units {line['units']} != signed quote units {qmeta['units']}"
+                    return False, None, None, decision_record
+
+                if "skuId" in line and line["skuId"].lower() != qmeta["skuId"].lower():
+                    decision_record["status"] = "REJECTED"
+                    decision_record["reasonCode"] = "QUOTE_SIGNATURE_INVALID"
+                    decision_record["detail"] = f"Line skuId {line['skuId']} != signed quote skuId {qmeta['skuId']}"
                     return False, None, None, decision_record
 
                 if "signature" in qmeta:

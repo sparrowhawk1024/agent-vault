@@ -222,16 +222,20 @@ class ChainClient:
         try:
             fn.call({"from": agent_account.address})
         except Exception as e:
-            # Revert caught in call
             err_str = str(e)
             decoded = "UnknownRevert"
-            if "data" in err_str:
-                # Extract data hex
+            # 1. Inspect e.args for 0x selector
+            for arg in getattr(e, "args", []):
+                if isinstance(arg, str) and arg.startswith("0x") and len(arg) >= 10:
+                    decoded = decode_custom_error(arg)
+                    break
+            # 2. Search regex across err_str
+            if decoded.startswith("UnknownRevert"):
                 import re
                 match = re.search(r"0x[0-9a-fA-F]{8,}", err_str)
                 if match:
                     decoded = decode_custom_error(match.group(0))
-            elif "execution reverted:" in err_str:
+            if decoded.startswith("UnknownRevert") and "execution reverted:" in err_str:
                 decoded = err_str.split("execution reverted:")[-1].strip()
             return False, None, None, decoded
 
@@ -243,3 +247,29 @@ class ChainClient:
             return True, tx_hash, receipt, None
         else:
             return False, tx_hash, receipt, "TransactionReverted"
+
+    def revoke_mandate(self, mandate_id_hex: str, owner_private_key: str) -> Tuple[str, Dict[str, Any]]:
+        """Owner revokes mandate."""
+        mandate_id_bytes = bytes.fromhex(
+            mandate_id_hex[2:] if mandate_id_hex.startswith("0x") else mandate_id_hex
+        )
+        account = Account.from_key(owner_private_key)
+        txn = self.vault.functions.revokeMandate(mandate_id_bytes).build_transaction(
+            {"from": account.address}
+        )
+        return self.send_tx(txn, owner_private_key)
+
+    def pause(self, owner_private_key: str) -> Tuple[str, Dict[str, Any]]:
+        account = Account.from_key(owner_private_key)
+        txn = self.vault.functions.pause().build_transaction({"from": account.address})
+        return self.send_tx(txn, owner_private_key)
+
+    def unpause(self, owner_private_key: str) -> Tuple[str, Dict[str, Any]]:
+        account = Account.from_key(owner_private_key)
+        txn = self.vault.functions.unpause().build_transaction({"from": account.address})
+        return self.send_tx(txn, owner_private_key)
+
+    def bump_verifier_epoch(self, owner_private_key: str) -> Tuple[str, Dict[str, Any]]:
+        account = Account.from_key(owner_private_key)
+        txn = self.vault.functions.bumpVerifierEpoch().build_transaction({"from": account.address})
+        return self.send_tx(txn, owner_private_key)
