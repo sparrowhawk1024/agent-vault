@@ -1,0 +1,70 @@
+{
+  "timestamp": "2026-10-28T17:02:56Z",
+  "environment": {
+    "python": "3.12.10",
+    "os": "Windows (AMD64)",
+    "foundry": "1.8.6"
+  },
+  "qpiai_opt": {
+    "installed_version": "0.0.9",
+    "model_name": "Procurement_Phase0",
+    "variables": [
+      "pack_0",
+      "pack_1",
+      "pack_2",
+      "pack_3"
+    ],
+    "status": "AUTHENTICATION_REQUIRED",
+    "execution_mode": "UNAVAILABLE",
+    "blocker": {
+      "error": "Local solving requires client=Client(api_key=...). Register for a free API key at https://opt.qpiai.tech/",
+      "detail": "qpiai_opt.opt_solvers.solve requires valid client=Client(api_key=...) registered at https://opt.qpiai.tech/"
+    },
+    "classical_optimum": {
+      "pack_0": 0,
+      "pack_1": 1,
+      "pack_2": 0,
+      "pack_3": 1,
+      "total_cost_micro_usdc": 37000000,
+      "total_cost_usdc": 37.0,
+      "solver": "Classical Exact Enumeration / Reference"
+    }
+  },
+  "qpiai_quantum": {
+    "installed_version": "0.7.5",
+    "local_experiment": {
+      "status": "SUCCESS",
+      "execution_mode": "LIVE_QPIAI",
+      "simulator": "qpiai_quantum.simulator.StatevectorSimulator",
+      "shots": 1024,
+      "n_qubits": 4,
+      "execution_time_seconds": 1.2913398742675781,
+      "sample_counts": {
+        "0000": 98,
+        "0001": 93,
+        "0010": 48,
+        "0011": 87,
+        "0100": 64,
+        "0101": 43,
+        "0110": 37,
+        "0111": 61,
+        "1000": 58,
+        "1001": 47,
+        "1010": 38,
+        "1011": 51,
+        "1100": 107,
+        "1101": 59,
+        "1110": 55,
+        "1111": 78
+      },
+      "most_frequent_bitstring": "1100"
+    },
+    "qcloud_remote": {
+      "status": "AUTHENTICATION_REQUIRED",
+      "execution_mode": "UNAVAILABLE",
+      "blocker": {
+        "detail": "QCLOUD_API_KEY not set in .env. Remote execution on QpiAI-QSV-Simulator or QpiAI Cloud hardware requires an API key from https://qcloud.qpiai.tech/"
+      }
+    }
+  }
+}
