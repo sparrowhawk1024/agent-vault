@@ -1,34 +1,35 @@
 # AgentVault Build Progress
 
-- **Current Phase**: Phase 1 (Smart contract and verifier) — **GATE PASSED**
+- **Current Phase**: Phase 2 (Catalog and classical optimization) — **GATE PASSED**
 - **Done**:
   - Saved complete master prompt (§0 through §15, Appendix A, Appendix B) to `docs/MASTER_PROMPT.md`.
   - Registered Appendix A workspace rule in `.agents/rules/agentvault.md` and `AGENTS.md`.
   - Completed Phase 0 (Environment and SDK execution probes, recorded in `evidence/runs/phase0_probe.json`).
-  - Completed Phase 1 (Smart contract and verifier):
-    - Implemented `MockUSDC.sol` (6 decimals, test mint) and `PolicyVault.sol` (EIP-712, OpenZeppelin v5, nonReentrant, allowlists, daily/per-purchase caps, atomic transfers).
-    - Implemented `FailingToken.sol` mock to test full revert atomicity.
-    - Wrote comprehensive unit tests in `PolicyVault.t.sol` (19/19 tests passing).
-    - Wrote handler invariant tests in `PolicyVault.invariant.t.sol` (256 runs, 128,000 calls, 0 violations).
-    - Generated golden vectors via `GoldenVectors.s.sol` and proved byte-for-byte parity with Python in `test_typed_data_parity.py`.
-    - Implemented `ChainClient` (`backend/app/chain/client.py`) and `VerifierService` (`backend/app/verifier/service.py`).
-    - Executed Phase 1 gate (`scripts/run_phase1_gate.py`):
-      - Deployed to local Anvil (`31337`).
-      - Created on-chain mandate with owner signature (ID `0x98930f...`).
-      - Executed authorized multi-vendor purchase ($27 USDC, tx `8783a9a1...`).
-      - Validated token transfers (15 USDC to Vendor 1, 12 USDC to Vendor 2).
-      - Verified real rejections: Verifier rejected non-allowlisted vendor (`VENDOR_NOT_ALLOWED`), contract reverted forged approval.
-      - Saved proof artifact to `evidence/runs/phase1_gate.json`.
+  - Completed Phase 1 (Smart contract and verifier, recorded in `evidence/runs/phase1_gate.json`).
+  - Completed Phase 2 (Catalog and classical optimization):
+    - Implemented vendor registry (`backend/app/catalog/vendors.py`) with 5 vendors and deterministic key derivation matching `Deploy.s.sol`.
+    - Implemented seeded synthetic catalog generator (`backend/app/catalog/generator.py`) producing ~50 signed quotes across 3 categories with volume discounts, near-expiry quotes, and adversarial prompt injections for `shadydeals`.
+    - Implemented mathematical procurement model builder (`backend/app/optimizer/model_builder.py`) supporting `qpiai_opt.opt_modeller.Model`.
+    - Implemented `ORToolsSolver` (CP-SAT exact integer solver) and `QpiAIOptSolver` (MILP with honest `CLASSICAL_FALLBACK` labeling).
+    - Implemented `GreedyBaselineSolver` (effective unit price heuristic) and `VendorRuleBaselineSolver` (naive single-vendor policy).
+    - Implemented `run_solver_comparison` (`backend/app/optimizer/selection.py`) computing runtimes, feasibility, and percentage savings against baselines.
+    - Implemented independent `WasteGuard` (`backend/app/verifier/waste_guard.py`) and integrated it into `VerifierService`, checking integer optimum and rejecting wasteful baskets or failing closed on missing solver (F-04).
+    - All 10 backend unit tests passing in `backend/tests/unit/`.
+    - Executed Phase 2 Gate (`scripts/run_phase2_gate.py`):
+      - Tested Seeds 1, 2, and 3: Optimal cost ~$23.03 - $23.39 USDC.
+      - Naive vendor-rule baseline costs ~$30.92 - $32.20 USDC; optimal solver delivers 24.34% to 28.47% savings (exceeding 15% calibration target).
+      - Verifier independently validated and approved the optimal candidate basket.
+      - Verifier Waste Guard rejected an inflated candidate (+30%) with `WASTEFUL_BASKET`.
+      - Saved gate evidence artifact to `evidence/runs/phase2_gate.json`.
 - **In Progress**:
-  - Transitioning to Phase 2: Catalog and classical optimization.
+  - Phase 3: Quantum procurement experiment (QpiAI QCloud / Quantum SDK QAOA path).
 - **Blockers**:
-  - None for Phase 2.
+  - `QCLOUD_API_KEY`: Remote cloud execution requires QpiAI QCloud credentials. Will run the genuine QAOA variational circuit locally on `qpiai_quantum.simulator.StatevectorSimulator` and honestly record execution mode as `CLASSICAL_FALLBACK` / local simulator, documenting remote status.
 - **Decisions**:
-  - Enabled `via_ir = true` in Foundry to resolve stack depth while optimizing gas.
-  - Used explicit `newTime = block.timestamp + 1 days` in rollover tests to prevent Yul compiler CSE on cheatcodes.
-  - Verifier uses independent signing key and performs all on-chain and policy checks fail-closed.
-- **Hours Used**: 2.0 hours.
+  - Added safe mock guard for `pandas` if blocked by Windows Application Control, allowing OR-Tools CP-SAT to execute without external native DLL dependency.
+  - Used effective unit price `price / min(units, deficit)` in greedy heuristic to avoid knapsack lumpiness bias.
+- **Hours Used**: 3.0 hours.
 - **Next Three Actions**:
-  1. Build the seeded multi-vendor catalog generator (`backend/app/catalog/generator.py` and `vendors.py`).
-  2. Implement QpiAI Opt MILP procurement formulation with greedy baseline, OR-Tools CP-SAT benchmark, and fallbacks.
-  3. Implement verifier-side waste guard (`waste_guard.py`) and exact integer monetary recalculation.
+  1. Implement reduced procurement QUBO mapping and QAOA variational circuit in `backend/app/optimizer/qaoa_path.py`.
+  2. Execute QAOA on `qpiai_quantum.simulator.StatevectorSimulator`, decode bitstrings to candidate offers, and compare with classical reference.
+  3. Save quantum run evidence and circuit histogram artifacts to `evidence/runs/phase3_gate.json`.

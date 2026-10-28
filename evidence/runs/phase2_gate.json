@@ -1,0 +1,48 @@
+{
+  "gate": "PHASE_2_CATALOG_AND_OPTIMIZATION",
+  "timestamp": 1793210710.6800098,
+  "status": "PASSED",
+  "requirements": {
+    "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00": 15000,
+    "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f": 8000,
+    "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0": 1200
+  },
+  "runs": [
+    {
+      "seed": 1,
+      "optimalCost": 23029818,
+      "qpiaiExecutionMode": "CLASSICAL_FALLBACK",
+      "qpiaiStatus": "OPTIMAL",
+      "greedyCost": 23308166,
+      "savingsVsGreedyPct": 1.19,
+      "vendorRuleCost": 32195318,
+      "savingsVsVendorRulePct": 28.47,
+      "verifierDecision": "APPROVED",
+      "wastefulRejectionReason": "WASTEFUL_BASKET"
+    },
+    {
+      "seed": 2,
+      "optimalCost": 23070879,
+      "qpiaiExecutionMode": "CLASSICAL_FALLBACK",
+      "qpiaiStatus": "OPTIMAL",
+      "greedyCost": 23540053,
+      "savingsVsGreedyPct": 1.99,
+      "vendorRuleCost": 31425407,
+      "savingsVsVendorRulePct": 26.59,
+      "verifierDecision": "APPROVED",
+      "wastefulRejectionReason": "WASTEFUL_BASKET"
+    },
+    {
+      "seed": 3,
+      "optimalCost": 23389998,
+      "qpiaiExecutionMode": "CLASSICAL_FALLBACK",
+      "qpiaiStatus": "OPTIMAL",
+      "greedyCost": 23565051,
+      "savingsVsGreedyPct": 0.74,
+      "vendorRuleCost": 30916347,
+      "savingsVsVendorRulePct": 24.34,
+      "verifierDecision": "APPROVED",
+      "wastefulRejectionReason": "WASTEFUL_BASKET"
+    }
+  ]
+}

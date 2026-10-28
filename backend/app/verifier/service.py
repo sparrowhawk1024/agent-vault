@@ -18,6 +18,7 @@ from backend.app.chain.typed_data import (
     sign_eip712_digest,
     recover_eip712_signer,
 )
+from backend.app.verifier.waste_guard import WasteGuard
 
 
 class VerifierService:
@@ -26,6 +27,8 @@ class VerifierService:
         verifier_private_key: str,
         chain_client: Any,
         approval_ttl_seconds: int = 120,
+        waste_tolerance_bps: int = 1000,
+        excess_units_margin_bps: int = 1000,
     ):
         self.private_key = verifier_private_key
         self.account = Account.from_key(verifier_private_key)
@@ -33,6 +36,10 @@ class VerifierService:
         self.chain = chain_client
         self.approval_ttl_seconds = approval_ttl_seconds
         self.is_active = True  # admin kill switch toggle
+        self.waste_guard = WasteGuard(
+            waste_tolerance_bps=waste_tolerance_bps,
+            excess_units_margin_bps=excess_units_margin_bps,
+        )
 
     def kill(self):
         """Emergency kill switch: stops issuing new approvals."""
@@ -50,6 +57,8 @@ class VerifierService:
         claimed_total: int,
         agent_address: str,
         quotes_metadata: Optional[Dict[str, Dict[str, Any]]] = None,
+        requirements: Optional[Dict[str, int]] = None,
+        eligible_quotes: Optional[List[Dict[str, Any]]] = None,
     ) -> Tuple[bool, Optional[Dict[str, Any]], Optional[str], Dict[str, Any]]:
         """Run all verification checks.
 
@@ -220,6 +229,23 @@ class VerifierService:
             decision_record["reasonCode"] = "DAILY_CAP_EXCEEDED"
             decision_record["detail"] = f"Daily spend {spent_today + calculated_total} exceeds dailyCap {m_daily_cap}"
             return False, None, None, decision_record
+
+        # 3.5. Waste Guard & Coverage Check (if requirements provided)
+        if requirements:
+            guard_quotes = eligible_quotes or (list(quotes_metadata.values()) if quotes_metadata else [])
+            passed, reason_code, detail, bench_meta = self.waste_guard.evaluate_basket(
+                candidate_lines=lines,
+                quotes_by_id=quotes_metadata or {},
+                eligible_quotes=guard_quotes,
+                requirements=requirements,
+                max_budget=min(m_per_purchase_cap, m_total_budget - spent_total, m_daily_cap - spent_today),
+            )
+            decision_record["wasteGuard"] = bench_meta
+            if not passed:
+                decision_record["status"] = "REJECTED"
+                decision_record["reasonCode"] = reason_code
+                decision_record["detail"] = detail
+                return False, None, None, decision_record
 
         # 4. Generate Approval
         basket_hash_bytes = compute_basket_hash(lines)
