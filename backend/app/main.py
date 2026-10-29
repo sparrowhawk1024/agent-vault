@@ -314,16 +314,18 @@ def get_dashboard_overview():
     active_mandate = None
     latest_mandate_id = None
     for entry in reversed(global_audit_log.entries):
-        if entry.get("eventType") == "MANDATE_CREATED" and "mandateId" in entry.get("payload", {}):
+        if entry.get("eventType") in ("MANDATE_CREATED", "MANDATE_BOOTSTRAPPED") and "mandateId" in entry.get("payload", {}):
             mid = entry["payload"]["mandateId"]
             if chain_connected and chain:
                 m = chain.get_mandate(mid)
-                if m and not m["revoked"]:
+                remaining = (m.get("totalBudget", 0) - m.get("spentTotal", 0)) if m else 0
+                # Ensure active mandate has sufficient budget and purchase cap for live operations (>= $30 USDC)
+                if m and not m.get("revoked") and remaining >= 30_000_000 and m.get("perPurchaseCap", 0) >= 30_000_000:
                     active_mandate = m
                     latest_mandate_id = mid
                     break
 
-    # If no active mandate exists on the active chain, initialize baseline mandate
+    # If no workable active mandate exists on the active chain, initialize baseline mandate ($100 budget, $50 cap)
     if active_mandate is None and chain_connected and chain:
         latest_mandate_id = ensure_active_mandate(chain)
         if latest_mandate_id:
@@ -495,6 +497,21 @@ def dev_sign_mandate(req: Dict[str, Any]):
         "digest": to_hex(digest),
         "signer": OWNER_ADDR,
         "notice": "DEMO ONLY: Signed by local development key"
+    }
+
+
+@app.post("/mandates/bootstrap")
+def bootstrap_fresh_mandate():
+    """Deploy fresh on-chain mandate ($100 budget, $50 purchase cap) for live orders."""
+    chain = get_chain()
+    mid = ensure_active_mandate(chain)
+    if not mid:
+        raise HTTPException(status_code=500, detail="Failed to bootstrap on-chain mandate.")
+    m = chain.get_mandate(mid)
+    return {
+        "status": "BOOTSTRAPPED",
+        "mandateId": mid,
+        "mandate": m,
     }
 
 
@@ -788,6 +805,27 @@ def run_agent_pipeline(req: AgentRunRequest):
         claimed_total = solv_data["totalCost"]
         optimizer_name = solv_data["solverName"]
         savings_pct = bench["summary"]["savingsVsVendorRulePct"]
+
+        if not lines:
+            decision = {
+                "status": "REJECTED",
+                "reasonCode": "INSUFFICIENT_MANDATE_CAP",
+                "detail": (
+                    f"Optimizer could not satisfy requirement {req.requirementId} within mandate per-purchase cap "
+                    f"(${max_budget/1e6:.2f} USDC available vs ~$22.59 USDC needed). "
+                    f"Please deploy or select a mandate with perPurchaseCap >= $30.00 USDC."
+                ),
+                "checks": {"budgetFeasible": False, "requiredMicroUsdc": 22_590_000, "availableMicroUsdc": max_budget},
+            }
+            return {
+                "approved": False,
+                "executed": False,
+                "decision": decision,
+                "lines": [],
+                "claimedTotal": 0,
+                "optimizer": optimizer_name,
+                "savingsVsVendorRulePct": 0.0,
+            }
 
     # 2. Verifier call
     verifier = get_verifier()

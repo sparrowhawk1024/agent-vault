@@ -352,6 +352,11 @@ export const api = {
     return res.json();
   },
 
+  bootstrapMandate: async (): Promise<{ status: string; mandateId: string; mandate: any }> => {
+    const res = await fetch(`${API_BASE}/mandates/bootstrap`, { method: "POST" });
+    return res.json();
+  },
+
   createMandate: async (mandate: any, ownerSignature: string) => {
     const res = await fetch(`${API_BASE}/mandates`, {
       method: "POST",

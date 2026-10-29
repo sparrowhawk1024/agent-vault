@@ -218,9 +218,28 @@ export const AgentRunView: React.FC<Props> = ({ activeMandateId, onRefreshOvervi
                 <h3 style={{ fontSize: '1.15rem', fontWeight: 700 }}>
                   {result.approved ? 'Approved by Verifier & Settled On-Chain' : 'Rejected by Verifier — Security Boundary Enforced'}
                 </h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
                   Reason Code: <span className="hash-tag" style={{ color: result.approved ? '#6ee7b7' : '#fda4af' }}>{result.decision?.reasonCode}</span> • Detail: {result.decision?.detail || 'All checks passed'}
                 </p>
+                {!result.approved && (
+                  <div style={{ marginTop: '8px' }}>
+                    <button
+                      className="btn btn-sm btn-primary"
+                      onClick={async () => {
+                        try {
+                          await api.bootstrapMandate();
+                          onRefreshOverview?.();
+                          await handleExecutePipeline(true);
+                        } catch (e: any) {
+                          setError(e.message);
+                        }
+                      }}
+                      style={{ fontSize: '0.75rem', padding: '4px 10px' }}
+                    >
+                      Deploy Fresh $100 Mandate & Retry
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
             <div>

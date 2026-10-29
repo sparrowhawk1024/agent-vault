@@ -2,6 +2,12 @@
 
 - **Current Phase**: Full End-to-End System Integration & Real-Time Interconnection — **GATE PASSED & EVIDENCE FROZEN**
 - **Done**:
+  - Resolved `INVALID_REQUEST: Basket lines count must be between 1 and 16` Boundary Rejection:
+    - Root cause: Occurred when executing an Agent Procurement run against an old or low-cap mandate (`perPurchaseCap: $15.00 USDC`). Since fulfilling `req-seed-01` requires ~$22.59 to $23.03 USDC, the optimizer reported infeasible budget and returned 0 selected quotes (`lines = []`). The pipeline previously passed `lines = []` directly to the Verifier, which triggered the structural check `Basket lines count must be between 1 and 16`.
+    - Fix 1 (Active Mandate Qualification): Updated `get_dashboard_overview()` to ensure active mandate selection requires `perPurchaseCap >= 30_000_000` and `remainingBudget >= 30_000_000`. If an old low-cap mandate is encountered, it automatically bootstraps a fresh $100 USDC mandate with a $50 purchase cap.
+    - Fix 2 (Graceful Infeasible Budget Reporting): Added explicit pre-validation in `/agent/run`: if the optimizer cannot find a feasible basket within `max_budget`, it returns `INSUFFICIENT_MANDATE_CAP` with human-readable guidance explaining the exact deficit instead of an uninformative structural rejection.
+    - Fix 3 (UI Recovery Action): Added `bootstrapMandate` API and a 1-click "Deploy Fresh $100 Mandate & Retry" button in `AgentRunView.tsx`.
+    - Verified live execution: Agent run executed on-chain with TxHash `d27a51a9...` for $22.92 USDC; x402 refill settled on-chain for $5.00 (350 units) with TxHash `f4ed0370...`.
   - Implemented Fixed Base Top-Up Tiers ($5 for 350 credits, $10, $20, $40, $50):
     - Configured standard fixed base tiers in `backend/app/x402/service.py`:
       - **$5 Tier (Cheapest Base / Starter)**: exactly 350 credits ($5.00 USDC = 5,000,000 µUSDC)
