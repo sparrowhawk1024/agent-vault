@@ -11,6 +11,7 @@ import { DashboardOverviewBanner } from './components/DashboardOverviewBanner';
 import { GuidedDemoModal } from './components/GuidedDemoModal';
 import { ArchitecturePolicyModal } from './components/ArchitecturePolicyModal';
 import { 
+  LayoutDashboard,
   Shield, 
   Cpu, 
   CreditCard, 
@@ -25,7 +26,7 @@ import {
 } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'mandate' | 'agent' | 'payments' | 'autorefill' | 'security' | 'qpiai' | 'audit'>('mandate');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'mandate' | 'agent' | 'payments' | 'autorefill' | 'security' | 'qpiai' | 'audit'>('dashboard');
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
   const [loadingOverview, setLoadingOverview] = useState<boolean>(false);
@@ -73,11 +74,20 @@ export const App: React.FC = () => {
       <header className="top-nav">
         {/* Brand Section: Hamburger + № Circular Logo + Title */}
         <div className="brand-section">
-          <div className="menu-pill-btn" title="Toggle Navigation Menu">
-            <Menu size={18} />
+          <div 
+            className="menu-pill-btn" 
+            onClick={() => setActiveTab('dashboard')} 
+            title="Dashboard Overview"
+          >
+            <Menu size={17} />
           </div>
 
-          <div className="brand-logo" title="AgentVault Autonomous Policy Vault">
+          <div 
+            className="brand-logo" 
+            onClick={() => setActiveTab('dashboard')} 
+            style={{ cursor: 'pointer' }}
+            title="AgentVault Policy Vault"
+          >
             №
           </div>
 
@@ -86,14 +96,22 @@ export const App: React.FC = () => {
               <span className="brand-title">Financial Dashboard</span>
               <span className="brand-badge">WEB3-05</span>
             </div>
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', letterSpacing: '0.02em', marginTop: '-2px' }}>
-              AgentVault Policy-Bound Autonomous Procurement
+            <div style={{ fontSize: '0.67rem', color: 'var(--text-dim)', letterSpacing: '0.01em', marginTop: '-2px' }}>
+              CEO Assistant • Policy-Bound Autonomous Procurement
             </div>
           </div>
         </div>
 
-        {/* 7 View Navigation Pill Tabs */}
+        {/* View Navigation Pill Tabs */}
         <nav className="nav-tabs">
+          <button 
+            className={`nav-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
+            onClick={() => setActiveTab('dashboard')}
+          >
+            <LayoutDashboard size={14} />
+            Dashboard
+          </button>
+
           <button 
             className={`nav-tab ${activeTab === 'mandate' ? 'active' : ''}`}
             onClick={() => setActiveTab('mandate')}
@@ -115,7 +133,7 @@ export const App: React.FC = () => {
             onClick={() => setActiveTab('payments')}
           >
             <CreditCard size={14} />
-            Payments & Proofs
+            Payments
           </button>
 
           <button 
@@ -123,7 +141,7 @@ export const App: React.FC = () => {
             onClick={() => setActiveTab('autorefill')}
           >
             <Bot size={14} />
-            Auto-Refill (x402)
+            x402 Refill
           </button>
 
           <button 
@@ -131,7 +149,7 @@ export const App: React.FC = () => {
             onClick={() => setActiveTab('security')}
           >
             <ShieldAlert size={14} />
-            Security Console
+            Security
           </button>
 
           <button 
@@ -139,7 +157,7 @@ export const App: React.FC = () => {
             onClick={() => setActiveTab('qpiai')}
           >
             <Atom size={14} />
-            QpiAI Evidence
+            QpiAI
           </button>
 
           <button 
@@ -147,7 +165,7 @@ export const App: React.FC = () => {
             onClick={() => setActiveTab('audit')}
           >
             <Link2 size={14} />
-            Audit Log
+            Audit
           </button>
         </nav>
 
@@ -155,17 +173,22 @@ export const App: React.FC = () => {
         <div className="header-actions">
           {/* Profile Pill matching screenshot */}
           <div className="profile-pill">
-            <div className="icon-circle-btn" style={{ width: '24px', height: '24px', marginRight: '-2px' }}>
-              <Plus size={12} />
+            <div 
+              className="icon-circle-btn" 
+              onClick={() => setShowDemoModal(true)}
+              style={{ width: '22px', height: '22px', marginRight: '-2px' }}
+              title="Launch Guided Demo"
+            >
+              <Plus size={11} />
             </div>
             <div className="avatar-circle">
               DT
             </div>
             <div style={{ lineHeight: 1.1 }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-main)' }}>
+              <div style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-main)' }}>
                 Dwayne Tatum
               </div>
-              <div style={{ fontSize: '0.64rem', color: 'var(--text-dim)' }}>
+              <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>
                 CEO Assistant
               </div>
             </div>
@@ -173,13 +196,17 @@ export const App: React.FC = () => {
 
           {/* Search Pill Bar matching screenshot */}
           <div className="search-pill-bar" onClick={() => setShowPolicyModal(true)}>
-            <Search size={14} color="var(--text-dim)" />
+            <Search size={13} color="var(--text-dim)" />
             <span>Start searching here...</span>
           </div>
 
           {/* Circular Mic Button matching screenshot */}
-          <div className="icon-circle-btn" onClick={() => setShowPolicyModal(true)} title="Architecture & Policy Documentation">
-            <Mic size={15} />
+          <div 
+            className="icon-circle-btn" 
+            onClick={() => setShowPolicyModal(true)} 
+            title="Policy & Architecture Documentation"
+          >
+            <Mic size={14} />
           </div>
 
           {/* Status Indicators Pill */}
@@ -192,15 +219,18 @@ export const App: React.FC = () => {
 
       {/* Main Viewport */}
       <main className="main-viewport">
-        {/* Real-Time Unified Dashboard Overview Bento Grid Banner */}
-        <DashboardOverviewBanner
-          overview={overview}
-          loading={loadingOverview}
-          onRefresh={fetchOverview}
-          onOpenDemo={() => setShowDemoModal(true)}
-        />
+        {/* Main Bento Grid Dashboard View (When 'dashboard' is active) */}
+        {activeTab === 'dashboard' && (
+          <DashboardOverviewBanner
+            overview={overview}
+            loading={loadingOverview}
+            onRefresh={fetchOverview}
+            onOpenDemo={() => setShowDemoModal(true)}
+            onNavigateTab={(t) => setActiveTab(t)}
+          />
+        )}
 
-        {/* Active Tab View */}
+        {/* Dedicated Tab Views (Without any duplicate banner above them) */}
         {activeTab === 'mandate' && (
           <MandateView 
             activeMandateId={activeMandateId} 
