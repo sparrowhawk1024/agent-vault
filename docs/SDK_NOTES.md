@@ -66,3 +66,27 @@
     `Server response: {'error': 'Failed to create job: an active subscription is required to run jobs'}`
   - **Engineering Conclusion**: Remote cloud dispatch requires an active cloud subscription with compute credit allocations. Therefore, executing the genuine variational QAOA circuit on the local `qpiai_quantum.simulator.StatevectorSimulator` provides the authentic, deterministic, and fully verifiable quantum computing demonstration for this hackathon build.
 
+## 6. QpiAI Opt Platform API Architecture & Submission Schema Investigation
+- **Target Endpoint**: `https://opt-server.qpiai.tech/api`
+- **Authentication**: Dual header support verified (`Authorization: Bearer <key>` and `X-Secret-Token: <key>`).
+- **Platform Problem Creation (`POST /api/problems/create`)**:
+  - Supported methods: `'QUBO'`, `'HUBO'`, `'MILP'`, `'maximumCut'`.
+  - **MILP Schema Requirement**:
+    - Request payload: `{"name": str, "method": "MILP", "milp_model_storage_id": str, "solver_config": dict}`
+    - Testing in-memory model strings, LP text, or matrices directly in `create_problem` returned HTTP 400:
+      `{"error":"milp_model_storage_id is required for MILP"}`
+    - **Conclusion**: There is no in-memory or JSON-embedded problem submission path for MILP on the platform API. MILP strictly requires an uploaded model file reference from `POST /api/storage/upload`.
+  - **QUBO / HUBO In-Memory Schema**:
+    - QUBO payload: `{"name": str, "method": "QUBO", "qubo_dict": dict, "num_variables": int, "max_evaluations": int}` -> HTTP 201 Created.
+    - HUBO payload: `{"name": str, "method": "HUBO", "polynomial_dict": dict, "num_variables": int, "sense": "MIN"|"MAX"}` -> HTTP 201 Created.
+- **Platform Job Submission (`POST /api/jobs/opt`)**:
+  - Submitting jobs for created problems via `client.submit_job(problem_id, method=...)` returns:
+    `APIError: Failed to create opt job: your organization does not have access to '<Solver>' compute resource. Please contact your administrator to allocate quota for this resource`
+- **Storage Upload Endpoint (`POST /api/storage/upload`)**:
+  - Uploading `.lp` model files returns HTTP 400:
+    `APIError: no active storage quota found for organization`
+- **Architectural Conclusion**:
+  - Hosted platform execution on QpiAI Opt fundamentally requires organization storage quota (for MILP) and active subscription resource allocations (for compute).
+  - Local execution via `qpiai_opt.opt_solvers.solve(model, mode="local", client=client)` operates authentically using the underlying HiGHS MILP engine and provides deterministic local optimization.
+
+

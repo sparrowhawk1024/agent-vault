@@ -37,7 +37,7 @@ def test_ortools_solver_optimal(standard_problem):
 
     assert result.feasible is True
     assert result.status == "OPTIMAL"
-    assert result.execution_mode == "CLASSICAL_FALLBACK"
+    assert result.execution_mode == "LOCAL_OR_TOOLS"
     assert len(result.selected_quotes) <= 16
     assert result.total_cost > 0
 
@@ -49,8 +49,9 @@ def test_ortools_solver_optimal(standard_problem):
         assert result.coverage[cat_id] >= req
 
 
-def test_qpiai_opt_solver_fallback_behavior(standard_problem):
-    # QPIAI_OPT_API_KEY is not set in test environment -> must fall back gracefully to CLASSICAL_FALLBACK
+def test_qpiai_opt_solver_fallback_behavior(standard_problem, monkeypatch):
+    # 1. Unset key -> must fall back gracefully to CLASSICAL_FALLBACK
+    monkeypatch.delenv("QPIAI_OPT_API_KEY", raising=False)
     solver = QpiAIOptSolver()
     result = solver.solve(standard_problem)
 
@@ -59,6 +60,15 @@ def test_qpiai_opt_solver_fallback_behavior(standard_problem):
     assert "qpiai-opt-milp" in result.solver_name
     assert result.error_detail is not None
     assert "QPIAI_OPT_API_KEY" in result.error_detail or "client=Client" in result.error_detail
+
+    # 2. Invalid/unreachable key -> must classify error and fall back cleanly
+    monkeypatch.setenv("QPIAI_OPT_API_KEY", "invalid-test-token-1234")
+    solver_invalid = QpiAIOptSolver()
+    result_invalid = solver_invalid.solve(standard_problem)
+
+    assert result_invalid.feasible is True
+    assert result_invalid.execution_mode == "CLASSICAL_FALLBACK"
+    assert "AUTHENTICATION_FAILURE" in result_invalid.error_detail or "AuthenticationError" in result_invalid.error_detail
 
 
 def test_baseline_solvers_and_calibration(standard_problem):

@@ -564,4 +564,390 @@ contract PolicyVaultTest is Test {
 
         vm.stopPrank();
     }
+
+    // --- ADDITIONAL SECTION 7.7 / 7.8 SECURITY & EDGE CASE TESTS ---
+
+    function test_RevertWhen_CompromisedVerifierSignsPolicyViolatingBasket() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        // perPurchaseCap is 40 USDC (40_000_000). Rogue/compromised verifier signs for 50 USDC.
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256("q-violate"), vendor1Id, catAi, keccak256("sku-ai"), 10, 50_000_000);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-violate"), bHash, 50_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+        // Valid signature from real verifier key
+        bytes memory sig = _signApproval(a, verifierPk);
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.PerPurchaseCapExceeded.selector);
+        vault.executeBasket(mandateId, a, lines, sig);
+    }
+
+    function test_RevertWhen_TotalMismatch() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256("q-mismatch"), vendor1Id, catAi, keccak256("sku-ai"), 10, 1_000_000);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        // Approval total states 2_000_000 but line total is 1_000_000
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-mismatch"), bHash, 2_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig = _signApproval(a, verifierPk);
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.TotalMismatch.selector);
+        vault.executeBasket(mandateId, a, lines, sig);
+    }
+
+    function test_RevertWhen_EmptyBasket() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](0);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-empty"), bHash, 0, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig = _signApproval(a, verifierPk);
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.EmptyBasket.selector);
+        vault.executeBasket(mandateId, a, lines, sig);
+    }
+
+    function test_RevertWhen_TooManyLines() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        // Max is 16 lines; create 17 lines
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](17);
+        for (uint256 i = 0; i < 17; i++) {
+            lines[i] = PolicyVault.BasketLine(
+                keccak256(abi.encodePacked("line-quote", i)),
+                vendor1Id,
+                catAi,
+                keccak256("sku-ai"),
+                1,
+                100_000
+            );
+        }
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-too-many"), bHash, 1_700_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig = _signApproval(a, verifierPk);
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.TooManyLines.selector);
+        vault.executeBasket(mandateId, a, lines, sig);
+    }
+
+    function test_RevertWhen_MandateExpired() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256("q-exp"), vendor1Id, catAi, keccak256("sku-ai"), 10, 1_000_000);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-exp"), bHash, 1_000_000, uint64(block.timestamp + 31 days + 120), vault.verifierEpoch());
+        bytes memory sig = _signApproval(a, verifierPk);
+
+        // Warp past mandate expiry (m.expiry is block.timestamp + 30 days)
+        vm.warp(block.timestamp + 31 days);
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.MandateExpired.selector);
+        vault.executeBasket(mandateId, a, lines, sig);
+    }
+
+    function test_RevertWhen_MandateNotYetValid() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        m.validFrom = uint64(block.timestamp + 5 days);
+        m.expiry = uint64(block.timestamp + 35 days);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256("q-early"), vendor1Id, catAi, keccak256("sku-ai"), 10, 1_000_000);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-early"), bHash, 1_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig = _signApproval(a, verifierPk);
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.MandateNotYetValid.selector);
+        vault.executeBasket(mandateId, a, lines, sig);
+    }
+
+    function test_RevertWhen_SignatureForDifferentChainIdOrContract() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256("q-crosschain"), vendor1Id, catAi, keccak256("sku-ai"), 10, 1_000_000);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-crosschain"), bHash, 1_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+
+        // Construct fake domain with different chainId (999999)
+        bytes32 fakeDomain = keccak256(
+            abi.encode(
+                keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"),
+                keccak256(bytes("AgentVault")),
+                keccak256(bytes("1")),
+                uint256(999999),
+                address(vault)
+            )
+        );
+        bytes32 digest = keccak256(abi.encodePacked("\x19\x01", fakeDomain, vault.hashApprovalStruct(a)));
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(verifierPk, digest);
+        bytes memory sig = abi.encodePacked(r, s, v);
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.BadVerifierSignature.selector);
+        vault.executeBasket(mandateId, a, lines, sig);
+    }
+
+    function test_RevertWhen_VendorInactive() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        // Owner marks vendor1 inactive
+        vm.prank(owner);
+        vault.setVendorActive(vendor1Id, false);
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256("q-inactive"), vendor1Id, catAi, keccak256("sku-ai"), 10, 1_000_000);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-inactive"), bHash, 1_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig = _signApproval(a, verifierPk);
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.VendorNotRegistered.selector);
+        vault.executeBasket(mandateId, a, lines, sig);
+    }
+
+    function test_RevertWhen_SetVerifierInvalidatesOutstandingApproval() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256("q-setver"), vendor1Id, catAi, keccak256("sku-ai"), 10, 1_000_000);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-setver"), bHash, 1_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig = _signApproval(a, verifierPk);
+
+        // Owner sets new verifier, which automatically bumps verifierEpoch
+        address newVerifier = address(0xCAFEBABE);
+        vm.prank(owner);
+        vault.setVerifier(newVerifier);
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.StaleVerifierEpoch.selector);
+        vault.executeBasket(mandateId, a, lines, sig);
+    }
+
+    function test_RevertWhen_AggregateBudgetExceeded() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        // First purchase: $35 USDC on Day 1
+        PolicyVault.BasketLine[] memory lines1 = new PolicyVault.BasketLine[](1);
+        lines1[0] = PolicyVault.BasketLine(keccak256("q-b1"), vendor1Id, catAi, keccak256("sku1"), 10, 35_000_000);
+        bytes32 bHash1 = vault.computeBasketHash(lines1);
+        PolicyVault.Approval memory a1 = PolicyVault.Approval(mandateId, keccak256("app-b1"), bHash1, 35_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig1 = _signApproval(a1, verifierPk);
+        vm.prank(agent);
+        vault.executeBasket(mandateId, a1, lines1, sig1);
+
+        // Warp to Day 2, purchase $35 USDC (cumulative $70 USDC)
+        uint256 timeDay2 = block.timestamp + 1 days;
+        vm.warp(timeDay2);
+        PolicyVault.BasketLine[] memory lines2 = new PolicyVault.BasketLine[](1);
+        lines2[0] = PolicyVault.BasketLine(keccak256("q-b2"), vendor1Id, catAi, keccak256("sku2"), 10, 35_000_000);
+        bytes32 bHash2 = vault.computeBasketHash(lines2);
+        PolicyVault.Approval memory a2 = PolicyVault.Approval(mandateId, keccak256("app-b2"), bHash2, 35_000_000, uint64(timeDay2 + 120), vault.verifierEpoch());
+        bytes memory sig2 = _signApproval(a2, verifierPk);
+        vm.prank(agent);
+        vault.executeBasket(mandateId, a2, lines2, sig2);
+
+        // Warp to Day 3, attempt $35 USDC (70 + 35 = 105 > 100 totalBudget -> BudgetExceeded)
+        uint256 timeDay3 = timeDay2 + 1 days;
+        vm.warp(timeDay3);
+        PolicyVault.BasketLine[] memory lines3 = new PolicyVault.BasketLine[](1);
+        lines3[0] = PolicyVault.BasketLine(keccak256("q-b3"), vendor1Id, catAi, keccak256("sku3"), 10, 35_000_000);
+        bytes32 bHash3 = vault.computeBasketHash(lines3);
+        PolicyVault.Approval memory a3 = PolicyVault.Approval(mandateId, keccak256("app-b3"), bHash3, 35_000_000, uint64(timeDay3 + 120), vault.verifierEpoch());
+        bytes memory sig3 = _signApproval(a3, verifierPk);
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.BudgetExceeded.selector);
+        vault.executeBasket(mandateId, a3, lines3, sig3);
+    }
+
+    function test_RevertWhen_VendorRegisteredButNotAllowlisted() public {
+        bytes32 vendor3Id = keccak256("vendor3");
+        vm.prank(owner);
+        vault.registerVendor(vendor3Id, address(0x301), address(0x302));
+
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256("q-v3"), vendor3Id, catAi, keccak256("sku"), 1, 1_000_000);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-v3"), bHash, 1_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig = _signApproval(a, verifierPk);
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.VendorNotAllowed.selector);
+        vault.executeBasket(mandateId, a, lines, sig);
+    }
+
+    function test_RevertWhen_QuoteAlreadyUsedAcrossBaskets() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        bytes32 quoteId = keccak256("shared-quote-id");
+
+        // Basket 1 uses quoteId
+        PolicyVault.BasketLine[] memory lines1 = new PolicyVault.BasketLine[](1);
+        lines1[0] = PolicyVault.BasketLine(quoteId, vendor1Id, catAi, keccak256("sku1"), 1, 1_000_000);
+        bytes32 bHash1 = vault.computeBasketHash(lines1);
+        PolicyVault.Approval memory a1 = PolicyVault.Approval(mandateId, keccak256("app-q1"), bHash1, 1_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig1 = _signApproval(a1, verifierPk);
+        vm.prank(agent);
+        vault.executeBasket(mandateId, a1, lines1, sig1);
+
+        // Basket 2 reuses the same quoteId
+        PolicyVault.BasketLine[] memory lines2 = new PolicyVault.BasketLine[](1);
+        lines2[0] = PolicyVault.BasketLine(quoteId, vendor1Id, catAi, keccak256("sku2"), 1, 1_000_000);
+        bytes32 bHash2 = vault.computeBasketHash(lines2);
+        PolicyVault.Approval memory a2 = PolicyVault.Approval(mandateId, keccak256("app-q2"), bHash2, 1_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig2 = _signApproval(a2, verifierPk);
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.QuoteAlreadyUsed.selector);
+        vault.executeBasket(mandateId, a2, lines2, sig2);
+    }
+
+    function test_RevertWhen_EmptyVerifierSignature() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256("q-empty-sig"), vendor1Id, catAi, keccak256("sku"), 1, 1_000_000);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-empty-sig"), bHash, 1_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.BadVerifierSignature.selector);
+        vault.executeBasket(mandateId, a, lines, "");
+    }
+
+    function test_RevertWhen_ShortVerifierSignature() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        bytes32 mandateId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256("q-short-sig"), vendor1Id, catAi, keccak256("sku"), 1, 1_000_000);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mandateId, keccak256("app-short-sig"), bHash, 1_000_000, uint64(block.timestamp + 120), vault.verifierEpoch());
+
+        vm.prank(agent);
+        vm.expectRevert(PolicyVault.BadVerifierSignature.selector);
+        vault.executeBasket(mandateId, a, lines, hex"12345678");
+    }
+
+    function test_RevertWhen_TokenMismatch() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        m.token = address(0xDEADBEEF);
+        bytes memory sig = _signMandate(m, ownerPk);
+        vm.expectRevert(PolicyVault.TokenMismatch.selector);
+        vault.createMandate(m, sig);
+    }
+
+    function test_RevertWhen_NonceReused() public {
+        PolicyVault.Mandate memory m1 = _buildStandardMandate(42);
+        vault.createMandate(m1, _signMandate(m1, ownerPk));
+
+        PolicyVault.Mandate memory m2 = _buildStandardMandate(42);
+        m2.totalBudget = 50_000_000;
+        bytes memory sig2 = _signMandate(m2, ownerPk);
+        vm.expectRevert(PolicyVault.NonceUsed.selector);
+        vault.createMandate(m2, sig2);
+    }
+
+    function test_RevertWhen_ZeroBudget() public {
+        PolicyVault.Mandate memory m = _buildStandardMandate(0);
+        m.totalBudget = 0;
+        bytes memory sig = _signMandate(m, ownerPk);
+        vm.expectRevert(PolicyVault.InvalidMandate.selector);
+        vault.createMandate(m, sig);
+    }
+
+    function test_RevertWhen_EmptyAllowlist() public {
+        PolicyVault.Mandate memory m1 = _buildStandardMandate(0);
+        m1.allowedVendorIds = new bytes32[](0);
+        bytes memory sig1 = _signMandate(m1, ownerPk);
+        vm.expectRevert(PolicyVault.InvalidMandate.selector);
+        vault.createMandate(m1, sig1);
+
+        PolicyVault.Mandate memory m2 = _buildStandardMandate(1);
+        m2.allowedCategoryIds = new bytes32[](0);
+        bytes memory sig2 = _signMandate(m2, ownerPk);
+        vm.expectRevert(PolicyVault.InvalidMandate.selector);
+        vault.createMandate(m2, sig2);
+    }
+
+    function testFuzz_RandomCapsAndBaskets(
+        uint256 rawBudget,
+        uint256 rawPerCap,
+        uint256 rawDailyCap,
+        uint256 rawAmount
+    ) public {
+        uint256 budget = bound(rawBudget, 1_000_000, 100_000_000);
+        uint256 perCap = bound(rawPerCap, 1, budget);
+        uint256 dailyCap = bound(rawDailyCap, 1, budget);
+        uint256 amount = bound(rawAmount, 1, budget * 2);
+
+        usdc.mint(owner, budget);
+        vm.prank(owner);
+        usdc.approve(address(vault), type(uint256).max);
+
+        bytes32[] memory vList = new bytes32[](1);
+        vList[0] = vendor1Id;
+        bytes32[] memory cList = new bytes32[](1);
+        cList[0] = catAi;
+
+        PolicyVault.Mandate memory m = PolicyVault.Mandate({
+            owner: owner,
+            agent: agent,
+            token: address(usdc),
+            totalBudget: budget,
+            perPurchaseCap: perCap,
+            dailyCap: dailyCap,
+            allowedVendorIds: vList,
+            allowedCategoryIds: cList,
+            validFrom: uint64(block.timestamp),
+            expiry: uint64(block.timestamp + 30 days),
+            nonce: 99999 + (budget % 100000)
+        });
+
+        bytes32 mId = vault.createMandate(m, _signMandate(m, ownerPk));
+
+        PolicyVault.BasketLine[] memory lines = new PolicyVault.BasketLine[](1);
+        lines[0] = PolicyVault.BasketLine(keccak256(abi.encodePacked("fuzz-q", budget, amount)), vendor1Id, catAi, keccak256("sku"), 1, amount);
+        bytes32 bHash = vault.computeBasketHash(lines);
+        PolicyVault.Approval memory a = PolicyVault.Approval(mId, keccak256(abi.encodePacked("fuzz-app", budget, amount)), bHash, amount, uint64(block.timestamp + 120), vault.verifierEpoch());
+        bytes memory sig = _signApproval(a, verifierPk);
+
+        vm.prank(agent);
+        if (amount > perCap) {
+            vm.expectRevert(PolicyVault.PerPurchaseCapExceeded.selector);
+            vault.executeBasket(mId, a, lines, sig);
+        } else if (amount > budget) {
+            vm.expectRevert(PolicyVault.BudgetExceeded.selector);
+            vault.executeBasket(mId, a, lines, sig);
+        } else if (amount > dailyCap) {
+            vm.expectRevert(PolicyVault.DailyCapExceeded.selector);
+            vault.executeBasket(mId, a, lines, sig);
+        } else {
+            vault.executeBasket(mId, a, lines, sig);
+            assertEq(vault.spentTotal(mId), amount);
+            assertEq(vault.spentToday(mId), amount);
+        }
+    }
 }

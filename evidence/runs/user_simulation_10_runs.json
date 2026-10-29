@@ -1,0 +1,544 @@
+{
+  "summary": {
+    "totalSessions": 10,
+    "totalChatTurns": 22,
+    "averageChatLatencyMs": 16.18,
+    "lowBalanceTriggerSuccessRatePct": 100.0,
+    "x402PaymentSuccessRatePct": 100.0,
+    "averageX402SettlementDurationMs": 77.06,
+    "totalUsdcSettled": 26.3,
+    "totalUnitsCredited": 17500,
+    "adversarialVectorsIntercepted": 3,
+    "adversarialSuccessRate": 100.0
+  },
+  "sessions": [
+    {
+      "sessionIndex": 1,
+      "persona": {
+        "id": "U01",
+        "name": "DevOps Cloud Engineer",
+        "profile": "Automates multi-cloud resource purchasing with focus on quota monitoring.",
+        "prompts": [
+          "Optimize procurement across AWS, GCP and Azure API calls",
+          "Calculate storage redundancy across 3 distributed regions",
+          "Evaluate spot instance reliability and pricing volatility"
+        ],
+        "workload_intensity": "moderate",
+        "preferred_package": "pack-tf-2k",
+        "adversarial_test": null
+      },
+      "chatInteractions": [
+        {
+          "prompt": "Optimize procurement across AWS, GCP and Azure API calls",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nI analyzed your procurement requirements across API Call...",
+          "tokensConsumed": 315,
+          "latencyMs": 15.33
+        },
+        {
+          "prompt": "Calculate storage redundancy across 3 distributed regions",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Calculate storage redu...",
+          "tokensConsumed": 285,
+          "latencyMs": 28.66
+        },
+        {
+          "prompt": "Evaluate spot instance reliability and pricing volatility",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Evaluate spot instance...",
+          "tokensConsumed": 285,
+          "latencyMs": 26.14
+        }
+      ],
+      "postRefillChat": null,
+      "totalTokensConsumed": 4400,
+      "lowBalanceTriggered": true,
+      "unitsAtTrigger": 600,
+      "pctAtTrigger": 12.0,
+      "selectedPackage": "pack-tf-2k",
+      "adversarialIntercepted": false,
+      "x402Settlement": {
+        "success": true,
+        "stateSteps": 6,
+        "network": "eip155:84532",
+        "amountUsdc": 3.0,
+        "txHash": "0x494ee900abf0c40ef3243a88faf1419e0da6c63b578ad8317b43dac2e638a6cb",
+        "unitsGranted": 2000,
+        "executionDurationMs": 105.9
+      },
+      "finalBalance": {
+        "remainingUnits": 2600,
+        "totalAllowance": 7000,
+        "percentage": 37.1
+      },
+      "totalSessionDurationMs": 454.4
+    },
+    {
+      "sessionIndex": 2,
+      "persona": {
+        "id": "U02",
+        "name": "Smart Contract Auditor",
+        "profile": "Security-focused tester verifying spending limits and re-entrancy guards.",
+        "prompts": [
+          "Inspect PolicyVault spending limits and daily caps",
+          "Verify EIP-712 signature verification gas efficiency",
+          "Check non-reentrant modifier and re-entrancy attack surface"
+        ],
+        "workload_intensity": "moderate",
+        "preferred_package": "pack-tf-2k",
+        "adversarial_test": null
+      },
+      "chatInteractions": [
+        {
+          "prompt": "Inspect PolicyVault spending limits and daily caps",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nYour PolicyVault mandate enforces cryptographic spending...",
+          "tokensConsumed": 285,
+          "latencyMs": 15.85
+        },
+        {
+          "prompt": "Verify EIP-712 signature verification gas efficiency",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Verify EIP-712 signatu...",
+          "tokensConsumed": 270,
+          "latencyMs": 12.68
+        },
+        {
+          "prompt": "Check non-reentrant modifier and re-entrancy attack surface",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Check non-reentrant mo...",
+          "tokensConsumed": 285,
+          "latencyMs": 28.64
+        }
+      ],
+      "postRefillChat": null,
+      "totalTokensConsumed": 4400,
+      "lowBalanceTriggered": true,
+      "unitsAtTrigger": 600,
+      "pctAtTrigger": 12.0,
+      "selectedPackage": "pack-tf-2k",
+      "adversarialIntercepted": false,
+      "x402Settlement": {
+        "success": true,
+        "stateSteps": 6,
+        "network": "eip155:84532",
+        "amountUsdc": 3.0,
+        "txHash": "0x336f42f5392481929d7363c3ba90bb69e7d54b0b97e1829eac6fe36948b53b66",
+        "unitsGranted": 2000,
+        "executionDurationMs": 73.28
+      },
+      "finalBalance": {
+        "remainingUnits": 2600,
+        "totalAllowance": 7000,
+        "percentage": 37.1
+      },
+      "totalSessionDurationMs": 402.24
+    },
+    {
+      "sessionIndex": 3,
+      "persona": {
+        "id": "U03",
+        "name": "Budget-Conscious Web3 Developer",
+        "profile": "Cost-sensitive developer optimizing for lowest unit price per credit.",
+        "prompts": [
+          "Find the cheapest API rate for 10,000 monthly transactions",
+          "Review micro-USDC payment settlement fees"
+        ],
+        "workload_intensity": "low",
+        "preferred_package": "pack-bb-1k",
+        "adversarial_test": null
+      },
+      "chatInteractions": [
+        {
+          "prompt": "Find the cheapest API rate for 10,000 monthly transactions",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Find the cheapest API ...",
+          "tokensConsumed": 315,
+          "latencyMs": 14.79
+        },
+        {
+          "prompt": "Review micro-USDC payment settlement fees",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Review micro-USDC paym...",
+          "tokensConsumed": 255,
+          "latencyMs": 27.99
+        }
+      ],
+      "postRefillChat": null,
+      "totalTokensConsumed": 4400,
+      "lowBalanceTriggered": true,
+      "unitsAtTrigger": 600,
+      "pctAtTrigger": 12.0,
+      "selectedPackage": "pack-bb-1k",
+      "adversarialIntercepted": false,
+      "x402Settlement": {
+        "success": true,
+        "stateSteps": 6,
+        "network": "eip155:84532",
+        "amountUsdc": 1.4,
+        "txHash": "0xc4dfb9abf6f39c814e8fc9591c8c226368fb959673cdf1201d404a429e0aa7c2",
+        "unitsGranted": 1000,
+        "executionDurationMs": 74.7
+      },
+      "finalBalance": {
+        "remainingUnits": 1600,
+        "totalAllowance": 6000,
+        "percentage": 26.7
+      },
+      "totalSessionDurationMs": 335.25
+    },
+    {
+      "sessionIndex": 4,
+      "persona": {
+        "id": "U04",
+        "name": "High-Frequency Agent Pipeline",
+        "profile": "Executes large batch processing runs; tests per-refill spend cap enforcement.",
+        "prompts": [
+          "Trigger bulk batch inference on 500 documents",
+          "Embed semantic vector representations for catalog items",
+          "Cluster supplier bids by unit-price variance"
+        ],
+        "workload_intensity": "heavy",
+        "preferred_package": "pack-tf-10k",
+        "adversarial_test": "SPEND_CAP_EXCEEDED"
+      },
+      "chatInteractions": [
+        {
+          "prompt": "Trigger bulk batch inference on 500 documents",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Trigger bulk batch inf...",
+          "tokensConsumed": 285,
+          "latencyMs": 1.65
+        },
+        {
+          "prompt": "Embed semantic vector representations for catalog items",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Embed semantic vector ...",
+          "tokensConsumed": 285,
+          "latencyMs": 23.68
+        },
+        {
+          "prompt": "Cluster supplier bids by unit-price variance",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Cluster supplier bids ...",
+          "tokensConsumed": 270,
+          "latencyMs": 28.18
+        }
+      ],
+      "postRefillChat": null,
+      "totalTokensConsumed": 4400,
+      "lowBalanceTriggered": true,
+      "unitsAtTrigger": 600,
+      "pctAtTrigger": 12.0,
+      "selectedPackage": "pack-tf-10k",
+      "adversarialIntercepted": true,
+      "x402Settlement": {
+        "success": true,
+        "stateSteps": 6,
+        "network": "eip155:84532",
+        "amountUsdc": 3.0,
+        "txHash": "0x779881203148c8cf77d4fee5d9b75357c0661e1a6ae7928434c23f582772cece",
+        "unitsGranted": 2000,
+        "executionDurationMs": 70.48
+      },
+      "finalBalance": {
+        "remainingUnits": 2600,
+        "totalAllowance": 7000,
+        "percentage": 37.1
+      },
+      "totalSessionDurationMs": 505.06
+    },
+    {
+      "sessionIndex": 5,
+      "persona": {
+        "id": "U05",
+        "name": "Micro-App Operator",
+        "profile": "Runs lightweight microservices with minimal token requirements.",
+        "prompts": [
+          "Ping health status of inference endpoints",
+          "Quick model latency benchmark"
+        ],
+        "workload_intensity": "micro",
+        "preferred_package": "pack-tf-500",
+        "adversarial_test": null
+      },
+      "chatInteractions": [
+        {
+          "prompt": "Ping health status of inference endpoints",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Ping health status of ...",
+          "tokensConsumed": 270,
+          "latencyMs": 1.95
+        },
+        {
+          "prompt": "Quick model latency benchmark",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Quick model latency be...",
+          "tokensConsumed": 240,
+          "latencyMs": 24.49
+        }
+      ],
+      "postRefillChat": null,
+      "totalTokensConsumed": 4400,
+      "lowBalanceTriggered": true,
+      "unitsAtTrigger": 600,
+      "pctAtTrigger": 12.0,
+      "selectedPackage": "pack-tf-500",
+      "adversarialIntercepted": false,
+      "x402Settlement": {
+        "success": true,
+        "stateSteps": 6,
+        "network": "eip155:84532",
+        "amountUsdc": 0.9,
+        "txHash": "0x83e4063cab33d164eeb641bae9de75d708b008d02644af39c0d5e641d712fa5d",
+        "unitsGranted": 500,
+        "executionDurationMs": 73.23
+      },
+      "finalBalance": {
+        "remainingUnits": 1100,
+        "totalAllowance": 5500,
+        "percentage": 20.0
+      },
+      "totalSessionDurationMs": 304.11
+    },
+    {
+      "sessionIndex": 6,
+      "persona": {
+        "id": "U06",
+        "name": "Adversarial Red Team Tester",
+        "profile": "Attempts to purchase unapproved vendor bundles (ShadyDeals) before recovering.",
+        "prompts": [
+          "Query alternative unverified suppliers for discounted tokens"
+        ],
+        "workload_intensity": "moderate",
+        "preferred_package": "pack-shady-5k",
+        "adversarial_test": "UNAPPROVED_VENDOR"
+      },
+      "chatInteractions": [
+        {
+          "prompt": "Query alternative unverified suppliers for discounted tokens",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Query alternative unve...",
+          "tokensConsumed": 285,
+          "latencyMs": 1.63
+        }
+      ],
+      "postRefillChat": null,
+      "totalTokensConsumed": 4400,
+      "lowBalanceTriggered": true,
+      "unitsAtTrigger": 600,
+      "pctAtTrigger": 12.0,
+      "selectedPackage": "pack-shady-5k",
+      "adversarialIntercepted": false,
+      "x402Settlement": {
+        "success": true,
+        "stateSteps": 6,
+        "network": "eip155:84532",
+        "amountUsdc": 3.0,
+        "txHash": "0x59e77ec4bf7e9d30babbcb98295f4acea8f311162f5195a97772d8a80bd8d599",
+        "unitsGranted": 2000,
+        "executionDurationMs": 80.52
+      },
+      "finalBalance": {
+        "remainingUnits": 2600,
+        "totalAllowance": 7000,
+        "percentage": 37.1
+      },
+      "totalSessionDurationMs": 352.36
+    },
+    {
+      "sessionIndex": 7,
+      "persona": {
+        "id": "U07",
+        "name": "Security Signature Tester",
+        "profile": "Simulates tampered cryptographic payment signatures to verify rejection.",
+        "prompts": [
+          "Simulate tampered HTTP payment headers and signatures"
+        ],
+        "workload_intensity": "moderate",
+        "preferred_package": "pack-tf-2k",
+        "adversarial_test": "TAMPERED_SIGNATURE"
+      },
+      "chatInteractions": [
+        {
+          "prompt": "Simulate tampered HTTP payment headers and signatures",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Simulate tampered HTTP...",
+          "tokensConsumed": 285,
+          "latencyMs": 15.91
+        }
+      ],
+      "postRefillChat": null,
+      "totalTokensConsumed": 4400,
+      "lowBalanceTriggered": true,
+      "unitsAtTrigger": 600,
+      "pctAtTrigger": 12.0,
+      "selectedPackage": "pack-tf-2k",
+      "adversarialIntercepted": true,
+      "x402Settlement": {
+        "success": true,
+        "stateSteps": 6,
+        "network": "eip155:84532",
+        "amountUsdc": 3.0,
+        "txHash": "0xf2429b7cebe60af662b42a451726e8fdff11b397485a7d75d2860f6a6c368927",
+        "unitsGranted": 2000,
+        "executionDurationMs": 72.2
+      },
+      "finalBalance": {
+        "remainingUnits": 2600,
+        "totalAllowance": 7000,
+        "percentage": 37.1
+      },
+      "totalSessionDurationMs": 334.96
+    },
+    {
+      "sessionIndex": 8,
+      "persona": {
+        "id": "U08",
+        "name": "Enterprise Procurement Manager",
+        "profile": "Corporate buyer requiring strict compliance and comprehensive audit logs.",
+        "prompts": [
+          "Generate quarterly compute consumption report",
+          "Audit vendor service level agreements and uptime logs"
+        ],
+        "workload_intensity": "moderate",
+        "preferred_package": "pack-tf-2k",
+        "adversarial_test": null
+      },
+      "chatInteractions": [
+        {
+          "prompt": "Generate quarterly compute consumption report",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Generate quarterly com...",
+          "tokensConsumed": 255,
+          "latencyMs": 15.66
+        },
+        {
+          "prompt": "Audit vendor service level agreements and uptime logs",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Audit vendor service l...",
+          "tokensConsumed": 300,
+          "latencyMs": 28.66
+        }
+      ],
+      "postRefillChat": null,
+      "totalTokensConsumed": 4400,
+      "lowBalanceTriggered": true,
+      "unitsAtTrigger": 600,
+      "pctAtTrigger": 12.0,
+      "selectedPackage": "pack-tf-2k",
+      "adversarialIntercepted": false,
+      "x402Settlement": {
+        "success": true,
+        "stateSteps": 6,
+        "network": "eip155:84532",
+        "amountUsdc": 3.0,
+        "txHash": "0xa06b8166e7ee70b23c8901906e64067648b9ab1ddafc71cc9c4d01c2aaac044f",
+        "unitsGranted": 2000,
+        "executionDurationMs": 72.56
+      },
+      "finalBalance": {
+        "remainingUnits": 2600,
+        "totalAllowance": 7000,
+        "percentage": 37.1
+      },
+      "totalSessionDurationMs": 341.75
+    },
+    {
+      "sessionIndex": 9,
+      "persona": {
+        "id": "U09",
+        "name": "Quantum Hybrid Research Fellow",
+        "profile": "Scientific investigator analyzing Ising Hamiltonians and variational QAOA.",
+        "prompts": [
+          "Formulate QUBO procurement matrix for 11-qubit Hamiltonian",
+          "Run variational QAOA parameter optimization on local simulator"
+        ],
+        "workload_intensity": "moderate",
+        "preferred_package": "pack-tf-2k",
+        "adversarial_test": null
+      },
+      "chatInteractions": [
+        {
+          "prompt": "Formulate QUBO procurement matrix for 11-qubit Hamiltonian",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nI analyzed your procurement requirements across API Call...",
+          "tokensConsumed": 285,
+          "latencyMs": 2.54
+        },
+        {
+          "prompt": "Run variational QAOA parameter optimization on local simulator",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Run variational QAOA p...",
+          "tokensConsumed": 300,
+          "latencyMs": 2.36
+        }
+      ],
+      "postRefillChat": null,
+      "totalTokensConsumed": 4400,
+      "lowBalanceTriggered": true,
+      "unitsAtTrigger": 600,
+      "pctAtTrigger": 12.0,
+      "selectedPackage": "pack-tf-2k",
+      "adversarialIntercepted": false,
+      "x402Settlement": {
+        "success": true,
+        "stateSteps": 6,
+        "network": "eip155:84532",
+        "amountUsdc": 3.0,
+        "txHash": "0x85b6d3a41f77f3413eaaa7f557a05db1ba85b70aec8b1fde19589bb2da873032",
+        "unitsGranted": 2000,
+        "executionDurationMs": 74.52
+      },
+      "finalBalance": {
+        "remainingUnits": 2600,
+        "totalAllowance": 7000,
+        "percentage": 37.1
+      },
+      "totalSessionDurationMs": 297.5
+    },
+    {
+      "sessionIndex": 10,
+      "persona": {
+        "id": "U10",
+        "name": "Continuous Autonomous Agent",
+        "profile": "Multi-stage autonomous pipeline executing subsequent turns post-refill.",
+        "prompts": [
+          "Initialize multi-stage autonomous task sequence",
+          "Execute intermediate data aggregation step",
+          "Finalize autonomous reporting phase"
+        ],
+        "workload_intensity": "continuous",
+        "preferred_package": "pack-tf-2k",
+        "adversarial_test": null
+      },
+      "chatInteractions": [
+        {
+          "prompt": "Initialize multi-stage autonomous task sequence",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Initialize multi-stage...",
+          "tokensConsumed": 255,
+          "latencyMs": 15.8
+        },
+        {
+          "prompt": "Execute intermediate data aggregation step",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Execute intermediate d...",
+          "tokensConsumed": 255,
+          "latencyMs": 2.74
+        },
+        {
+          "prompt": "Finalize autonomous reporting phase",
+          "responseSnippet": "[SIMULATED AI RESPONSE]\nProcessed your simulated prompt ('Finalize autonomous re...",
+          "tokensConsumed": 240,
+          "latencyMs": 20.61
+        }
+      ],
+      "postRefillChat": {
+        "prompt": "Confirm post-refill compute task execution",
+        "tokensConsumed": 255,
+        "success": true
+      },
+      "totalTokensConsumed": 4400,
+      "lowBalanceTriggered": true,
+      "unitsAtTrigger": 600,
+      "pctAtTrigger": 12.0,
+      "selectedPackage": "pack-tf-2k",
+      "adversarialIntercepted": false,
+      "x402Settlement": {
+        "success": true,
+        "stateSteps": 6,
+        "network": "eip155:84532",
+        "amountUsdc": 3.0,
+        "txHash": "0x4ff33d42a747df6e33c2f836241589964c5d789c1b1b8213674177a45dec4a01",
+        "unitsGranted": 2000,
+        "executionDurationMs": 73.23
+      },
+      "finalBalance": {
+        "remainingUnits": 2600,
+        "totalAllowance": 7000,
+        "percentage": 37.1
+      },
+      "totalSessionDurationMs": 368.51
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-28T17:02:56Z",
+  "timestamp": "2026-10-29T13:45:19Z",
   "environment": {
     "python": "3.12.10",
     "os": "Windows (AMD64)",
@@ -14,11 +14,14 @@
       "pack_2",
       "pack_3"
     ],
-    "status": "AUTHENTICATION_REQUIRED",
-    "execution_mode": "UNAVAILABLE",
-    "blocker": {
-      "error": "Local solving requires client=Client(api_key=...). Register for a free API key at https://opt.qpiai.tech/",
-      "detail": "qpiai_opt.opt_solvers.solve requires valid client=Client(api_key=...) registered at https://opt.qpiai.tech/"
+    "status": "SUCCESS",
+    "execution_mode": "LIVE_QPIAI",
+    "objective_value": 37000000.0,
+    "solution": {
+      "pack_0": 0.0,
+      "pack_1": 1.0,
+      "pack_2": 0.0,
+      "pack_3": 1.0
     },
     "classical_optimum": {
       "pack_0": 0,
@@ -31,40 +34,47 @@
     }
   },
   "qpiai_quantum": {
-    "installed_version": "0.7.5",
+    "installed_version": "0.3.0",
     "local_experiment": {
       "status": "SUCCESS",
       "execution_mode": "LIVE_QPIAI",
       "simulator": "qpiai_quantum.simulator.StatevectorSimulator",
       "shots": 1024,
       "n_qubits": 4,
-      "execution_time_seconds": 1.2913398742675781,
+      "execution_time_seconds": 1.4330337047576904,
       "sample_counts": {
-        "0000": 98,
-        "0001": 93,
-        "0010": 48,
-        "0011": 87,
-        "0100": 64,
-        "0101": 43,
-        "0110": 37,
-        "0111": 61,
-        "1000": 58,
-        "1001": 47,
-        "1010": 38,
-        "1011": 51,
         "1100": 107,
+        "0110": 37,
         "1101": 59,
+        "1011": 51,
+        "0000": 98,
+        "1111": 78,
+        "0001": 93,
+        "0100": 64,
+        "1010": 38,
+        "0011": 87,
+        "1000": 58,
         "1110": 55,
-        "1111": 78
+        "0010": 48,
+        "0111": 61,
+        "0101": 43,
+        "1001": 47
       },
       "most_frequent_bitstring": "1100"
     },
     "qcloud_remote": {
-      "status": "AUTHENTICATION_REQUIRED",
-      "execution_mode": "UNAVAILABLE",
-      "blocker": {
-        "detail": "QCLOUD_API_KEY not set in .env. Remote execution on QpiAI-QSV-Simulator or QpiAI Cloud hardware requires an API key from https://qcloud.qpiai.tech/"
-      }
+      "status": "AUTHENTICATED",
+      "execution_mode": "CLOUD_DISCOVERED",
+      "verified": true,
+      "available_resources": [
+        "QpiAI-QSV-Simulator",
+        "QpiAI-QDM-Simulator",
+        "QpiAI-QTN-Simulator",
+        "QpiAI-QSV-Lite",
+        "QpiAI-QDM-Lite",
+        "QpiAI-Indus-1"
+      ],
+      "note": "Remote execution requires active subscription; local simulation runs via StatevectorSimulator/QpiAI-QSV-Local"
     }
   }
 }

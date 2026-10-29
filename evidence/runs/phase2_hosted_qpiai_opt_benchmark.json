@@ -1,0 +1,1539 @@
+{
+  "experiment": "HOSTED_QPIAI_OPT_BENCHMARK",
+  "generatedAt": "2026-10-29T14:51:39Z",
+  "installedPackage": {
+    "name": "qpiai-opt",
+    "version": "0.0.9"
+  },
+  "accountTelemetry": {
+    "authenticated": true,
+    "email": "sparrowhawk1024@gmail.com",
+    "organizationName": null,
+    "activeSubscriptionStatus": "inactive",
+    "credits": 0,
+    "planTier": null,
+    "discoveredSolvers": [
+      "id='47f3a720-b08d-4e4c-87b5-e5852834f801' backend_name='HUBO Solver' type='HUBO Solver' device_name='hubo-solver' status='active' usage_rate=1.0 created_at='2026-07-22T08:54:51.951642Z' updated_at='2026-07-22T08:54:51.951642Z' deleted_at=None",
+      "id='6d862522-0cf0-4859-a242-d50d30723b88' backend_name='MILP Solver' type='MILP Solver' device_name='milp-solver' status='active' usage_rate=1.0 created_at='2026-07-22T08:54:51.956923Z' updated_at='2026-07-22T08:54:51.956923Z' deleted_at=None",
+      "id='407cb528-5602-44be-bfcd-63edfc3b5c64' backend_name='QUBO Solver' type='QUBO Solver' device_name='qubo-solver' status='active' usage_rate=1.0 created_at='2026-07-22T08:54:51.927278Z' updated_at='2026-07-22T08:54:51.927278Z' deleted_at=None"
+    ]
+  },
+  "acceptanceCriteriaStatus": {
+    "inputHashMatchesAcrossSolvers": true,
+    "hostedExecutionConfirmedThroughGenuineMetadata": true,
+    "allCostsIndependentlyRecomputed": true,
+    "failedRequestsAndFallbackClearlyLabelled": true,
+    "noCredentialsOrFabricatedResults": true,
+    "calibrationBenchmarkSeed1Preserved": true
+  },
+  "runs": [
+    {
+      "seed": 1,
+      "inputSha256": "f0d8a9ff5001e3b2b94efd73144662a1b774d0304c5fbd421b563714086c1581",
+      "inputSnapshot": {
+        "seed": 1,
+        "fixed_timestamp": 1700000000,
+        "vault_address": "0x1111111111111111111111111111111111111111",
+        "requirements": {
+          "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00": 15000,
+          "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f": 8000,
+          "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0": 1200
+        },
+        "max_budget_micro_usdc": 40000000,
+        "max_lines": 16,
+        "total_quotes_generated": 53,
+        "allowed_quotes_count": 48,
+        "allowed_vendors": [
+          "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+          "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+          "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+          "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c"
+        ],
+        "offers": [
+          {
+            "quoteId": "0x6543800ceeb97e5c41c37e069d8089b84b7c717a0325bbf3e532b7d13c4b9108",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0xedd6be6762c4684f7de70673eeec51fcf54ce0e4aa327e55d1a94d4aa6319709",
+            "units": 1000,
+            "price_micro_usdc": 439571
+          },
+          {
+            "quoteId": "0xc7d5e274c1d65445a35b27bad7a5430e99cb9470a9fb46fea6f8cd08570c64b4",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x6ecbd3fc6205adf737761307cde1a20f36aa272a52f33df00b0894e724fc8888",
+            "units": 1000,
+            "price_micro_usdc": 438120
+          },
+          {
+            "quoteId": "0x023a84169652da60ab0dfcdfcdcf84d56f457e1afacb06611ce91990676b0210",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x99484002cf8ede8885290a8c4cd4cc9175c78bf5326c4a4783f4ede8851327e5",
+            "units": 5000,
+            "price_micro_usdc": 1950658
+          },
+          {
+            "quoteId": "0xbda2c695e61d2c72282341fe3d2bfac13194aec914a0ac1677b5bcb0f2cd9cd5",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0xed656339b539a73861c6d36b70c22e792f80962ef0c39b77e88f333a6c91bbc1",
+            "units": 5000,
+            "price_micro_usdc": 1947072
+          },
+          {
+            "quoteId": "0xe1cefd0f3ec361859b6bd70c2741c515b3a0b30543de78fecd5c5806c72ba87f",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x36967871ef14d3f47d77969867920ee565c26095efcafec5451a5d4181d8345c",
+            "units": 20000,
+            "price_micro_usdc": 6982806
+          },
+          {
+            "quoteId": "0x3de10642465b190fbc3c6243ee460c807db854f6255db27cd98109db9ff72c1d",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x56fafcab8e910e01025ec77507815e8a9ed102e590a47a67949a6043591667ad",
+            "units": 20000,
+            "price_micro_usdc": 6790938
+          },
+          {
+            "quoteId": "0x8ecb4fa8a573d70f0ee4cf2d6062e0cb2d1aef0ff34fb35935574044752627a0",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x7834e6d155eb1f302d7372ed2c413e2cbe7b084d32b556c20c11990482b9e948",
+            "units": 50000,
+            "price_micro_usdc": 14484478
+          },
+          {
+            "quoteId": "0x6a365f8a84e3893a7af092a53d15417ebfb00bbf47998859231bbb437b6f13c8",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x182ceb57089501e3b71b97458eaf26ca908935a47cf224ed48c4407f04ae8149",
+            "units": 50000,
+            "price_micro_usdc": 14254084
+          },
+          {
+            "quoteId": "0xd7e1ba22cc8a609be51c4ea843150b9ab9031029f970ea0330441bb7282675f6",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x9380bcc7211cad9eddac78c0e45c8d8501632f8294eebda650a19b58c004617b",
+            "units": 100000,
+            "price_micro_usdc": 26150537
+          },
+          {
+            "quoteId": "0xbb8416786f77507f1adccb5b6d77bcd3f1eaa01ff45a81cb1b8345b21c988fbc",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x0afc5d72229953e8e5f4f9c6c97bc753ac724ce86cceceb37759f1817edffaea",
+            "units": 100000,
+            "price_micro_usdc": 26623641
+          },
+          {
+            "quoteId": "0xdff9b77529ffe886b8d88ea52425bea05dcb7775be7dd58cd829319950a169c2",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x4f4391132321209093a05fa66ef979aace9f45d2a5f69cad4fda0f8071d00a46",
+            "units": 500,
+            "price_micro_usdc": 909958
+          },
+          {
+            "quoteId": "0x0070b2adc9b3ab4bd2af06d6b350376293f3cdafc640de5cb957c50062828298",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xe36df6b5bd4f0d5ed35c2345b83fdb35be5b92dc71e7db71c080ca883b792f8e",
+            "units": 500,
+            "price_micro_usdc": 936324
+          },
+          {
+            "quoteId": "0x5e0e0d5a0a0c186878761f6ab337125ffde9a6fdda24f980b15ab38895c09913",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xb16e1f25d936499d28efa714788dc5f01db4b265c6f85a7780cbc6044332c037",
+            "units": 2000,
+            "price_micro_usdc": 3061838
+          },
+          {
+            "quoteId": "0xb21b5736cd251f5a1baa2e6ac6fec84b304e15815427ba873a231896c12205b8",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x40cd5c875f8517621711bad6f3b91cab0d4057837f4c3e33301ead7924ef84d9",
+            "units": 2000,
+            "price_micro_usdc": 3061196
+          },
+          {
+            "quoteId": "0x06c75e84063c68987e9064d70ac6fed97284108fa6e213d01f25001480287377",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xc3680b6dd92a21ed59544f9244f6b39d1a937d4512cee2b994134961dbb5487d",
+            "units": 10000,
+            "price_micro_usdc": 12261360
+          },
+          {
+            "quoteId": "0xc5527d7372d392215273c39ab20c27f18772c08e7bcb9c048c4a78c473ee06ca",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x0e6f8c55f06e43636eb5a7170bda729fc1f8d9ca95997d2420d58d3a9a528e91",
+            "units": 10000,
+            "price_micro_usdc": 11992437
+          },
+          {
+            "quoteId": "0x3987608af1e4590a5ee6ef383c2f32865ee2bbcb16e13c884a282625b53bf2be",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x90b64067d057e073d95592eac3d9f3f881346d0c9388706d7e04d41870f797b1",
+            "units": 25000,
+            "price_micro_usdc": 24215822
+          },
+          {
+            "quoteId": "0x43be0dad45b016c8cbed25a971c22481cf3b8892ffdb2d9f68bb09e839b85263",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x81fb3ca1dd78e7457b8a65e1536af78c372cd3ec230a45b1bb69d9bb1f7f5c37",
+            "units": 25000,
+            "price_micro_usdc": 23833886
+          },
+          {
+            "quoteId": "0x6b25b84c9cff31f12a0cd89c07cc9636c4768036a8c9e53aac1ca8343926fe7c",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xb65bcfff1d832f6d8c0c8daf1e285a902a9ed254ba8450f4f0648f14a5f086f8",
+            "units": 50000,
+            "price_micro_usdc": 41214538
+          },
+          {
+            "quoteId": "0xfbbee15f3181778f9be7329bbcd05e474f13d70672a2f46fce34eec5530ee43c",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xff196adec1b0e8c557dcc27d76fef5f34df1bbccbec38a08e4ba1e828ea24439",
+            "units": 50000,
+            "price_micro_usdc": 41310269
+          },
+          {
+            "quoteId": "0x136174042e1811ea8a05bd19ba3f9673a80b4342dd13046323a862a3da7791db",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x703eb19ab0439b6825326fb113a4d3c0ce4e9444c6de2beb3e2a36efac43e49e",
+            "units": 100,
+            "price_micro_usdc": 770265
+          },
+          {
+            "quoteId": "0x4a63b07ef0d25c79cc0e491623f4b86b68273bc6ca25c559c5fef3b9a68f8f6b",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xb6985f98ae89f76cf0d55999af5278556b05ccd1c4675948c82c49a9ef49a982",
+            "units": 100,
+            "price_micro_usdc": 769888
+          },
+          {
+            "quoteId": "0x6a0a75d653c4bfd5062fd2b0f25a8c81ca058078353600226d2a3500cc305ac6",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xcecadc60776b93ae3ce0aab0d7925ad5bc928f845b9a955ecf6684acf37ff38f",
+            "units": 500,
+            "price_micro_usdc": 3209653
+          },
+          {
+            "quoteId": "0x5a98e796b4fded58f991ab54d048b44b9474b3430b4746eb94f50ee42a488ad0",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xedee527756fd5fb817ee4213de3486928a5b54085d46d4591a08782006077fc8",
+            "units": 500,
+            "price_micro_usdc": 3174916
+          },
+          {
+            "quoteId": "0xc7d1726fa199202e7537d4065e49ca1521afe9d8691c96e7729b1c0653d66dab",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xecb51bc5feea33257c4b68bd915474cd86dcecde1fe4f15ab984bde8abfabb8b",
+            "units": 2500,
+            "price_micro_usdc": 12951152
+          },
+          {
+            "quoteId": "0x3109d93de9c7c5a3fa5a4071a16680fce7ce8d2b2558420792e396eaccad267d",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x90da81e3dd5003fd6b3a13317d452affecfc4a684666d793987ac149d8385c1f",
+            "units": 2500,
+            "price_micro_usdc": 12995521
+          },
+          {
+            "quoteId": "0x666ca8cab6943dc4366f6ddda9b7307f959f635b32d0657d455e4beade56c770",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x6f715ff5694c6f7a17c19368142bcf1e57b200e2ad4473b21432bca8ce9ccf5f",
+            "units": 10000,
+            "price_micro_usdc": 39506942
+          },
+          {
+            "quoteId": "0xae7a48e4a9d1021fed50a613ba473f6467bfdfa606ec25d083d5e814f36e7822",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xd01ecb3574691b1da575245943e2b97e84d1bc5f2b8865b61079dd68c2bbde17",
+            "units": 10000,
+            "price_micro_usdc": 39301450
+          },
+          {
+            "quoteId": "0x4fc3306037e920b2388f1333d01f8cf45b730e39131f6ac297f3a8874d0ddebe",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xf737c50572fd8eac15ae921421d3081b64468ca48b04a4911209f904129bb327",
+            "units": 25000,
+            "price_micro_usdc": 83619420
+          },
+          {
+            "quoteId": "0x6dfded44b30ae7b32b613e7b12f62794334daf51455c6b16096bc3b7d014fbc7",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x07972c4b71617f1e2c4f44a61729efe55817bf744e245a09859024e85c759f6c",
+            "units": 25000,
+            "price_micro_usdc": 84928594
+          },
+          {
+            "quoteId": "0x4506507184334c59a1aba536ce322834ae79fc7a7b48e261ed209f6f30015992",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x2e4fa778342f94e870921a57d0e8b0a73204c04128aa0541f8096e65fec70677",
+            "units": 2000,
+            "price_micro_usdc": 772840
+          },
+          {
+            "quoteId": "0x91e3efe4537ed170de05daac79b5a00686bcb40aca79c1e2f7172b3d3676a86e",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x9f415412511ccc9e0de78e607579501a685af3ceaebfc57198b918c076b276a0",
+            "units": 2000,
+            "price_micro_usdc": 786536
+          },
+          {
+            "quoteId": "0x935ee827c5a7e24bf649f5611e2630bd0e48e92f2000cd445acd223f49d03cf0",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x038a215a6a0ea9585c6218005ff9d12ee3eab315232c31721669d8b7bfb45f4b",
+            "units": 10000,
+            "price_micro_usdc": 3577567
+          },
+          {
+            "quoteId": "0xa26d131e0b1eea5c0acc62ce54b8a1316745ebc6e4e8c94a44fd76a95adba1f7",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x0c7f46f61f811b41600a43924684e9906b22da5db1b936f4dee71a39a13b685b",
+            "units": 10000,
+            "price_micro_usdc": 3695050
+          },
+          {
+            "quoteId": "0xe58aaa2f11d654fc21cc6584e4504fefa9216639edab5db8974c6c4a70e93291",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x006154af691a644e70ac2681a22b2eba16bfa830f6506a2f17fea5ea4ad5c48e",
+            "units": 30000,
+            "price_micro_usdc": 10643057
+          },
+          {
+            "quoteId": "0x9dd13a9be221e358409a5ed02fa21db4f34450e61305b2cfc9ee8f53628ecd1e",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x2f8faf547999a7a4ddc402245eb34e0046c1e9d17c68213b4baf01967fb2d4b6",
+            "units": 30000,
+            "price_micro_usdc": 10334830
+          },
+          {
+            "quoteId": "0x26a4024f91c61b85a6b9cfc850d1c247a0eb175349ed52cf333aabd0486a7ca7",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x1d67702e723eb2fbb8db15f6fe0ddd0d749b20b3195cf79c7d39e10798dafa2d",
+            "units": 1000,
+            "price_micro_usdc": 1409809
+          },
+          {
+            "quoteId": "0xb8842c7ab21fd55cbe044f587588ca7ba73a1d14c2e8779ee9dcc5b586b94c78",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x2aec726f2db73ae6716dab44873cf7ac4813868259a7ab3bff6827eb8debd9b4",
+            "units": 1000,
+            "price_micro_usdc": 1442838
+          },
+          {
+            "quoteId": "0x399d1dc6a9e9c41a288709c34332d20742a1b8c593a951d75655ec087b3129c9",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xdc21304724d749b3c7a5b56108dfffde79e0e9e9d2a10297d2de27b1a1b690c3",
+            "units": 5000,
+            "price_micro_usdc": 6680023
+          },
+          {
+            "quoteId": "0xf3b672ba408c9e5ec5b07ba3b59b595bf211377ce7ef570506fac167f25871f2",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x6c0c6aee770a8104e21e2158b05ce2a40aab53c1cfe30353d8734be507d48d62",
+            "units": 5000,
+            "price_micro_usdc": 6502748
+          },
+          {
+            "quoteId": "0x80f3a79a62064adf87a1ddce21ac04dbe3b0dd0866301d90940907c93bb26556",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xa132354ce838812d2145e08cbb5b9ca28cd457321fa6beca36a349b10494b372",
+            "units": 15000,
+            "price_micro_usdc": 18883503
+          },
+          {
+            "quoteId": "0xa45f6b4696e2150f1d20d03efec3356f27fbf15cb2f932c4fd1b3f8ec04167ac",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xa10123214c9b40ef13057880bdbed5025bb134bf6b5f92ececb2602d267997ac",
+            "units": 15000,
+            "price_micro_usdc": 18051789
+          },
+          {
+            "quoteId": "0x1b3b1ebd77be391b9d5be60032be88b80b53f39aab350196237be82cdf164c0c",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xa80e957fd3f49bc89f97af7192c4790015a053bd7e7df211731aba5142e7b356",
+            "units": 200,
+            "price_micro_usdc": 1175303
+          },
+          {
+            "quoteId": "0x2ba0380bae638a21863dccdd130780e840dc50163ad790beb17cc28e4d4f2b3a",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x544e3dc8d687403a7dad002e053cc05fad5a357247091f6582591c35950340ef",
+            "units": 200,
+            "price_micro_usdc": 1228551
+          },
+          {
+            "quoteId": "0xc938851f8a6b91a15a5ee9c8d9d71f629ef4a14edd6808ef3005df401fac86e5",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x389e842340c026ff0d45f0faee5abd3c11ca0a37891adbf5e415d38360516a9e",
+            "units": 1000,
+            "price_micro_usdc": 5462298
+          },
+          {
+            "quoteId": "0x8f5173d2034290bf550172cdd69e54258376ddf60eb7c96c972e629abf670139",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x0aced4c4340099dd7b11b894c414f27e02e679cc4a47818906d5d9d5f48a792d",
+            "units": 1000,
+            "price_micro_usdc": 5356123
+          },
+          {
+            "quoteId": "0x62baa98ecdd1dc67477980a20f5fcd55e83a192a6655a4943cc42f78e8f3b7f5",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x715fa136f62058ca5633b96510917b38e2f37c9b738bd08503ecb62aa4506693",
+            "units": 4000,
+            "price_micro_usdc": 20881201
+          },
+          {
+            "quoteId": "0x9d37d96b7e99a3f8f7d0d348bb4596a16c864c97f04ca2a0370827fc72ab5a75",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x4f88bac441a0c91259d50dc14bf3dd8ede3182301f745a082624fe3c0b67b988",
+            "units": 4000,
+            "price_micro_usdc": 21137860
+          }
+        ]
+      },
+      "solvers": {
+        "ortools_cpsat": {
+          "solver": "OR-Tools CP-SAT",
+          "executionMode": "LOCAL_REFERENCE",
+          "jobId": "N/A (Local)",
+          "status": "OPTIMAL",
+          "feasible": true,
+          "costMicroUsdc": 23029818,
+          "costUsdc": 23.03,
+          "gapVsCpSatPct": 0.0,
+          "savingsVsVendorRulePct": 28.47,
+          "savingsVsGreedyPct": 1.19,
+          "runtimeMs": 33.45,
+          "usageCredits": "0 (Local Execution)",
+          "selectedOfferCount": 7,
+          "selectedOfferIds": [
+            "0xbda2c695e61d2c72282341fe3d2bfac13194aec914a0ac1677b5bcb0f2cd9cd5",
+            "0xb21b5736cd251f5a1baa2e6ac6fec84b304e15815427ba873a231896c12205b8",
+            "0x935ee827c5a7e24bf649f5611e2630bd0e48e92f2000cd445acd223f49d03cf0",
+            "0x26a4024f91c61b85a6b9cfc850d1c247a0eb175349ed52cf333aabd0486a7ca7",
+            "0xf3b672ba408c9e5ec5b07ba3b59b595bf211377ce7ef570506fac167f25871f2",
+            "0x1b3b1ebd77be391b9d5be60032be88b80b53f39aab350196237be82cdf164c0c",
+            "0x8f5173d2034290bf550172cdd69e54258376ddf60eb7c96c972e629abf670139"
+          ]
+        },
+        "greedy_baseline": {
+          "solver": "Greedy Heuristic",
+          "executionMode": "LOCAL_BASELINE",
+          "jobId": "N/A (Local)",
+          "status": "FEASIBLE",
+          "feasible": true,
+          "costMicroUsdc": 23308166,
+          "costUsdc": 23.31,
+          "gapVsCpSatPct": 1.21,
+          "savingsVsVendorRulePct": 27.6,
+          "runtimeMs": 0.11,
+          "usageCredits": "0 (Local Execution)",
+          "selectedOfferCount": 11,
+          "selectedOfferIds": [
+            "0x935ee827c5a7e24bf649f5611e2630bd0e48e92f2000cd445acd223f49d03cf0",
+            "0x4506507184334c59a1aba536ce322834ae79fc7a7b48e261ed209f6f30015992",
+            "0x91e3efe4537ed170de05daac79b5a00686bcb40aca79c1e2f7172b3d3676a86e",
+            "0xc7d5e274c1d65445a35b27bad7a5430e99cb9470a9fb46fea6f8cd08570c64b4",
+            "0xf3b672ba408c9e5ec5b07ba3b59b595bf211377ce7ef570506fac167f25871f2",
+            "0x26a4024f91c61b85a6b9cfc850d1c247a0eb175349ed52cf333aabd0486a7ca7",
+            "0xb8842c7ab21fd55cbe044f587588ca7ba73a1d14c2e8779ee9dcc5b586b94c78",
+            "0xdff9b77529ffe886b8d88ea52425bea05dcb7775be7dd58cd829319950a169c2",
+            "0x0070b2adc9b3ab4bd2af06d6b350376293f3cdafc640de5cb957c50062828298",
+            "0x8f5173d2034290bf550172cdd69e54258376ddf60eb7c96c972e629abf670139",
+            "0x1b3b1ebd77be391b9d5be60032be88b80b53f39aab350196237be82cdf164c0c"
+          ]
+        },
+        "vendor_rule_baseline": {
+          "solver": "Vendor-Rule Heuristic",
+          "executionMode": "LOCAL_BASELINE",
+          "jobId": "N/A (Local)",
+          "status": "FEASIBLE",
+          "feasible": true,
+          "costMicroUsdc": 32195318,
+          "costUsdc": 32.2,
+          "gapVsCpSatPct": 39.8,
+          "savingsVsVendorRulePct": 0.0,
+          "runtimeMs": 0.03,
+          "usageCredits": "0 (Local Execution)",
+          "selectedOfferCount": 3,
+          "selectedOfferIds": [
+            "0xe1cefd0f3ec361859b6bd70c2741c515b3a0b30543de78fecd5c5806c72ba87f",
+            "0x06c75e84063c68987e9064d70ac6fed97284108fa6e213d01f25001480287377",
+            "0xc7d1726fa199202e7537d4065e49ca1521afe9d8691c96e7729b1c0653d66dab"
+          ]
+        },
+        "hosted_qpiai_opt": {
+          "solver": "QpiAI Opt Platform (MILP)",
+          "executionMode": "HOSTED_PLATFORM_BLOCKED",
+          "jobId": "None (Blocked Pre-Execution)",
+          "status": "BLOCKED_NO_STORAGE_QUOTA",
+          "feasible": false,
+          "costMicroUsdc": null,
+          "costUsdc": null,
+          "gapVsCpSatPct": null,
+          "savingsVsVendorRulePct": null,
+          "runtimeMs": 93.24,
+          "usageCredits": "0 credits (Tier: None)",
+          "errorDetail": {
+            "category": "QUOTA_CREDIT_RESTRICTION",
+            "blockerCode": "BLOCKED_NO_STORAGE_QUOTA",
+            "errorClass": "APIError",
+            "errorMessage": "no active storage quota found for organization",
+            "wallClockMs": 93.24
+          }
+        }
+      }
+    },
+    {
+      "seed": 2,
+      "inputSha256": "aee282bf18bea3c2a417137750686a46bb9b69443cec1811deb35a6daf2ef9fa",
+      "inputSnapshot": {
+        "seed": 2,
+        "fixed_timestamp": 1700000000,
+        "vault_address": "0x1111111111111111111111111111111111111111",
+        "requirements": {
+          "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00": 15000,
+          "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f": 8000,
+          "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0": 1200
+        },
+        "max_budget_micro_usdc": 40000000,
+        "max_lines": 16,
+        "total_quotes_generated": 53,
+        "allowed_quotes_count": 48,
+        "allowed_vendors": [
+          "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+          "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+          "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+          "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c"
+        ],
+        "offers": [
+          {
+            "quoteId": "0xa2ade0f05ee03f80f273b67fd1afd2ee558db93907a13f5d18bde9aee7bf656d",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0xedd6be6762c4684f7de70673eeec51fcf54ce0e4aa327e55d1a94d4aa6319709",
+            "units": 1000,
+            "price_micro_usdc": 478951
+          },
+          {
+            "quoteId": "0xcdd6aeda66396052df35f9348e29cda7b245d96e8ba68b569f9e67f308f2b895",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x6ecbd3fc6205adf737761307cde1a20f36aa272a52f33df00b0894e724fc8888",
+            "units": 1000,
+            "price_micro_usdc": 462176
+          },
+          {
+            "quoteId": "0xe554422aa4b16f107b05d19f832e50a5896383a94c641ee3f4efba75191c0fe7",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x99484002cf8ede8885290a8c4cd4cc9175c78bf5326c4a4783f4ede8851327e5",
+            "units": 5000,
+            "price_micro_usdc": 1942700
+          },
+          {
+            "quoteId": "0x8dd10bf73d4fd12a35e3931a9fa13bd141efce45b797d3a69a82bbfe787fcef8",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0xed656339b539a73861c6d36b70c22e792f80962ef0c39b77e88f333a6c91bbc1",
+            "units": 5000,
+            "price_micro_usdc": 1935068
+          },
+          {
+            "quoteId": "0xff3286fd16f0313ab090ff267eca189704b6df7a32a0890ab98f21b24e1720ef",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x36967871ef14d3f47d77969867920ee565c26095efcafec5451a5d4181d8345c",
+            "units": 20000,
+            "price_micro_usdc": 6862344
+          },
+          {
+            "quoteId": "0x4d417dff37a5c78a10c12c2c0f9c3ef3039a9e89778034a55e1fedec326f4eb1",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x56fafcab8e910e01025ec77507815e8a9ed102e590a47a67949a6043591667ad",
+            "units": 20000,
+            "price_micro_usdc": 6944723
+          },
+          {
+            "quoteId": "0xd2cfbb8947739d9faba60d1bff031264fd6ee37f3d6a3bd9e482eb9ab475347d",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x7834e6d155eb1f302d7372ed2c413e2cbe7b084d32b556c20c11990482b9e948",
+            "units": 50000,
+            "price_micro_usdc": 15209446
+          },
+          {
+            "quoteId": "0x18652c19c69525b3801fc86548769a7b8dc8d80ed7692158dc6449b6f0f8a9d2",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x182ceb57089501e3b71b97458eaf26ca908935a47cf224ed48c4407f04ae8149",
+            "units": 50000,
+            "price_micro_usdc": 14953044
+          },
+          {
+            "quoteId": "0xf17eaa76f566eb0d36efd5b51ea39ebe8d53c4ee13e94802cdc07dded018a8e9",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x9380bcc7211cad9eddac78c0e45c8d8501632f8294eebda650a19b58c004617b",
+            "units": 100000,
+            "price_micro_usdc": 25709782
+          },
+          {
+            "quoteId": "0x69f8973dc21ad57e3af9cb585a8506f75f3156345f7094afdc50df284fdcabf4",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x0afc5d72229953e8e5f4f9c6c97bc753ac724ce86cceceb37759f1817edffaea",
+            "units": 100000,
+            "price_micro_usdc": 26050066
+          },
+          {
+            "quoteId": "0x20202da148df155759a140d87d56dda3dd4102a56127a0d7d17b8c8085c542ba",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x4f4391132321209093a05fa66ef979aace9f45d2a5f69cad4fda0f8071d00a46",
+            "units": 500,
+            "price_micro_usdc": 961513
+          },
+          {
+            "quoteId": "0x2653cd7984e16a9dfc2fdd6f8f48851799af68a654b6e030337ab1ddfb0ba05d",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xe36df6b5bd4f0d5ed35c2345b83fdb35be5b92dc71e7db71c080ca883b792f8e",
+            "units": 500,
+            "price_micro_usdc": 946203
+          },
+          {
+            "quoteId": "0x47368351f3b37cbf4f5845ceae843416afbd371cf450d92b9002baaf98665104",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xb16e1f25d936499d28efa714788dc5f01db4b265c6f85a7780cbc6044332c037",
+            "units": 2000,
+            "price_micro_usdc": 2955798
+          },
+          {
+            "quoteId": "0x571227eff38196138e06b8ae62e5e4df6136302df96699d9de533095561d9e9e",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x40cd5c875f8517621711bad6f3b91cab0d4057837f4c3e33301ead7924ef84d9",
+            "units": 2000,
+            "price_micro_usdc": 2928074
+          },
+          {
+            "quoteId": "0x49e33eda518d3de7514b59087d4b78c5c5a50d913e5d0f8b9622889fa3b697f0",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xc3680b6dd92a21ed59544f9244f6b39d1a937d4512cee2b994134961dbb5487d",
+            "units": 10000,
+            "price_micro_usdc": 11416879
+          },
+          {
+            "quoteId": "0x2e344692e34ab58b8d03e1c8a57eb0afce75885c4725c88747ff05d503d639af",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x0e6f8c55f06e43636eb5a7170bda729fc1f8d9ca95997d2420d58d3a9a528e91",
+            "units": 10000,
+            "price_micro_usdc": 11349915
+          },
+          {
+            "quoteId": "0x13128f9ca0fd8dcdce9137f1b9a5f98168973a6a759340d413946123fc79ef9d",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x90b64067d057e073d95592eac3d9f3f881346d0c9388706d7e04d41870f797b1",
+            "units": 25000,
+            "price_micro_usdc": 25087126
+          },
+          {
+            "quoteId": "0x4cec1ac5d55dbf208e735a0ed94ba4a8aa17125e8901d510c3ed0ab25a9d206b",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x81fb3ca1dd78e7457b8a65e1536af78c372cd3ec230a45b1bb69d9bb1f7f5c37",
+            "units": 25000,
+            "price_micro_usdc": 24725481
+          },
+          {
+            "quoteId": "0xe3df46a24604ffae5096bbcb381f555d1e38cbeb9b7c948a43e5039b21f0de17",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xb65bcfff1d832f6d8c0c8daf1e285a902a9ed254ba8450f4f0648f14a5f086f8",
+            "units": 50000,
+            "price_micro_usdc": 42305864
+          },
+          {
+            "quoteId": "0x6797b274e36ffdcc390b0cf198d5497aaec90d78bca517f6cf9670b80dd1fc03",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xff196adec1b0e8c557dcc27d76fef5f34df1bbccbec38a08e4ba1e828ea24439",
+            "units": 50000,
+            "price_micro_usdc": 41942830
+          },
+          {
+            "quoteId": "0x5d0b025cacaae770ea36a69fb5e6fa9e897230c1371bef36ad7a9189cd29a3f5",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x703eb19ab0439b6825326fb113a4d3c0ce4e9444c6de2beb3e2a36efac43e49e",
+            "units": 100,
+            "price_micro_usdc": 774589
+          },
+          {
+            "quoteId": "0xa8634e99d85e9e51c25c009b92bc021500f0be2610e10145d94e0984f4f5686f",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xb6985f98ae89f76cf0d55999af5278556b05ccd1c4675948c82c49a9ef49a982",
+            "units": 100,
+            "price_micro_usdc": 786332
+          },
+          {
+            "quoteId": "0x278c39950aedb4bea00981e160e8c12f5eef6d3183c9f2cb4f723cf477b4549c",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xcecadc60776b93ae3ce0aab0d7925ad5bc928f845b9a955ecf6684acf37ff38f",
+            "units": 500,
+            "price_micro_usdc": 3435885
+          },
+          {
+            "quoteId": "0x98ed057b8f9c6f1ee31674af68e32f53515b4691971364a721f56bfffc8c723f",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xedee527756fd5fb817ee4213de3486928a5b54085d46d4591a08782006077fc8",
+            "units": 500,
+            "price_micro_usdc": 3368649
+          },
+          {
+            "quoteId": "0x69858ead0e106ccfe3a264fe6d18084cf6e24798812af342e347c2f910b0ac1c",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xecb51bc5feea33257c4b68bd915474cd86dcecde1fe4f15ab984bde8abfabb8b",
+            "units": 2500,
+            "price_micro_usdc": 13146184
+          },
+          {
+            "quoteId": "0x28990e52123de0c0f357fc7515f100bd0eef92f87734c4c4aeab97b5e55d79bb",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x90da81e3dd5003fd6b3a13317d452affecfc4a684666d793987ac149d8385c1f",
+            "units": 2500,
+            "price_micro_usdc": 13113778
+          },
+          {
+            "quoteId": "0x10c9a79ce1beb169835d2958ebe24cb7ce97e0fe75b06f2993e6a99fa418fc29",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x6f715ff5694c6f7a17c19368142bcf1e57b200e2ad4473b21432bca8ce9ccf5f",
+            "units": 10000,
+            "price_micro_usdc": 42064094
+          },
+          {
+            "quoteId": "0x32cbc28ffb186864d47d167957343a15d18ae2f36d6001d3008a5944b7cda950",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xd01ecb3574691b1da575245943e2b97e84d1bc5f2b8865b61079dd68c2bbde17",
+            "units": 10000,
+            "price_micro_usdc": 42108821
+          },
+          {
+            "quoteId": "0xac1775bb5fc62c64c6f934aa74b74f52c060a7ff081e86019f7e55002dd17c99",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xf737c50572fd8eac15ae921421d3081b64468ca48b04a4911209f904129bb327",
+            "units": 25000,
+            "price_micro_usdc": 87879440
+          },
+          {
+            "quoteId": "0x1eef01ad43af82c3ff9e237e00f60fe9f2418eb085d7cf6c483a42a71448cfaa",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x07972c4b71617f1e2c4f44a61729efe55817bf744e245a09859024e85c759f6c",
+            "units": 25000,
+            "price_micro_usdc": 87813652
+          },
+          {
+            "quoteId": "0xe40a1fbdf0bda53e149cd0d01389012b53df0e081d233d5f70e29444b8290eaf",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x2e4fa778342f94e870921a57d0e8b0a73204c04128aa0541f8096e65fec70677",
+            "units": 2000,
+            "price_micro_usdc": 739400
+          },
+          {
+            "quoteId": "0x5f354d77c54d166e08db1598d8ed586e4bcb340752d880f8b91d8914aa33eee5",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x9f415412511ccc9e0de78e607579501a685af3ceaebfc57198b918c076b276a0",
+            "units": 2000,
+            "price_micro_usdc": 775443
+          },
+          {
+            "quoteId": "0x57959b1695117151500382699e6c833e58ffe8a3722f456fdeaeeb697152fa32",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x038a215a6a0ea9585c6218005ff9d12ee3eab315232c31721669d8b7bfb45f4b",
+            "units": 10000,
+            "price_micro_usdc": 3661963
+          },
+          {
+            "quoteId": "0x1dddc85a8dbf483daa8f0c1e17fef3f7fe74be04b236ac4638b363aaf585dd40",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x0c7f46f61f811b41600a43924684e9906b22da5db1b936f4dee71a39a13b685b",
+            "units": 10000,
+            "price_micro_usdc": 3588885
+          },
+          {
+            "quoteId": "0x5aad618507553c4ee950c9eb5d8d9ed7b1cb999e8d07848cefe459ea71ba06cf",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x006154af691a644e70ac2681a22b2eba16bfa830f6506a2f17fea5ea4ad5c48e",
+            "units": 30000,
+            "price_micro_usdc": 10525499
+          },
+          {
+            "quoteId": "0x7bec93a151d765e0fe65ab6cb9a7570dcc2e79a9de73a58715ced3f803e6b58f",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x2f8faf547999a7a4ddc402245eb34e0046c1e9d17c68213b4baf01967fb2d4b6",
+            "units": 30000,
+            "price_micro_usdc": 10491612
+          },
+          {
+            "quoteId": "0xb813583827f94f8e0f12e545cf30eb571018dfdace4d292fe1b8d1b60c33346d",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x1d67702e723eb2fbb8db15f6fe0ddd0d749b20b3195cf79c7d39e10798dafa2d",
+            "units": 1000,
+            "price_micro_usdc": 1447581
+          },
+          {
+            "quoteId": "0x8ee6de32dce9b21618b219dc2deee150d8b26e1a8e2229ae3b4b735962a135d7",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x2aec726f2db73ae6716dab44873cf7ac4813868259a7ab3bff6827eb8debd9b4",
+            "units": 1000,
+            "price_micro_usdc": 1400094
+          },
+          {
+            "quoteId": "0x37d71478b51a10343c69332e459c1ef0b783a17f1f7485483ff981d8d94bcf35",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xdc21304724d749b3c7a5b56108dfffde79e0e9e9d2a10297d2de27b1a1b690c3",
+            "units": 5000,
+            "price_micro_usdc": 6672393
+          },
+          {
+            "quoteId": "0x07c5641fd176276102a519dbdc0302ccb93228b7b4fa42340f3c9443db18f4dc",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x6c0c6aee770a8104e21e2158b05ce2a40aab53c1cfe30353d8734be507d48d62",
+            "units": 5000,
+            "price_micro_usdc": 6424041
+          },
+          {
+            "quoteId": "0xb2f4a7a701ab3ff50a227d4dbd1d1e5110f7e3d94eda2d528be6b6a478917334",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xa132354ce838812d2145e08cbb5b9ca28cd457321fa6beca36a349b10494b372",
+            "units": 15000,
+            "price_micro_usdc": 19324276
+          },
+          {
+            "quoteId": "0x44dbd2187a2ec123cc6c1feb0248c983a6227469dfad2b341db82c3e5c405b9d",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xa10123214c9b40ef13057880bdbed5025bb134bf6b5f92ececb2602d267997ac",
+            "units": 15000,
+            "price_micro_usdc": 19349551
+          },
+          {
+            "quoteId": "0x9b5426b8d8dc4ed6d2e5c49b04b9514ebc8c8b2232004ceb1a614b88aceff707",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xa80e957fd3f49bc89f97af7192c4790015a053bd7e7df211731aba5142e7b356",
+            "units": 200,
+            "price_micro_usdc": 1196257
+          },
+          {
+            "quoteId": "0x3b1ff815a063f4e7b27072e764b103616046565b768138c725f919c4561d362a",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x544e3dc8d687403a7dad002e053cc05fad5a357247091f6582591c35950340ef",
+            "units": 200,
+            "price_micro_usdc": 1206500
+          },
+          {
+            "quoteId": "0x2842b7d236a4b17f81caa6ccef456211106639b2e9c7f44cd73e61e01b957e03",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x389e842340c026ff0d45f0faee5abd3c11ca0a37891adbf5e415d38360516a9e",
+            "units": 1000,
+            "price_micro_usdc": 5684945
+          },
+          {
+            "quoteId": "0x94d3b4b72c5de36e1a6f55dd1483f1a38134076992e328f629845a3b55ec5640",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x0aced4c4340099dd7b11b894c414f27e02e679cc4a47818906d5d9d5f48a792d",
+            "units": 1000,
+            "price_micro_usdc": 5598460
+          },
+          {
+            "quoteId": "0xca8a46b2fc8abd5e594cbb1fa938b57e52e10ac395b679f981c5cfa973ca041c",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x715fa136f62058ca5633b96510917b38e2f37c9b738bd08503ecb62aa4506693",
+            "units": 4000,
+            "price_micro_usdc": 20777717
+          },
+          {
+            "quoteId": "0xf0db679e933a4f6be3bef9414ed9e6b320ff9ca68c9d02088be2148bb2039b4d",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x4f88bac441a0c91259d50dc14bf3dd8ede3182301f745a082624fe3c0b67b988",
+            "units": 4000,
+            "price_micro_usdc": 20337094
+          }
+        ]
+      },
+      "solvers": {
+        "ortools_cpsat": {
+          "solver": "OR-Tools CP-SAT",
+          "executionMode": "LOCAL_REFERENCE",
+          "jobId": "N/A (Local)",
+          "status": "OPTIMAL",
+          "feasible": true,
+          "costMicroUsdc": 23070879,
+          "costUsdc": 23.07,
+          "gapVsCpSatPct": 0.0,
+          "savingsVsVendorRulePct": 26.59,
+          "savingsVsGreedyPct": 1.99,
+          "runtimeMs": 27.55,
+          "usageCredits": "0 (Local Execution)",
+          "selectedOfferCount": 7,
+          "selectedOfferIds": [
+            "0x8dd10bf73d4fd12a35e3931a9fa13bd141efce45b797d3a69a82bbfe787fcef8",
+            "0x571227eff38196138e06b8ae62e5e4df6136302df96699d9de533095561d9e9e",
+            "0x1dddc85a8dbf483daa8f0c1e17fef3f7fe74be04b236ac4638b363aaf585dd40",
+            "0x8ee6de32dce9b21618b219dc2deee150d8b26e1a8e2229ae3b4b735962a135d7",
+            "0x07c5641fd176276102a519dbdc0302ccb93228b7b4fa42340f3c9443db18f4dc",
+            "0x9b5426b8d8dc4ed6d2e5c49b04b9514ebc8c8b2232004ceb1a614b88aceff707",
+            "0x94d3b4b72c5de36e1a6f55dd1483f1a38134076992e328f629845a3b55ec5640"
+          ]
+        },
+        "greedy_baseline": {
+          "solver": "Greedy Heuristic",
+          "executionMode": "LOCAL_BASELINE",
+          "jobId": "N/A (Local)",
+          "status": "FEASIBLE",
+          "feasible": true,
+          "costMicroUsdc": 23540053,
+          "costUsdc": 23.54,
+          "gapVsCpSatPct": 2.03,
+          "savingsVsVendorRulePct": 25.09,
+          "runtimeMs": 0.11,
+          "usageCredits": "0 (Local Execution)",
+          "selectedOfferCount": 11,
+          "selectedOfferIds": [
+            "0x1dddc85a8dbf483daa8f0c1e17fef3f7fe74be04b236ac4638b363aaf585dd40",
+            "0xe40a1fbdf0bda53e149cd0d01389012b53df0e081d233d5f70e29444b8290eaf",
+            "0x5f354d77c54d166e08db1598d8ed586e4bcb340752d880f8b91d8914aa33eee5",
+            "0xcdd6aeda66396052df35f9348e29cda7b245d96e8ba68b569f9e67f308f2b895",
+            "0x07c5641fd176276102a519dbdc0302ccb93228b7b4fa42340f3c9443db18f4dc",
+            "0x8ee6de32dce9b21618b219dc2deee150d8b26e1a8e2229ae3b4b735962a135d7",
+            "0xb813583827f94f8e0f12e545cf30eb571018dfdace4d292fe1b8d1b60c33346d",
+            "0x2653cd7984e16a9dfc2fdd6f8f48851799af68a654b6e030337ab1ddfb0ba05d",
+            "0x20202da148df155759a140d87d56dda3dd4102a56127a0d7d17b8c8085c542ba",
+            "0x94d3b4b72c5de36e1a6f55dd1483f1a38134076992e328f629845a3b55ec5640",
+            "0x9b5426b8d8dc4ed6d2e5c49b04b9514ebc8c8b2232004ceb1a614b88aceff707"
+          ]
+        },
+        "vendor_rule_baseline": {
+          "solver": "Vendor-Rule Heuristic",
+          "executionMode": "LOCAL_BASELINE",
+          "jobId": "N/A (Local)",
+          "status": "FEASIBLE",
+          "feasible": true,
+          "costMicroUsdc": 31425407,
+          "costUsdc": 31.43,
+          "gapVsCpSatPct": 36.21,
+          "savingsVsVendorRulePct": 0.0,
+          "runtimeMs": 0.02,
+          "usageCredits": "0 (Local Execution)",
+          "selectedOfferCount": 3,
+          "selectedOfferIds": [
+            "0xff3286fd16f0313ab090ff267eca189704b6df7a32a0890ab98f21b24e1720ef",
+            "0x49e33eda518d3de7514b59087d4b78c5c5a50d913e5d0f8b9622889fa3b697f0",
+            "0x69858ead0e106ccfe3a264fe6d18084cf6e24798812af342e347c2f910b0ac1c"
+          ]
+        },
+        "hosted_qpiai_opt": {
+          "solver": "QpiAI Opt Platform (MILP)",
+          "executionMode": "HOSTED_PLATFORM_BLOCKED",
+          "jobId": "None (Blocked Pre-Execution)",
+          "status": "BLOCKED_NO_STORAGE_QUOTA",
+          "feasible": false,
+          "costMicroUsdc": null,
+          "costUsdc": null,
+          "gapVsCpSatPct": null,
+          "savingsVsVendorRulePct": null,
+          "runtimeMs": 119.62,
+          "usageCredits": "0 credits (Tier: None)",
+          "errorDetail": {
+            "category": "QUOTA_CREDIT_RESTRICTION",
+            "blockerCode": "BLOCKED_NO_STORAGE_QUOTA",
+            "errorClass": "APIError",
+            "errorMessage": "no active storage quota found for organization",
+            "wallClockMs": 119.62
+          }
+        }
+      }
+    },
+    {
+      "seed": 3,
+      "inputSha256": "55737105bf8e4df2325e27f622f6ca95e7170b16af4d17a1c9abf30e86bbfa29",
+      "inputSnapshot": {
+        "seed": 3,
+        "fixed_timestamp": 1700000000,
+        "vault_address": "0x1111111111111111111111111111111111111111",
+        "requirements": {
+          "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00": 15000,
+          "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f": 8000,
+          "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0": 1200
+        },
+        "max_budget_micro_usdc": 40000000,
+        "max_lines": 16,
+        "total_quotes_generated": 53,
+        "allowed_quotes_count": 48,
+        "allowed_vendors": [
+          "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+          "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+          "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+          "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c"
+        ],
+        "offers": [
+          {
+            "quoteId": "0x98e01cffb1dcca3eb3544e018e5e93e442d58a4e545f1b707d584a10107ae010",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0xedd6be6762c4684f7de70673eeec51fcf54ce0e4aa327e55d1a94d4aa6319709",
+            "units": 1000,
+            "price_micro_usdc": 438983
+          },
+          {
+            "quoteId": "0xa47fe95a90e3c18394f7e2b6430216cbfe984d608ceb39a27a976be0bb495805",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x6ecbd3fc6205adf737761307cde1a20f36aa272a52f33df00b0894e724fc8888",
+            "units": 1000,
+            "price_micro_usdc": 435929
+          },
+          {
+            "quoteId": "0xe1a84c5e4832dc631222eabbd08b380391b793536c64a7a5d05840bff8b25fc7",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x99484002cf8ede8885290a8c4cd4cc9175c78bf5326c4a4783f4ede8851327e5",
+            "units": 5000,
+            "price_micro_usdc": 2030946
+          },
+          {
+            "quoteId": "0x21d75106d8f06723bf7723476061656119ca9567fe8139ad8d4df504b50e4a16",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0xed656339b539a73861c6d36b70c22e792f80962ef0c39b77e88f333a6c91bbc1",
+            "units": 5000,
+            "price_micro_usdc": 1985665
+          },
+          {
+            "quoteId": "0xe322376935574ae44371732c9b1d230da0890fbdd8c32babc76cc088052d6906",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x36967871ef14d3f47d77969867920ee565c26095efcafec5451a5d4181d8345c",
+            "units": 20000,
+            "price_micro_usdc": 6556277
+          },
+          {
+            "quoteId": "0x4fc62d83bb24fcd12ea6fc38e04a2fef13c7c5e6fa19d6f575d6a5106fdb90f5",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x56fafcab8e910e01025ec77507815e8a9ed102e590a47a67949a6043591667ad",
+            "units": 20000,
+            "price_micro_usdc": 6406685
+          },
+          {
+            "quoteId": "0xa73ee53b3a50844781f229ecc3892c31f179e4e8327b94bc9d3b6aa70aab6edb",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x7834e6d155eb1f302d7372ed2c413e2cbe7b084d32b556c20c11990482b9e948",
+            "units": 50000,
+            "price_micro_usdc": 14890982
+          },
+          {
+            "quoteId": "0x82b0aa8caec8dfa97c8bdfeca2e219d8206ff981df7d7cd1157f476bddc79a69",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x182ceb57089501e3b71b97458eaf26ca908935a47cf224ed48c4407f04ae8149",
+            "units": 50000,
+            "price_micro_usdc": 14584128
+          },
+          {
+            "quoteId": "0xd8e9e2b9c961c3abc14807225c5454c7f2b9000b4de5a5fb35809d7b290450e6",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x9380bcc7211cad9eddac78c0e45c8d8501632f8294eebda650a19b58c004617b",
+            "units": 100000,
+            "price_micro_usdc": 26849380
+          },
+          {
+            "quoteId": "0x98c051620adc4f5dc16482b9172c962c1cdaca4a4364b8b45c895f293f7e03ff",
+            "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x0afc5d72229953e8e5f4f9c6c97bc753ac724ce86cceceb37759f1817edffaea",
+            "units": 100000,
+            "price_micro_usdc": 27024297
+          },
+          {
+            "quoteId": "0x60d6673b203b5409c5531321a5e836044b1843821c228fcde71a8d552ac2027d",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x4f4391132321209093a05fa66ef979aace9f45d2a5f69cad4fda0f8071d00a46",
+            "units": 500,
+            "price_micro_usdc": 873240
+          },
+          {
+            "quoteId": "0xafff6bdd0cd7ea677787bc40c72fcf2481b7dea698298b066f67f02ceccc5730",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xe36df6b5bd4f0d5ed35c2345b83fdb35be5b92dc71e7db71c080ca883b792f8e",
+            "units": 500,
+            "price_micro_usdc": 881342
+          },
+          {
+            "quoteId": "0xbf51ae31e4e4684a5d69d89786f4fbbea698e6b3eceffff60a4482dc33c98439",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xb16e1f25d936499d28efa714788dc5f01db4b265c6f85a7780cbc6044332c037",
+            "units": 2000,
+            "price_micro_usdc": 3035971
+          },
+          {
+            "quoteId": "0x58a4dcc097715fb7f8b377303c3bc5c2379b29a92fcea498995259906ef4731d",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x40cd5c875f8517621711bad6f3b91cab0d4057837f4c3e33301ead7924ef84d9",
+            "units": 2000,
+            "price_micro_usdc": 3027571
+          },
+          {
+            "quoteId": "0xb12d4b7cc2efedac25214d74282f8b9e6f929a9fdb1b2e63fe9a009171fc0d14",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xc3680b6dd92a21ed59544f9244f6b39d1a937d4512cee2b994134961dbb5487d",
+            "units": 10000,
+            "price_micro_usdc": 11595385
+          },
+          {
+            "quoteId": "0x063a06abaada15e9b6ec76743f5ce643b61c1de40ec1b3f17fb120e78b341b39",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x0e6f8c55f06e43636eb5a7170bda729fc1f8d9ca95997d2420d58d3a9a528e91",
+            "units": 10000,
+            "price_micro_usdc": 11518659
+          },
+          {
+            "quoteId": "0x2e1616d7949e2e43cf46b96efd7ecb231d2d2db7a5ab480b2ebabc74c1eafeed",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x90b64067d057e073d95592eac3d9f3f881346d0c9388706d7e04d41870f797b1",
+            "units": 25000,
+            "price_micro_usdc": 24043501
+          },
+          {
+            "quoteId": "0x336f1bc6e118381c256fbc92358a31bd9c013cdb7839efa9c8b5c1fb4780321b",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x81fb3ca1dd78e7457b8a65e1536af78c372cd3ec230a45b1bb69d9bb1f7f5c37",
+            "units": 25000,
+            "price_micro_usdc": 24861432
+          },
+          {
+            "quoteId": "0x726b046af050079ccd05017d4672b65bb0a6b991221da6ad8709fcde92310bdb",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xb65bcfff1d832f6d8c0c8daf1e285a902a9ed254ba8450f4f0648f14a5f086f8",
+            "units": 50000,
+            "price_micro_usdc": 42755171
+          },
+          {
+            "quoteId": "0xa36301dbb8aa7a1ec1b3a849449890cd332707729f84ad15190d4addfc7bc8b3",
+            "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xff196adec1b0e8c557dcc27d76fef5f34df1bbccbec38a08e4ba1e828ea24439",
+            "units": 50000,
+            "price_micro_usdc": 43026411
+          },
+          {
+            "quoteId": "0x69680b7568e02edf45c631dc8f83fb5207e35bb7454a578155ddebf6b0c61950",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x703eb19ab0439b6825326fb113a4d3c0ce4e9444c6de2beb3e2a36efac43e49e",
+            "units": 100,
+            "price_micro_usdc": 830894
+          },
+          {
+            "quoteId": "0x7b5d596199805019ab8b895b6d257613c5a3dac775c8922443d76ecac3399b95",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xb6985f98ae89f76cf0d55999af5278556b05ccd1c4675948c82c49a9ef49a982",
+            "units": 100,
+            "price_micro_usdc": 813697
+          },
+          {
+            "quoteId": "0xaa0a801cf82b6402f77fe9273f4c89e51d407bb5662bfcf8a0ae066e3b814b8c",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xcecadc60776b93ae3ce0aab0d7925ad5bc928f845b9a955ecf6684acf37ff38f",
+            "units": 500,
+            "price_micro_usdc": 3340379
+          },
+          {
+            "quoteId": "0x11ce31125d10179d9ffb8640b12c00f1848d182213a315d91900275b899f266e",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xedee527756fd5fb817ee4213de3486928a5b54085d46d4591a08782006077fc8",
+            "units": 500,
+            "price_micro_usdc": 3406125
+          },
+          {
+            "quoteId": "0xc2b0995ca621cec68daf538738ae6fd276ac392011fa71434d15793f1556b3a5",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xecb51bc5feea33257c4b68bd915474cd86dcecde1fe4f15ab984bde8abfabb8b",
+            "units": 2500,
+            "price_micro_usdc": 12764685
+          },
+          {
+            "quoteId": "0x0fe1ee7a9292abfdd2682a86c61c0bbc8970b87b8a62c20b87eacae963687dfe",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x90da81e3dd5003fd6b3a13317d452affecfc4a684666d793987ac149d8385c1f",
+            "units": 2500,
+            "price_micro_usdc": 12784671
+          },
+          {
+            "quoteId": "0xc8711b62163f7e7fc5ab389a56c10fd5a86207ac0040c887298393a8b451e3a0",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x6f715ff5694c6f7a17c19368142bcf1e57b200e2ad4473b21432bca8ce9ccf5f",
+            "units": 10000,
+            "price_micro_usdc": 39591638
+          },
+          {
+            "quoteId": "0xb8643dd11f518049b6ea5787353682e7dc09bdd86cde8daa8f8254298b4f154b",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xd01ecb3574691b1da575245943e2b97e84d1bc5f2b8865b61079dd68c2bbde17",
+            "units": 10000,
+            "price_micro_usdc": 38768698
+          },
+          {
+            "quoteId": "0x78fe60863f92c963fd2bc0853dcc0fd7b0f6cf306af9f6aa3d0f6ffead9ffe8d",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xf737c50572fd8eac15ae921421d3081b64468ca48b04a4911209f904129bb327",
+            "units": 25000,
+            "price_micro_usdc": 87902945
+          },
+          {
+            "quoteId": "0x4234365620b63b91ed0d9f9486f89b2fe12c52595609b4867a5c851dadfb5d14",
+            "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x07972c4b71617f1e2c4f44a61729efe55817bf744e245a09859024e85c759f6c",
+            "units": 25000,
+            "price_micro_usdc": 88633845
+          },
+          {
+            "quoteId": "0x1e158b53b2fd192fea14af7423e519c595e88388f27be59fa7c9547ae2c8154f",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x2e4fa778342f94e870921a57d0e8b0a73204c04128aa0541f8096e65fec70677",
+            "units": 2000,
+            "price_micro_usdc": 753061
+          },
+          {
+            "quoteId": "0x9edabb054a428e1089c27136410751197bf5f01a91ca397dc4ce5bf2dc78310c",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x9f415412511ccc9e0de78e607579501a685af3ceaebfc57198b918c076b276a0",
+            "units": 2000,
+            "price_micro_usdc": 750935
+          },
+          {
+            "quoteId": "0x6b58c3ab80b063b9034950461da8f4ff7f5f2dbf2c236eef7eaf90d98e1d903f",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x038a215a6a0ea9585c6218005ff9d12ee3eab315232c31721669d8b7bfb45f4b",
+            "units": 10000,
+            "price_micro_usdc": 3624501
+          },
+          {
+            "quoteId": "0x92cb5bb658f49b11fc1dc7ca4eb72a73c5f1331c02d3bf0b3a8aac5b29e3eceb",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x0c7f46f61f811b41600a43924684e9906b22da5db1b936f4dee71a39a13b685b",
+            "units": 10000,
+            "price_micro_usdc": 3624265
+          },
+          {
+            "quoteId": "0xb2fcca5f0fc858d3cc920ee23d0fd2a79bbf0a690d4ff400388c0032c394730f",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x006154af691a644e70ac2681a22b2eba16bfa830f6506a2f17fea5ea4ad5c48e",
+            "units": 30000,
+            "price_micro_usdc": 10839529
+          },
+          {
+            "quoteId": "0xc248787d43c4bde9f1854f71d5bf3d2653790cee2df26525eebca1e2d50b0b08",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00",
+            "skuId": "0x2f8faf547999a7a4ddc402245eb34e0046c1e9d17c68213b4baf01967fb2d4b6",
+            "units": 30000,
+            "price_micro_usdc": 10652865
+          },
+          {
+            "quoteId": "0x952ed8eac496de92e5d46664ab5e4cf4b2d09f88e6b6f95cd833b02c7caaf460",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x1d67702e723eb2fbb8db15f6fe0ddd0d749b20b3195cf79c7d39e10798dafa2d",
+            "units": 1000,
+            "price_micro_usdc": 1448042
+          },
+          {
+            "quoteId": "0x0a5a180baad07354ead1fcbf85a5e760c21bb1700dd9016da64dce458d83e642",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x2aec726f2db73ae6716dab44873cf7ac4813868259a7ab3bff6827eb8debd9b4",
+            "units": 1000,
+            "price_micro_usdc": 1439917
+          },
+          {
+            "quoteId": "0x04d9c8912423e94f259f6efa15c560cec520d5547ad6afabf46ff6d642e072c5",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xdc21304724d749b3c7a5b56108dfffde79e0e9e9d2a10297d2de27b1a1b690c3",
+            "units": 5000,
+            "price_micro_usdc": 6755315
+          },
+          {
+            "quoteId": "0x1dfe3daf24ab8f7f12e52e639ae5194c992a0ec54279893a719b7c96bc8e0289",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0x6c0c6aee770a8104e21e2158b05ce2a40aab53c1cfe30353d8734be507d48d62",
+            "units": 5000,
+            "price_micro_usdc": 6589062
+          },
+          {
+            "quoteId": "0xffedafc9dc781f7ca425e9bc6fee2cfc49720074ee603022a3f731a0df982382",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xa132354ce838812d2145e08cbb5b9ca28cd457321fa6beca36a349b10494b372",
+            "units": 15000,
+            "price_micro_usdc": 18244649
+          },
+          {
+            "quoteId": "0x2231239f60259b528a3b273487552088609ad8f4d41c952b5e9eff7e008980b0",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f",
+            "skuId": "0xa10123214c9b40ef13057880bdbed5025bb134bf6b5f92ececb2602d267997ac",
+            "units": 15000,
+            "price_micro_usdc": 19290956
+          },
+          {
+            "quoteId": "0xd9cac31451203189b81461fbf95716c1effea7b2df7294e3a526244ed0796f1c",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0xa80e957fd3f49bc89f97af7192c4790015a053bd7e7df211731aba5142e7b356",
+            "units": 200,
+            "price_micro_usdc": 1244605
+          },
+          {
+            "quoteId": "0x8c3f9e68dabb0db6caf5c4a33d415ef4f39c7967eb3206471866752a94de08c5",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x544e3dc8d687403a7dad002e053cc05fad5a357247091f6582591c35950340ef",
+            "units": 200,
+            "price_micro_usdc": 1238851
+          },
+          {
+            "quoteId": "0x0c65ba38f250b56adf5016a9c117b7e652d130e7d8eb347660b181cbe77afd0a",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x389e842340c026ff0d45f0faee5abd3c11ca0a37891adbf5e415d38360516a9e",
+            "units": 1000,
+            "price_micro_usdc": 5530407
+          },
+          {
+            "quoteId": "0xc0102905cfd28f4650c7b895608e8ee7f711a56bfe29274debb0f7e739e8309a",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x0aced4c4340099dd7b11b894c414f27e02e679cc4a47818906d5d9d5f48a792d",
+            "units": 1000,
+            "price_micro_usdc": 5594079
+          },
+          {
+            "quoteId": "0x552503043fe210c2c8bf6a0c12ef9f5731bf62a0b463042913f8221b13c4f228",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x715fa136f62058ca5633b96510917b38e2f37c9b738bd08503ecb62aa4506693",
+            "units": 4000,
+            "price_micro_usdc": 20319312
+          },
+          {
+            "quoteId": "0xea6113befe312c2bcf6d65e54650ac4a82767bd330f2ca8bee4df62f7be88170",
+            "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c",
+            "categoryId": "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0",
+            "skuId": "0x4f88bac441a0c91259d50dc14bf3dd8ede3182301f745a082624fe3c0b67b988",
+            "units": 4000,
+            "price_micro_usdc": 21351796
+          }
+        ]
+      },
+      "solvers": {
+        "ortools_cpsat": {
+          "solver": "OR-Tools CP-SAT",
+          "executionMode": "LOCAL_REFERENCE",
+          "jobId": "N/A (Local)",
+          "status": "OPTIMAL",
+          "feasible": true,
+          "costMicroUsdc": 23389998,
+          "costUsdc": 23.39,
+          "gapVsCpSatPct": 0.0,
+          "savingsVsVendorRulePct": 24.34,
+          "savingsVsGreedyPct": 0.74,
+          "runtimeMs": 69.39,
+          "usageCredits": "0 (Local Execution)",
+          "selectedOfferCount": 9,
+          "selectedOfferIds": [
+            "0xa47fe95a90e3c18394f7e2b6430216cbfe984d608ceb39a27a976be0bb495805",
+            "0x58a4dcc097715fb7f8b377303c3bc5c2379b29a92fcea498995259906ef4731d",
+            "0x1e158b53b2fd192fea14af7423e519c595e88388f27be59fa7c9547ae2c8154f",
+            "0x9edabb054a428e1089c27136410751197bf5f01a91ca397dc4ce5bf2dc78310c",
+            "0x92cb5bb658f49b11fc1dc7ca4eb72a73c5f1331c02d3bf0b3a8aac5b29e3eceb",
+            "0x0a5a180baad07354ead1fcbf85a5e760c21bb1700dd9016da64dce458d83e642",
+            "0x1dfe3daf24ab8f7f12e52e639ae5194c992a0ec54279893a719b7c96bc8e0289",
+            "0x8c3f9e68dabb0db6caf5c4a33d415ef4f39c7967eb3206471866752a94de08c5",
+            "0x0c65ba38f250b56adf5016a9c117b7e652d130e7d8eb347660b181cbe77afd0a"
+          ]
+        },
+        "greedy_baseline": {
+          "solver": "Greedy Heuristic",
+          "executionMode": "LOCAL_BASELINE",
+          "jobId": "N/A (Local)",
+          "status": "FEASIBLE",
+          "feasible": true,
+          "costMicroUsdc": 23565051,
+          "costUsdc": 23.57,
+          "gapVsCpSatPct": 0.75,
+          "savingsVsVendorRulePct": 23.78,
+          "runtimeMs": 0.13,
+          "usageCredits": "0 (Local Execution)",
+          "selectedOfferCount": 11,
+          "selectedOfferIds": [
+            "0x92cb5bb658f49b11fc1dc7ca4eb72a73c5f1331c02d3bf0b3a8aac5b29e3eceb",
+            "0x9edabb054a428e1089c27136410751197bf5f01a91ca397dc4ce5bf2dc78310c",
+            "0x1e158b53b2fd192fea14af7423e519c595e88388f27be59fa7c9547ae2c8154f",
+            "0xa47fe95a90e3c18394f7e2b6430216cbfe984d608ceb39a27a976be0bb495805",
+            "0x1dfe3daf24ab8f7f12e52e639ae5194c992a0ec54279893a719b7c96bc8e0289",
+            "0x0a5a180baad07354ead1fcbf85a5e760c21bb1700dd9016da64dce458d83e642",
+            "0x952ed8eac496de92e5d46664ab5e4cf4b2d09f88e6b6f95cd833b02c7caaf460",
+            "0x60d6673b203b5409c5531321a5e836044b1843821c228fcde71a8d552ac2027d",
+            "0xafff6bdd0cd7ea677787bc40c72fcf2481b7dea698298b066f67f02ceccc5730",
+            "0x0c65ba38f250b56adf5016a9c117b7e652d130e7d8eb347660b181cbe77afd0a",
+            "0x8c3f9e68dabb0db6caf5c4a33d415ef4f39c7967eb3206471866752a94de08c5"
+          ]
+        },
+        "vendor_rule_baseline": {
+          "solver": "Vendor-Rule Heuristic",
+          "executionMode": "LOCAL_BASELINE",
+          "jobId": "N/A (Local)",
+          "status": "FEASIBLE",
+          "feasible": true,
+          "costMicroUsdc": 30916347,
+          "costUsdc": 30.92,
+          "gapVsCpSatPct": 32.18,
+          "savingsVsVendorRulePct": 0.0,
+          "runtimeMs": 0.03,
+          "usageCredits": "0 (Local Execution)",
+          "selectedOfferCount": 3,
+          "selectedOfferIds": [
+            "0xe322376935574ae44371732c9b1d230da0890fbdd8c32babc76cc088052d6906",
+            "0xb12d4b7cc2efedac25214d74282f8b9e6f929a9fdb1b2e63fe9a009171fc0d14",
+            "0xc2b0995ca621cec68daf538738ae6fd276ac392011fa71434d15793f1556b3a5"
+          ]
+        },
+        "hosted_qpiai_opt": {
+          "solver": "QpiAI Opt Platform (MILP)",
+          "executionMode": "HOSTED_PLATFORM_BLOCKED",
+          "jobId": "None (Blocked Pre-Execution)",
+          "status": "BLOCKED_NO_STORAGE_QUOTA",
+          "feasible": false,
+          "costMicroUsdc": null,
+          "costUsdc": null,
+          "gapVsCpSatPct": null,
+          "savingsVsVendorRulePct": null,
+          "runtimeMs": 115.4,
+          "usageCredits": "0 credits (Tier: None)",
+          "errorDetail": {
+            "category": "QUOTA_CREDIT_RESTRICTION",
+            "blockerCode": "BLOCKED_NO_STORAGE_QUOTA",
+            "errorClass": "APIError",
+            "errorMessage": "no active storage quota found for organization",
+            "wallClockMs": 115.4
+          }
+        }
+      }
+    }
+  ]
+}

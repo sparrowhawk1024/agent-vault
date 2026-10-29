@@ -84,6 +84,12 @@ class AuditLog:
         if 0 <= index < len(self.entries):
             self.entries[index]["payload"] = new_payload
 
+    def reset(self):
+        """Reset the audit chain back to genesis."""
+        self.entries = []
+        self._record_raw("GENESIS", {"system": "AgentVault", "version": "1.0.0"}, prev_hash=self._genesis_hash)
+
 
 # Singleton audit log instance
 global_audit_log = AuditLog()
+

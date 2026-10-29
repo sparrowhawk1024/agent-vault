@@ -13,6 +13,10 @@ import json
 import time
 import math
 import numpy as np
+from dotenv import load_dotenv
+
+# Ensure .env is loaded
+load_dotenv()
 
 # Ensure evidence dir exists
 os.makedirs("evidence/runs", exist_ok=True)
@@ -75,11 +79,18 @@ try:
                 "detail": "qpiai_opt.opt_solvers.solve requires valid client=Client(api_key=...) registered at https://opt.qpiai.tech/",
             }
     else:
-        client = Client(api_key=api_key)
+        import requests
+        session = requests.Session()
+        session.headers.update({
+            "Authorization": f"Bearer {api_key}",
+            "X-Secret-Token": api_key,
+        })
+        client = Client(api_key=api_key, session=session)
         res = solve(m, mode="local", client=client)
+        print("QpiAI Opt local solve succeeded! Objective:", getattr(res, "objective", None))
         evidence["qpiai_opt"]["status"] = "SUCCESS"
         evidence["qpiai_opt"]["execution_mode"] = "LIVE_QPIAI"
-        evidence["qpiai_opt"]["objective_value"] = getattr(res, "objective_value", None)
+        evidence["qpiai_opt"]["objective_value"] = getattr(res, "objective", None)
         evidence["qpiai_opt"]["solution"] = getattr(res, "solution", None)
 
 except Exception as ex:
@@ -173,13 +184,21 @@ try:
             },
         }
     else:
-        # If key is available, attempt remote run
+        # If key is available, verify authentication and check remote resources
         try:
-            cloud_res = circ.run(shots=100)
+            from qpiai_quantum import QpiAIQuantumAuth
+            QpiAIQuantumAuth.login(qcloud_key)
+            is_verified = bool(QpiAIQuantumAuth.verify_api_key())
+            print(f"QCloud API Key Authenticated: {is_verified}")
+            resources = QpiAIQuantumAuth.list_compute_resources(display=False)
+            
+            # Note: Remote job submission requires an active paid subscription tier
             evidence["qpiai_quantum"]["qcloud_remote"] = {
-                "status": "SUCCESS",
-                "execution_mode": "LIVE_QPIAI",
-                "result": str(cloud_res),
+                "status": "AUTHENTICATED",
+                "execution_mode": "CLOUD_DISCOVERED",
+                "verified": is_verified,
+                "available_resources": [r.get("backend_name") for r in resources] if resources else [],
+                "note": "Remote execution requires active subscription; local simulation runs via StatevectorSimulator/QpiAI-QSV-Local",
             }
         except Exception as qe:
             evidence["qpiai_quantum"]["qcloud_remote"] = {

@@ -1,37 +1,66 @@
 import React, { useState, useEffect } from 'react';
-import { api, type SystemHealth } from './api';
+import { api, type SystemHealth, type DashboardOverview } from './api';
 import { MandateView } from './views/MandateView';
 import { AgentRunView } from './views/AgentRunView';
 import { PaymentsView } from './views/PaymentsView';
 import { SecurityConsoleView } from './views/SecurityConsoleView';
 import { QpiAIEvidenceView } from './views/QpiAIEvidenceView';
 import { AuditLogView } from './views/AuditLogView';
+import { AutoRefillView } from './views/AutoRefillView';
+import { DashboardOverviewBanner } from './components/DashboardOverviewBanner';
+import { GuidedDemoModal } from './components/GuidedDemoModal';
+import { ArchitecturePolicyModal } from './components/ArchitecturePolicyModal';
 import { 
   Shield, 
   Cpu, 
   CreditCard, 
   ShieldAlert, 
   Atom, 
-  Link2 
+  Link2,
+  BookOpen,
+  Bot
 } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'mandate' | 'agent' | 'payments' | 'security' | 'qpiai' | 'audit'>('mandate');
+  const [activeTab, setActiveTab] = useState<'mandate' | 'agent' | 'payments' | 'autorefill' | 'security' | 'qpiai' | 'audit'>('mandate');
   const [health, setHealth] = useState<SystemHealth | null>(null);
+  const [overview, setOverview] = useState<DashboardOverview | null>(null);
+  const [loadingOverview, setLoadingOverview] = useState<boolean>(false);
   const [activeMandateId, setActiveMandateId] = useState<string>('');
+  const [showDemoModal, setShowDemoModal] = useState<boolean>(false);
+  const [showPolicyModal, setShowPolicyModal] = useState<boolean>(false);
+
+  const fetchOverview = async () => {
+    setLoadingOverview(true);
+    try {
+      const data = await api.getOverview();
+      setOverview(data);
+      if (data.mandate?.mandateId && !activeMandateId) {
+        setActiveMandateId(data.mandate.mandateId);
+      }
+    } catch (err) {
+      console.error('Error fetching overview:', err);
+    } finally {
+      setLoadingOverview(false);
+    }
+  };
 
   const fetchHealth = async () => {
     try {
       const h = await api.getHealth();
       setHealth(h);
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching health:', err);
     }
   };
 
   useEffect(() => {
     fetchHealth();
-    const interval = setInterval(fetchHealth, 5000);
+    fetchOverview();
+    const interval = setInterval(() => {
+      fetchHealth();
+      fetchOverview();
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -81,6 +110,14 @@ export const App: React.FC = () => {
           </button>
 
           <button 
+            className={`nav-tab ${activeTab === 'autorefill' ? 'active' : ''}`}
+            onClick={() => setActiveTab('autorefill')}
+          >
+            <Bot size={16} />
+            Auto-Refill (x402)
+          </button>
+
+          <button 
             className={`nav-tab ${activeTab === 'security' ? 'active' : ''}`}
             onClick={() => setActiveTab('security')}
           >
@@ -105,27 +142,47 @@ export const App: React.FC = () => {
           </button>
         </nav>
 
-        {/* Live System Status Badges */}
-        <div className="header-status">
-          <div className="status-pill">
-            <span className={`status-dot ${health?.chain?.connected ? 'dot-green' : 'dot-red'}`} />
-            <span>Anvil: {health?.chain?.connected ? '31337' : 'Offline'}</span>
-          </div>
+        {/* Header Right Status & Policy Action */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => setShowPolicyModal(true)}
+            style={{ fontSize: '0.74rem', padding: '5px 10px' }}
+          >
+            <BookOpen size={13} />
+            Architecture & Policy
+          </button>
 
-          <div className="status-pill">
-            <span className={`status-dot ${health?.verifier?.status === 'ACTIVE' ? 'dot-green' : 'dot-red'}`} />
-            <span>Verifier: {health?.verifier?.status || 'Unknown'}</span>
-          </div>
+          <div className="header-status">
+            <div className="status-pill">
+              <span className={`status-dot ${health?.chain?.connected ? 'dot-green' : 'dot-red'}`} />
+              <span>Anvil: {health?.chain?.connected ? '31337' : 'Offline'}</span>
+            </div>
 
-          <div className="status-pill">
-            <span className="status-dot dot-green" />
-            <span>QpiAI: {health?.qpiai?.optExecutionMode || 'Live'}</span>
+            <div className="status-pill">
+              <span className={`status-dot ${health?.verifier?.status === 'ACTIVE' ? 'dot-green' : 'dot-red'}`} />
+              <span>Verifier: {health?.verifier?.status || 'Unknown'}</span>
+            </div>
+
+            <div className="status-pill">
+              <span className="status-dot dot-green" />
+              <span>QpiAI: {health?.qpiai?.optExecutionMode || 'Live'}</span>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Viewport */}
       <main className="main-viewport">
+        {/* Real-Time Unified Dashboard Overview Banner (Phase 2.A) */}
+        <DashboardOverviewBanner
+          overview={overview}
+          loading={loadingOverview}
+          onRefresh={fetchOverview}
+          onOpenDemo={() => setShowDemoModal(true)}
+        />
+
+        {/* 6 Core Views */}
         {activeTab === 'mandate' && (
           <MandateView 
             activeMandateId={activeMandateId} 
@@ -136,11 +193,19 @@ export const App: React.FC = () => {
         {activeTab === 'agent' && (
           <AgentRunView 
             activeMandateId={activeMandateId} 
+            onRefreshOverview={fetchOverview}
           />
         )}
 
         {activeTab === 'payments' && (
           <PaymentsView />
+        )}
+
+        {activeTab === 'autorefill' && (
+          <AutoRefillView 
+            activeMandateId={activeMandateId} 
+            onRefreshOverview={fetchOverview}
+          />
         )}
 
         {activeTab === 'security' && (
@@ -155,6 +220,22 @@ export const App: React.FC = () => {
           <AuditLogView />
         )}
       </main>
+
+      {/* Guided Walkthrough Modal (Phase 3) */}
+      <GuidedDemoModal
+        isOpen={showDemoModal}
+        onClose={() => setShowDemoModal(false)}
+        onNavigateTab={(t) => setActiveTab(t)}
+        activeMandateId={activeMandateId}
+        setActiveMandateId={setActiveMandateId}
+        onRefreshOverview={fetchOverview}
+      />
+
+      {/* Architecture, Privacy & Limitations Modal (Phase 4 & 5) */}
+      <ArchitecturePolicyModal
+        isOpen={showPolicyModal}
+        onClose={() => setShowPolicyModal(false)}
+      />
     </div>
   );
 };

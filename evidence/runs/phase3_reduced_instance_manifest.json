@@ -1,0 +1,154 @@
+{
+  "dataset": "AgentVault Reduced Procurement Instance (13-Qubit)",
+  "createdAt": "2026-10-29T09:12:28Z",
+  "sourceCatalog": {
+    "seed": 1,
+    "fixedTimestamp": 1700000000,
+    "vaultAddress": "0x1111111111111111111111111111111111111111",
+    "catalogInputSha256": "f0d8a9ff5001e3b2b94efd73144662a1b774d0304c5fbd421b563714086c1581"
+  },
+  "qubitCount": 13,
+  "decisionVariablesCount": 8,
+  "slackVariablesCount": 5,
+  "variableMapping": {
+    "q0": {
+      "name": "x0",
+      "category": "API_CALLS",
+      "units": 1000,
+      "price": 438120,
+      "quoteId": "0xc7d5e274c1d65445a35b27bad7a5430e99cb9470a9fb46fea6f8cd08570c64b4",
+      "skuId": "0x6ecbd3fc6205adf737761307cde1a20f36aa272a52f33df00b0894e724fc8888",
+      "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994"
+    },
+    "q1": {
+      "name": "x1",
+      "category": "API_CALLS",
+      "units": 1000,
+      "price": 439571,
+      "quoteId": "0x6543800ceeb97e5c41c37e069d8089b84b7c717a0325bbf3e532b7d13c4b9108",
+      "skuId": "0xedd6be6762c4684f7de70673eeec51fcf54ce0e4aa327e55d1a94d4aa6319709",
+      "vendorId": "0x712da6898e634b700fc359c6b2599709f7e98018dda6d755b693f947eeecc994"
+    },
+    "q2": {
+      "name": "x2",
+      "category": "API_CALLS",
+      "units": 2000,
+      "price": 772840,
+      "quoteId": "0x4506507184334c59a1aba536ce322834ae79fc7a7b48e261ed209f6f30015992",
+      "skuId": "0x2e4fa778342f94e870921a57d0e8b0a73204c04128aa0541f8096e65fec70677",
+      "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c"
+    },
+    "q3": {
+      "name": "x3",
+      "category": "AI_CREDITS",
+      "units": 500,
+      "price": 909958,
+      "quoteId": "0xdff9b77529ffe886b8d88ea52425bea05dcb7775be7dd58cd829319950a169c2",
+      "skuId": "0x4f4391132321209093a05fa66ef979aace9f45d2a5f69cad4fda0f8071d00a46",
+      "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61"
+    },
+    "q4": {
+      "name": "x4",
+      "category": "AI_CREDITS",
+      "units": 500,
+      "price": 936324,
+      "quoteId": "0x0070b2adc9b3ab4bd2af06d6b350376293f3cdafc640de5cb957c50062828298",
+      "skuId": "0xe36df6b5bd4f0d5ed35c2345b83fdb35be5b92dc71e7db71c080ca883b792f8e",
+      "vendorId": "0x2a74bed253fea98ba6745e1ee1e4f5c252d0c37c8d7b03f1de4e33e31c3a4f61"
+    },
+    "q5": {
+      "name": "x5",
+      "category": "AI_CREDITS",
+      "units": 1000,
+      "price": 1409809,
+      "quoteId": "0x26a4024f91c61b85a6b9cfc850d1c247a0eb175349ed52cf333aabd0486a7ca7",
+      "skuId": "0x1d67702e723eb2fbb8db15f6fe0ddd0d749b20b3195cf79c7d39e10798dafa2d",
+      "vendorId": "0xe1cec596caf7175944aba1e9515ab5b714ceb8c90afb6ed7f62c287281b1300c"
+    },
+    "q6": {
+      "name": "x6",
+      "category": "STORAGE",
+      "units": 100,
+      "price": 769888,
+      "quoteId": "0x4a63b07ef0d25c79cc0e491623f4b86b68273bc6ca25c559c5fef3b9a68f8f6b",
+      "skuId": "0xb6985f98ae89f76cf0d55999af5278556b05ccd1c4675948c82c49a9ef49a982",
+      "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955"
+    },
+    "q7": {
+      "name": "x7",
+      "category": "STORAGE",
+      "units": 100,
+      "price": 770265,
+      "quoteId": "0x136174042e1811ea8a05bd19ba3f9673a80b4342dd13046323a862a3da7791db",
+      "skuId": "0x703eb19ab0439b6825326fb113a4d3c0ce4e9444c6de2beb3e2a36efac43e49e",
+      "vendorId": "0x616d963b1568c37c9cc111a65dbaf284641b42acfc4ec1503fddb97dfbe17955"
+    },
+    "q8": {
+      "name": "s_api_0",
+      "type": "slack",
+      "weight": 1,
+      "surplusCategory": "API_CALLS"
+    },
+    "q9": {
+      "name": "s_api_1",
+      "type": "slack",
+      "weight": 2,
+      "surplusCategory": "API_CALLS"
+    },
+    "q10": {
+      "name": "s_ai_0",
+      "type": "slack",
+      "weight": 1,
+      "surplusCategory": "AI_CREDITS"
+    },
+    "q11": {
+      "name": "s_ai_1",
+      "type": "slack",
+      "weight": 2,
+      "surplusCategory": "AI_CREDITS"
+    },
+    "q12": {
+      "name": "s_storage",
+      "type": "slack",
+      "weight": 1,
+      "surplusCategory": "STORAGE"
+    }
+  },
+  "requirements": {
+    "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00": 1000,
+    "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f": 500,
+    "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0": 100
+  },
+  "penalties": {
+    "scaleLambda": 2.5,
+    "apiEquality": "x0 + x1 + 2*x2 - 1 - (s_api_0 + 2*s_api_1) = 0",
+    "aiEquality": "x3 + x4 + 2*x5 - 1 - (s_ai_0 + 2*s_ai_1) = 0",
+    "storageEquality": "x6 + x7 - 1 - s_storage = 0"
+  },
+  "classicalOptimum": {
+    "totalCostMicroUsdc": 2117966,
+    "totalCostUsdc": 2.12,
+    "selectedIndices": [
+      0,
+      3,
+      6
+    ],
+    "selectedQuotes": [
+      "0xc7d5e274c1d65445a35b27bad7a5430e99cb9470a9fb46fea6f8cd08570c64b4",
+      "0xdff9b77529ffe886b8d88ea52425bea05dcb7775be7dd58cd829319950a169c2",
+      "0x4a63b07ef0d25c79cc0e491623f4b86b68273bc6ca25c559c5fef3b9a68f8f6b"
+    ]
+  },
+  "hamiltonianVerification": {
+    "totalBasisStates": 8192,
+    "feasibleStates": 4704,
+    "infeasibleStates": 3488,
+    "groundStateEnergy": 0.32853109,
+    "bestFeasibleEnergy": 0.32853109,
+    "lowestInfeasibleEnergy": 2.68738175,
+    "energySeparation": 2.35885066,
+    "argminMatchesClassicalOptimum": true,
+    "noInfeasibleBeatsBest": true
+  },
+  "reducedInstanceSha256": "a670eccd46e7868d91beae614efc66e88656b2536b78da7d4fd56077cc461114"
+}

@@ -4,14 +4,16 @@ import { Cpu, Zap, AlertOctagon, CheckCircle2, XCircle, ArrowRight, TrendingDown
 
 interface Props {
   activeMandateId: string;
+  onRefreshOverview?: () => void;
 }
 
-export const AgentRunView: React.FC<Props> = ({ activeMandateId }) => {
+export const AgentRunView: React.FC<Props> = ({ activeMandateId, onRefreshOverview }) => {
   const [requirements, setRequirements] = useState<Requirement[]>([]);
   const [selectedReqId, setSelectedReqId] = useState<string>('req-seed-01');
   const [agentMode, setAgentMode] = useState<'honest' | 'gullible'>('honest');
   const [attackType, setAttackType] = useState<string>('A01_PROMPT_INJECTION_REDIRECT');
   const [solverType, setSolverType] = useState<string>('qpiai');
+  const [runSeed, setRunSeed] = useState<number>(1);
   
   const [benchmark, setBenchmark] = useState<BenchmarkReport | null>(null);
   const [running, setRunning] = useState<boolean>(false);
@@ -38,10 +40,14 @@ export const AgentRunView: React.FC<Props> = ({ activeMandateId }) => {
     }
   }, [selectedReqId, activeMandateId]);
 
-  const handleExecutePipeline = async () => {
+  const handleExecutePipeline = async (forceNewSeed: boolean = false) => {
     setRunning(true);
     setError(null);
     setResult(null);
+    const targetSeed = forceNewSeed ? Math.floor(Date.now() / 1000) : runSeed;
+    if (forceNewSeed) {
+      setRunSeed(targetSeed);
+    }
     try {
       const res = await api.runAgent({
         requirementId: selectedReqId,
@@ -49,9 +55,12 @@ export const AgentRunView: React.FC<Props> = ({ activeMandateId }) => {
         mode: agentMode,
         attackType: agentMode === 'gullible' ? attackType : undefined,
         solver: solverType,
-        seed: 1,
+        seed: targetSeed,
       });
       setResult(res);
+      if (res.executed) {
+        onRefreshOverview?.();
+      }
     } catch (err: any) {
       setError(err.message || 'Pipeline execution failed');
     } finally {
@@ -162,15 +171,27 @@ export const AgentRunView: React.FC<Props> = ({ activeMandateId }) => {
             <option value="greedy">Greedy Unit-Price Heuristic</option>
             <option value="vendor_rule">Vendor-Lock Baseline</option>
           </select>
-          <button 
-            className="btn btn-primary" 
-            style={{ width: '100%', marginTop: '10px' }}
-            onClick={handleExecutePipeline}
-            disabled={running}
-          >
-            {running ? 'Executing Pipeline...' : 'Run Autonomous Procurement Pipeline'}
-            <ArrowRight size={16} />
-          </button>
+          <div style={{ display: 'flex', gap: '8px', marginTop: '10px' }}>
+            <button 
+              className="btn btn-primary" 
+              style={{ flex: 1 }}
+              onClick={() => handleExecutePipeline(true)}
+              disabled={running}
+              title="Generate fresh live quotes and execute atomic on-chain settlement"
+            >
+              {running ? 'Executing Pipeline...' : 'Run Live Order (Fresh Quotes)'}
+              <ArrowRight size={15} />
+            </button>
+            <button 
+              className="btn btn-secondary" 
+              style={{ padding: '8px 12px', fontSize: '0.78rem' }}
+              onClick={() => handleExecutePipeline(false)}
+              disabled={running}
+              title="Run with Seed 1 benchmark baseline"
+            >
+              Seed 1
+            </button>
+          </div>
         </div>
       </div>
 

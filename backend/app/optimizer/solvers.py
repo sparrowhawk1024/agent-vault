@@ -24,11 +24,26 @@ from ortools.sat.python import cp_model
 from backend.app.optimizer.model_builder import ProcurementProblem, QPIAI_OPT_AVAILABLE
 
 try:
-    from qpiai_opt.opt_solvers import milp
-    from qpiai_opt.opt_solvers.exceptions import AuthenticationError as QpiAIAuthError
+    import requests
+    from qpiai_opt.opt_solvers import Client, LocalProvider, solve as qpiai_solve
+    from qpiai_opt.opt_solvers.exceptions import AuthenticationError as QpiAIAuthError, APIError as QpiAIAPIError
 except ImportError:
-    milp = None
+    requests = None
+    Client = None
+    LocalProvider = None
+    qpiai_solve = None
     QpiAIAuthError = Exception
+    QpiAIAPIError = Exception
+
+
+def redact_api_key(key: Optional[str]) -> str:
+    """Safely redact sensitive API key for logs and diagnostics."""
+    if not key:
+        return "<empty>"
+    clean = key.strip()
+    if len(clean) <= 8:
+        return "***"
+    return f"{clean[:4]}...{clean[-4:]}"
 
 
 @dataclass
@@ -98,7 +113,7 @@ class ORToolsSolver:
             status_str = "OPTIMAL" if status_code == cp_model.OPTIMAL else "FEASIBLE"
             return SolverResult(
                 solver_name="ortools-cpsat",
-                execution_mode="CLASSICAL_FALLBACK",  # Transparent classical
+                execution_mode="LOCAL_OR_TOOLS",  # Transparent classical reference
                 feasible=True,
                 status=status_str,
                 total_cost=total_cost,
@@ -116,7 +131,7 @@ class ORToolsSolver:
         else:
             return SolverResult(
                 solver_name="ortools-cpsat",
-                execution_mode="CLASSICAL_FALLBACK",
+                execution_mode="LOCAL_OR_TOOLS",
                 feasible=False,
                 status="INFEASIBLE",
                 total_cost=0,
@@ -129,17 +144,68 @@ class ORToolsSolver:
 
 
 class QpiAIOptSolver:
-    """Primary QpiAI Opt MILP Solver with honest classical fallback."""
+    """Primary QpiAI Opt MILP Solver with dual token authentication and honest classical fallback."""
 
     def __init__(self, fallback_solver: Optional[ORToolsSolver] = None):
         self.fallback = fallback_solver or ORToolsSolver()
         self.api_key = os.environ.get("QPIAI_OPT_API_KEY", "").strip()
 
+    def probe_auth(self) -> Dict[str, Any]:
+        """Diagnostic probe for QpiAI Opt credentials."""
+        if not self.api_key:
+            return {
+                "status": "UNCONFIGURED",
+                "statusCode": None,
+                "message": "QPIAI_OPT_API_KEY is not configured in backend environment.",
+            }
+        try:
+            server_base = os.environ.get("QPIAI_OPT_SERVER_URL", "https://opt-server.qpiai.tech/api").rstrip("/")
+            session = requests.Session()
+            session.headers.update({
+                "Authorization": f"Bearer {self.api_key}",
+                "X-Secret-Token": self.api_key,
+            })
+            resp = session.get(f"{server_base}/users/me", timeout=5.0)
+            if resp.status_code == 200:
+                data = resp.json()
+                return {
+                    "status": "AUTHENTICATED",
+                    "statusCode": 200,
+                    "user": data.get("email") or data.get("name") or "authenticated_user",
+                }
+            elif resp.status_code == 401:
+                return {
+                    "status": "AUTHENTICATION_FAILURE",
+                    "statusCode": 401,
+                    "message": "API key rejected by QpiAI Opt server (401 Unauthorized).",
+                    "detail": resp.text[:200],
+                }
+            elif resp.status_code == 403:
+                return {
+                    "status": "ACCOUNT_PERMISSION",
+                    "statusCode": 403,
+                    "message": "Account forbidden or revoked (403 Forbidden).",
+                    "detail": resp.text[:200],
+                }
+            else:
+                return {
+                    "status": "API_ERROR",
+                    "statusCode": resp.status_code,
+                    "message": f"Server returned HTTP {resp.status_code}",
+                    "detail": resp.text[:200],
+                }
+        except Exception as e:
+            return {
+                "status": "CONNECTION_ERROR",
+                "statusCode": None,
+                "message": f"Could not connect to QpiAI Opt server: {type(e).__name__}",
+            }
+
     def solve(self, problem: ProcurementProblem) -> SolverResult:
         start_t = time.perf_counter()
 
         # Check if SDK is available
-        if not QPIAI_OPT_AVAILABLE:
+        if not QPIAI_OPT_AVAILABLE or Client is None or qpiai_solve is None:
             fb_res = self.fallback.solve(problem)
             fb_res.solver_name = "qpiai-opt-milp"
             fb_res.execution_mode = "CLASSICAL_FALLBACK"
@@ -150,7 +216,7 @@ class QpiAIOptSolver:
         if not self.api_key:
             err_msg = (
                 "QPIAI_OPT_API_KEY is not configured. Local solving requires "
-                "client=Client(api_key=...) to authorize cython license. Falling back to OR-Tools."
+                "client=Client(api_key=...) registered at https://opt.qpiai.tech/tokens. Falling back to OR-Tools."
             )
             fb_res = self.fallback.solve(problem)
             fb_res.solver_name = "qpiai-opt-milp"
@@ -160,18 +226,23 @@ class QpiAIOptSolver:
 
         # Attempt Live QpiAI solve
         try:
-            from qpiai_opt.opt_solvers import Client, LocalProvider
-            client = Client(api_key=self.api_key)
-            provider = LocalProvider(client=client)
+            server_base = os.environ.get("QPIAI_OPT_SERVER_URL", "https://opt-server.qpiai.tech/api").rstrip("/")
+            session = requests.Session()
+            session.headers.update({
+                "Authorization": f"Bearer {self.api_key}",
+                "X-Secret-Token": self.api_key,
+            })
+            client = Client(api_key=self.api_key, session=session, base_url=server_base)
 
             opt_model, x_vars = problem.build_qpiai_model()
-            result = milp(opt_model, provider=provider)
+            res = qpiai_solve(opt_model, mode="local", client=client)
             runtime_ms = (time.perf_counter() - start_t) * 1000
 
             # Decode QpiAI solution
+            sol_dict = getattr(res, "solution", {}) or {}
             selected_indices = [
                 i for i, v in enumerate(x_vars)
-                if result.get(v.name, 0) == 1
+                if round(sol_dict.get(v.name, 0.0)) == 1
             ]
             selected_quotes = [problem.quotes[i] for i in selected_indices]
             total_cost = sum(q["price"] for q in selected_quotes)
@@ -182,14 +253,20 @@ class QpiAIOptSolver:
                 if cid in coverage:
                     coverage[cid] += q["units"]
 
-            is_feasible = all(
-                coverage.get(cat, 0) >= req
-                for cat, req in problem.requirements.items()
-            ) and total_cost <= problem.max_budget and len(selected_indices) <= problem.max_lines
+            is_feasible = (
+                all(coverage.get(cat, 0) >= req for cat, req in problem.requirements.items())
+                and total_cost <= problem.max_budget
+                and len(selected_indices) <= problem.max_lines
+            )
+
+            job_id = getattr(res, "job_id", None)
+            solve_info = getattr(res, "solve_info", None)
+            underlying_solver = getattr(solve_info, "solver", "HiGHS") if solve_info else "HiGHS"
+            provider_name = getattr(solve_info, "provider", "qpiai-opt-local") if solve_info else "qpiai-opt-local"
 
             return SolverResult(
-                solver_name="qpiai-opt-milp",
-                execution_mode="LIVE_QPIAI",
+                solver_name=f"qpiai-opt-{underlying_solver.lower()}",
+                execution_mode="LOCAL_QPIAI_OPT",
                 feasible=is_feasible,
                 status="OPTIMAL" if is_feasible else "INFEASIBLE",
                 total_cost=total_cost,
@@ -197,13 +274,36 @@ class QpiAIOptSolver:
                 selected_quotes=selected_quotes,
                 coverage=coverage,
                 runtime_ms=runtime_ms,
-                extra_metadata={"qpiai_opt_version": "0.0.9"},
+                gap_against_optimal=getattr(res, "optimality_gap", 0.0),
+                extra_metadata={
+                    "qpiai_opt_version": "0.0.9",
+                    "problem_class": getattr(res, "problem_class", "MILP"),
+                    "provider": provider_name,
+                    "solver": underlying_solver,
+                    "solver_time_s": getattr(res, "solver_time_s", None),
+                    "compute_time_s": getattr(res, "compute_time_s", None),
+                    "model_status": getattr(res, "model_status", None),
+                    "job_id": job_id,
+                },
             )
 
         except Exception as e:
             runtime_ms = (time.perf_counter() - start_t) * 1000
-            err_text = f"QpiAI Opt execution failed: {type(e).__name__}: {str(e)}"
-            # Fall back to transparent classical
+            err_class = type(e).__name__
+            err_str = str(e)
+            if "AuthenticationError" in err_class or "401" in err_str or "unauthorized" in err_str.lower() or "invalid" in err_str.lower():
+                category = "AUTHENTICATION_FAILURE"
+            elif "Forbidden" in err_str or "403" in err_str or "revoked" in err_str.lower():
+                category = "ACCOUNT_PERMISSION"
+            elif "subscription" in err_str.lower() or "credit" in err_str.lower() or "quota" in err_str.lower():
+                category = "QUOTA_CREDIT_RESTRICTION"
+            elif "CapabilityError" in err_class:
+                category = "UNSUPPORTED_OPERATION"
+            else:
+                category = "SOLVER_FAILURE"
+
+            err_text = f"QpiAI Opt {category} ({err_class}): {err_str}"
+            # Fall back to transparent classical (OR-Tools CP-SAT)
             fb_res = self.fallback.solve(problem)
             fb_res.solver_name = "qpiai-opt-milp"
             fb_res.execution_mode = "CLASSICAL_FALLBACK"

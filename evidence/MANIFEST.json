@@ -1,31 +1,47 @@
 {
   "manifestVersion": "1.0.0",
-  "generatedAt": "2026-10-28T19:49:38Z",
-  "totalFiles": 6,
+  "generatedAt": "2026-10-29T17:19:39Z",
+  "totalFiles": 16,
   "files": [
     {
       "path": "evidence/attacks.json",
       "contentType": "application/json",
-      "sha256": "5cf715f3ac33f22d2df95dabcc7445f73a27537f74726da167524832902b0c7b",
-      "sizeBytes": 11832,
-      "description": "Automated 33-case adversarial test suite results",
-      "lastModified": "2026-10-28T19:25:04Z"
+      "sha256": "34ec6361616a64abb9ef2bb7b40438766499edc55827ba1d34df93fabf401207",
+      "sizeBytes": 13997,
+      "description": "Automated 38-case adversarial test suite results",
+      "lastModified": "2026-10-29T17:19:32Z"
     },
     {
       "path": "evidence/summary.md",
       "contentType": "text/markdown",
-      "sha256": "ee35b0f624abebc54ef65507162fcf2f6d3ad07463ed8e2f3b4b11c3c9ab2e48",
-      "sizeBytes": 12080,
+      "sha256": "f4003afebdda95fb46dde463b5ad11847ff57c9187463817d4bb5e6bd7c0d4b4",
+      "sizeBytes": 18424,
       "description": "Comprehensive benchmark and security verification summary",
-      "lastModified": "2026-10-28T19:49:38Z"
+      "lastModified": "2026-10-29T17:19:39Z"
+    },
+    {
+      "path": "evidence/reports/daily_cap_exhaustion_report.md",
+      "contentType": "text/markdown",
+      "sha256": "507267be1088442007480acb8560397c8acadb40091647eb0fa8f8cceb4fedf8",
+      "sizeBytes": 1253,
+      "description": "Comprehensive benchmark and security verification summary",
+      "lastModified": "2026-10-29T17:19:39Z"
+    },
+    {
+      "path": "evidence/reports/user_simulation_report.md",
+      "contentType": "text/markdown",
+      "sha256": "0ac2ddd54c52be6b8ca321393f7ff4c07f6e520d1116f78f666f2bb183abf4dc",
+      "sizeBytes": 3928,
+      "description": "Comprehensive benchmark and security verification summary",
+      "lastModified": "2026-10-29T17:19:38Z"
     },
     {
       "path": "evidence/runs/phase0_probe.json",
       "contentType": "application/json",
-      "sha256": "77e558712272b707cb78ed4edd20cd9b3c1b7e54747014da71756bd96e39b126",
-      "sizeBytes": 2006,
+      "sha256": "a4e54f798a7d15c049c1522e727b8506ff4afd06b6052b91d4810f8dd958af8f",
+      "sizeBytes": 2027,
       "description": "Phase 0 environment discovery and SDK execution probe results",
-      "lastModified": "2026-10-28T17:02:59Z"
+      "lastModified": "2026-10-29T13:45:24Z"
     },
     {
       "path": "evidence/runs/phase1_gate.json",
@@ -44,12 +60,76 @@
       "lastModified": "2026-10-28T18:05:10Z"
     },
     {
+      "path": "evidence/runs/phase2_hosted_qpiai_opt_benchmark.json",
+      "contentType": "application/json",
+      "sha256": "02a47584d955cd8c1864cb2b37afc80304a690007ef76cb40bdf4554c7178e8b",
+      "sizeBytes": 86117,
+      "description": "Phase 2 hosted QpiAI Opt platform execution benchmark and local control comparison",
+      "lastModified": "2026-10-29T14:51:39Z"
+    },
+    {
+      "path": "evidence/runs/phase2_opt_token_probe.json",
+      "contentType": "application/json",
+      "sha256": "af8684571a0ae0207174389b8b75f3e58e031eeb3e28711eabc7eb0b08ca20c1",
+      "sizeBytes": 7465,
+      "description": "Phase 2 QpiAI Opt token integration and authentication probe results",
+      "lastModified": "2026-10-29T15:06:11Z"
+    },
+    {
+      "path": "evidence/runs/phase3_exhaustive_states.json",
+      "contentType": "application/json",
+      "sha256": "cc750faf7514dacc37a589a45b68cdcad637535d400cfd9d9f690f03980485cb",
+      "sizeBytes": 8517287,
+      "description": "Phase 3 exhaustive state evaluation (8,192 states) proving Hamiltonian penalty adequacy and ground-state optimality",
+      "lastModified": "2026-10-29T09:12:28Z"
+    },
+    {
       "path": "evidence/runs/phase3_gate.json",
       "contentType": "application/json",
       "sha256": "faf365908e6bbe5f8a22aa35c85954a26e9f03cfafce05a2516cd614d360046f",
       "sizeBytes": 6679,
-      "description": "Phase 3 4-qubit QAOA variational circuit execution telemetry",
+      "description": "Phase 3 QAOA variational circuit execution telemetry",
       "lastModified": "2026-10-28T18:09:17Z"
+    },
+    {
+      "path": "evidence/runs/phase3_qaoa_multistart.json",
+      "contentType": "application/json",
+      "sha256": "6c8a1dec6bcd896745600e6bf45dfafe11dcdba2f40b386f6d3ce7481121f119",
+      "sizeBytes": 242195,
+      "description": "Phase 3 multi-start QAOA (80 optimization starts across depths p=1..4) and 1,024-shot validation",
+      "lastModified": "2026-10-29T09:21:57Z"
+    },
+    {
+      "path": "evidence/runs/phase3_reduced_instance_manifest.json",
+      "contentType": "application/json",
+      "sha256": "327b85e7402a5481da695419798b23d93fe0f0dd60a271fd986848a89cbec0c7",
+      "sizeBytes": 5550,
+      "description": "Phase 3 13-qubit reduced procurement instance provenance manifest and hash bindings",
+      "lastModified": "2026-10-29T09:12:28Z"
+    },
+    {
+      "path": "evidence/runs/phase4_opt_qaoa_run.json",
+      "contentType": "application/json",
+      "sha256": "20f4b67209828f8204153256b3cd36b881b4ed7a0a7f59f287b2d4bb48dacb28",
+      "sizeBytes": 2558,
+      "description": "Phase 4 native QpiAI Opt QAOA algorithmic run telemetry on QpiAI-QSV-Local",
+      "lastModified": "2026-10-29T15:07:25Z"
+    },
+    {
+      "path": "evidence/runs/qpiai_local_experiment.json",
+      "contentType": "application/json",
+      "sha256": "548513557c3b4a019738c94b64bc6de204cf26a13a6a47c46187a85d0899f663",
+      "sizeBytes": 92187,
+      "description": "QpiAI local optimization (HiGHS) and quantum simulation (QpiAI-QSV-Local) multi-trial experiment",
+      "lastModified": "2026-10-29T13:48:23Z"
+    },
+    {
+      "path": "evidence/runs/user_simulation_10_runs.json",
+      "contentType": "application/json",
+      "sha256": "33bf95067299862aa4d35de7669e0b1a509a57922c16c44c722add91bbfb06f6",
+      "sizeBytes": 19668,
+      "description": "Evidence artifact",
+      "lastModified": "2026-10-29T17:19:38Z"
     }
   ]
 }

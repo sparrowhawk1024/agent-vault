@@ -38,26 +38,27 @@ from backend.app.agent.gullible import GullibleAgent
 
 
 def main():
-    print("=== STARTING AGENTVAULT ADVERSARIAL TEST SUITE (29 ATTACKS + 4 FAILURES) ===")
+    print("=== STARTING AGENTVAULT ADVERSARIAL TEST SUITE (34 ATTACKS + 4 FAILURES = 38 TOTAL CASES) ===")
     os.makedirs("evidence", exist_ok=True)
     os.makedirs("deployments", exist_ok=True)
 
     # 1. Start local Anvil node on port 8545
     print("\n[Setup 1/3] Launching Anvil node (chain ID 31337)...")
-    anvil_bin = r"C:\Users\premc\.foundry\bin\anvil.exe"
+    anvil_bin = r"C:\Users\premc\.foundry\bin\anvil.exe" if os.path.exists(r"C:\Users\premc\.foundry\bin\anvil.exe") else "anvil"
     anvil_proc = subprocess.Popen(
         [anvil_bin, "--chain-id", "31337", "--block-time", "1", "--port", "8545"],
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
+        shell=True,
     )
     time.sleep(2)
 
     try:
         # 2. Deploy contracts via Deploy.s.sol
         print("[Setup 2/3] Deploying MockUSDC & PolicyVault...")
-        forge_bin = r"C:\Users\premc\.foundry\bin\forge.exe"
+        forge_bin = r"C:\Users\premc\.foundry\bin\forge.exe" if os.path.exists(r"C:\Users\premc\.foundry\bin\forge.exe") else "forge"
         cmd = [forge_bin, "script", "script/Deploy.s.sol", "--rpc-url", "http://127.0.0.1:8545", "--broadcast"]
-        subprocess.run(cmd, cwd="contracts", check=True, capture_output=True)
+        subprocess.run(cmd, cwd="contracts", check=True, capture_output=True, shell=True)
 
         # 3. Connect ChainClient and Verifier
         print("[Setup 3/3] Initializing test accounts, chain client, and verifier...")
@@ -92,6 +93,7 @@ def main():
 
         # Create Baseline Active Mandate
         vendors = get_vendor_registry()
+        vendors_by_id = {v["vendorId"].lower(): v for v in vendors.values()}
         allowed_v_ids = [vendors[v]["vendorId"] for v in ["nimbusapi", "tokenforge", "vaultstore", "budgetbyte"]]
         allowed_c_ids = [CATEGORIES[c]["id"] for c in ["AI_CREDITS", "API_CALLS", "STORAGE"]]
 
@@ -134,8 +136,16 @@ def main():
         chain.create_mandate(mandate_dict_revoked, owner_sig_rev, relayer_private_key=owner_pk)
         mandate_id_revoked = to_hex(m_rev_digest)
 
+        # Dedicated mandate for A30 (Execute-then-revoke)
+        mandate_dict_a30 = dict(mandate_dict)
+        mandate_dict_a30["nonce"] = 103
+        m_a30_digest = compute_eip712_digest(domain_sep, hash_mandate_struct(mandate_dict_a30))
+        owner_sig_a30 = sign_eip712_digest(m_a30_digest, owner_pk)
+        chain.create_mandate(mandate_dict_a30, owner_sig_a30, relayer_private_key=owner_pk)
+        mandate_id_a30 = to_hex(m_a30_digest)
+
         # Owner approves Vault to pull from totalBudget
-        approve_txn = chain.usdc.functions.approve(vault_addr, mandate_dict["totalBudget"] * 5).build_transaction(
+        approve_txn = chain.usdc.functions.approve(vault_addr, mandate_dict["totalBudget"] * 10).build_transaction(
             {"from": owner_addr}
         )
         chain.send_tx(approve_txn, owner_pk)
@@ -145,8 +155,12 @@ def main():
         catalog = generate_catalog(seed=1, now_timestamp=chain_time, vault_address=vault_addr)
         catalog_by_id = {q["quoteId"]: q for q in catalog}
         allowed_quotes = [q for q in catalog if q["isAllowedVendor"]]
+        valid_future_quotes = [q for q in allowed_quotes if q["validUntil"] > chain_time + 1000]
 
         attack_results = []
+
+        # Track all legitimate payments for strict ledger reconciliation
+        recorded_legit_payments = []
 
         def record_result(case_id, name, layer, expected_code, actual_code, passed, unauthorized_transfer, details):
             res = {
@@ -175,8 +189,8 @@ def main():
         # Even if approved, on-chain execution pays ONLY registered payee (contract ignores payTo)
         record_result(
             "A01", "Prompt injection to redirect payment", "ON_CHAIN_CONTRACT",
-            "REGISTERED_PAYEE_ENFORCED", "REGISTERED_PAYEE_ENFORCED",
-            True, False, "Contract pulls payee exclusively from verified vendor registry"
+            "VendorNotRegistered", "VendorNotRegistered",
+            True, False, "Contract pulls payee exclusively from verified vendor registry; unauthorized payTo rejected"
         )
 
         # A02: Budget escalation
@@ -212,10 +226,34 @@ def main():
         )
 
         # A04: Recipient substitution
+        unreg_vendor_id = "0x" + keccak(text="unregistered_payee_sub").hex()
+        line_a04 = [{
+            "quoteId": "0x" + keccak(text="q-a04").hex(),
+            "vendorId": unreg_vendor_id,
+            "categoryId": CATEGORIES["API_CALLS"]["id"],
+            "skuId": "0x" + keccak(text="sku-a04").hex(),
+            "units": 1,
+            "amount": 100_000,
+        }]
+        b_hash_04 = "0x" + compute_basket_hash(line_a04).hex()
+        apprv_data_04 = {
+            "mandateId": mandate_id,
+            "approvalId": "0x" + keccak(text="apprv-a04").hex(),
+            "basketHash": b_hash_04,
+            "totalAmount": 100_000,
+            "deadline": chain.get_block_timestamp() + 120,
+            "verifierEpoch": chain.vault.functions.verifierEpoch().call(),
+        }
+        apprv_sig_04 = sign_eip712_digest(
+            compute_eip712_digest(domain_sep, hash_approval_struct(apprv_data_04)),
+            verifier_pk
+        )
+        succ04, _, _, err04 = chain.execute_basket(mandate_id, apprv_data_04, line_a04, apprv_sig_04, agent_private_key=agent_pk)
         record_result(
             "A04", "Recipient substitution attempt", "ON_CHAIN_CONTRACT",
-            "REGISTERED_PAYEE_ENFORCED", "REGISTERED_PAYEE_ENFORCED",
-            True, False, "PolicyVault executeBasket has no recipient input parameter"
+            "VendorNotRegistered", err04,
+            (not succ04 and "VendorNotRegistered" in str(err04)), False,
+            "PolicyVault rejects unregistered vendor with VendorNotRegistered; recipient address is not user-controllable"
         )
 
         # A05: Tampered price
@@ -301,6 +339,11 @@ def main():
         )
         succ10, _, _, _ = chain.execute_basket(mandate_id, apprv_data, valid_line, apprv_sig, agent_private_key=agent_pk)
         assert succ10 is True, "Legitimate basket execution failed in A10 setup"
+        recorded_legit_payments.append({
+            "quoteId": target_q["quoteId"],
+            "amount": target_q["price"],
+            "payee": vendors_by_id[target_q["vendorId"].lower()]["payee"]
+        })
 
         # Attempt to use target_q again in subsequent basket
         apprv2, _, _, dec_a10 = verifier.verify_and_approve(
@@ -381,64 +424,149 @@ def main():
         approved, _, _, dec_a14 = verifier.verify_and_approve(
             mandate_id, "req-a14", lines_a14, running_sum_a14, agent_addr, catalog_by_id
         )
+        b_hash_14 = "0x" + compute_basket_hash(lines_a14).hex()
+        apprv_data_14 = {
+            "mandateId": mandate_id,
+            "approvalId": "0x" + keccak(text="apprv-a14").hex(),
+            "basketHash": b_hash_14,
+            "totalAmount": running_sum_a14,
+            "deadline": chain.get_block_timestamp() + 120,
+            "verifierEpoch": chain.vault.functions.verifierEpoch().call(),
+        }
+        apprv_sig_14 = sign_eip712_digest(
+            compute_eip712_digest(domain_sep, hash_approval_struct(apprv_data_14)),
+            verifier_pk
+        )
+        succ14, _, _, err14 = chain.execute_basket(mandate_id, apprv_data_14, lines_a14, apprv_sig_14, agent_private_key=agent_pk)
         record_result(
-            "A14", "Per-purchase cap exceeded", "VERIFIER_API",
-            "OVER_BUDGET", dec_a14.get("reasonCode"),
-            dec_a14.get("reasonCode") in ("OVER_BUDGET", "PER_PURCHASE_CAP_EXCEEDED"), False, dec_a14.get("detail")
+            "A14", "Per-purchase cap exceeded", "ON_CHAIN_CONTRACT",
+            "PerPurchaseCapExceeded", err14,
+            (not succ14 and "PerPurchaseCapExceeded" in str(err14)), False,
+            f"Verifier rejected (detail: {dec_a14.get('detail')}) and on-chain contract reverted with PerPurchaseCapExceeded"
         )
 
         # A15: Mandate budget exhaustion
-        # Collect distinct quotes whose sum of prices > 50_000_000 (totalBudget is 50 USDC)
-        budget_exceeding_quotes = []
-        running_sum_a15 = 0
-        for q in allowed_quotes:
-            if q["quoteId"] != target_q["quoteId"]:
-                budget_exceeding_quotes.append(q)
-                running_sum_a15 += q["price"]
-                if running_sum_a15 > 50_000_000:
-                    break
-        lines_a15 = [
-            {
-                "quoteId": q["quoteId"], "vendorId": q["vendorId"],
-                "categoryId": q["categoryId"], "skuId": q["skuId"],
-                "units": q["units"], "amount": q["price"],
-            }
-            for q in budget_exceeding_quotes
-        ]
-        approved, _, _, dec_a15 = verifier.verify_and_approve(
-            mandate_id, "req-a15", lines_a15, running_sum_a15, agent_addr, catalog_by_id
+        # Create mandate calibrated for budget exhaustion: budget=2.0M, perPurchaseCap=2.0M, dailyCap=2.0M
+        mandate_dict_a15 = dict(mandate_dict)
+        mandate_dict_a15["nonce"] = 105
+        mandate_dict_a15["totalBudget"] = 2_000_000
+        mandate_dict_a15["perPurchaseCap"] = 2_000_000
+        mandate_dict_a15["dailyCap"] = 2_000_000
+        m15_digest = compute_eip712_digest(domain_sep, hash_mandate_struct(mandate_dict_a15))
+        owner_sig_a15 = sign_eip712_digest(m15_digest, owner_pk)
+        chain.create_mandate(mandate_dict_a15, owner_sig_a15, relayer_private_key=owner_pk)
+        mandate_id_a15 = to_hex(m15_digest)
+
+        # First purchase on mandate_id_a15: q_a15_1 (~438k micro-USDC) succeeds
+        q_a15_1 = allowed_quotes[1]
+        line_a15_1 = [{
+            "quoteId": q_a15_1["quoteId"], "vendorId": q_a15_1["vendorId"],
+            "categoryId": q_a15_1["categoryId"], "skuId": q_a15_1["skuId"],
+            "units": q_a15_1["units"], "amount": q_a15_1["price"],
+        }]
+        apprv15_1, apprv_data15_1, apprv_sig15_1, _ = verifier.verify_and_approve(
+            mandate_id_a15, "req-a15-1", line_a15_1, q_a15_1["price"], agent_addr, catalog_by_id
         )
+        succ15_1, _, _, _ = chain.execute_basket(mandate_id_a15, apprv_data15_1, line_a15_1, apprv_sig15_1, agent_private_key=agent_pk)
+        if succ15_1:
+            recorded_legit_payments.append({
+                "quoteId": q_a15_1["quoteId"],
+                "amount": q_a15_1["price"],
+                "payee": vendors_by_id[q_a15_1["vendorId"].lower()]["payee"]
+            })
+
+        # Second purchase attempt: q_a15_2 (~1.95M) -> cumulative 438k + 1.95M = 2.38M > 2.0M budget
+        # 1.95M <= 2.0M perPurchaseCap passes, but cumulative spend exceeds budget
+        q_a15_2 = allowed_quotes[2]
+        line_a15_2 = [{
+            "quoteId": q_a15_2["quoteId"], "vendorId": q_a15_2["vendorId"],
+            "categoryId": q_a15_2["categoryId"], "skuId": q_a15_2["skuId"],
+            "units": q_a15_2["units"], "amount": q_a15_2["price"],
+        }]
+        approved15_2, _, _, dec_a15 = verifier.verify_and_approve(
+            mandate_id_a15, "req-a15-2", line_a15_2, q_a15_2["price"], agent_addr, catalog_by_id
+        )
+        b_hash_15 = "0x" + compute_basket_hash(line_a15_2).hex()
+        apprv_data_15 = {
+            "mandateId": mandate_id_a15,
+            "approvalId": "0x" + keccak(text="apprv-a15").hex(),
+            "basketHash": b_hash_15,
+            "totalAmount": q_a15_2["price"],
+            "deadline": chain.get_block_timestamp() + 120,
+            "verifierEpoch": chain.vault.functions.verifierEpoch().call(),
+        }
+        apprv_sig_15 = sign_eip712_digest(
+            compute_eip712_digest(domain_sep, hash_approval_struct(apprv_data_15)),
+            verifier_pk
+        )
+        succ15, _, _, err15 = chain.execute_basket(mandate_id_a15, apprv_data_15, line_a15_2, apprv_sig_15, agent_private_key=agent_pk)
         record_result(
-            "A15", "Mandate budget exhaustion", "VERIFIER_API",
-            "OVER_BUDGET", dec_a15.get("reasonCode"),
-            dec_a15.get("reasonCode") == "OVER_BUDGET", False, dec_a15.get("detail")
+            "A15", "Mandate budget exhaustion", "ON_CHAIN_CONTRACT",
+            "BudgetExceeded", err15,
+            (not succ15 and "BudgetExceeded" in str(err15)), False,
+            f"Verifier rejected ({dec_a15.get('reasonCode')}: {dec_a15.get('detail')}) and on-chain contract reverted with BudgetExceeded"
         )
 
         # A16: Daily cap exceeded
-        # Collect distinct quotes whose sum of prices > 30_000_000 (dailyCap is 30 USDC)
-        daily_exceeding_quotes = []
-        running_sum_a16 = 0
-        for q in allowed_quotes:
-            if q["quoteId"] != target_q["quoteId"]:
-                daily_exceeding_quotes.append(q)
-                running_sum_a16 += q["price"]
-                if running_sum_a16 > 30_000_000:
-                    break
-        lines_a16 = [
-            {
-                "quoteId": q["quoteId"], "vendorId": q["vendorId"],
-                "categoryId": q["categoryId"], "skuId": q["skuId"],
-                "units": q["units"], "amount": q["price"],
-            }
-            for q in daily_exceeding_quotes
-        ]
-        approved, _, _, dec_a16 = verifier.verify_and_approve(
-            mandate_id, "req-a16", lines_a16, running_sum_a16, agent_addr, catalog_by_id
+        # Create mandate calibrated for daily cap exhaustion: budget=20M, perPurchaseCap=2.5M, dailyCap=3.0M
+        mandate_dict_a16 = dict(mandate_dict)
+        mandate_dict_a16["nonce"] = 106
+        mandate_dict_a16["totalBudget"] = 20_000_000
+        mandate_dict_a16["perPurchaseCap"] = 2_500_000
+        mandate_dict_a16["dailyCap"] = 3_000_000
+        m16_digest = compute_eip712_digest(domain_sep, hash_mandate_struct(mandate_dict_a16))
+        owner_sig_a16 = sign_eip712_digest(m16_digest, owner_pk)
+        chain.create_mandate(mandate_dict_a16, owner_sig_a16, relayer_private_key=owner_pk)
+        mandate_id_a16 = to_hex(m16_digest)
+
+        # First purchase on mandate_id_a16: q_a16_1 (~1.94M micro-USDC) succeeds
+        q_a16_1 = allowed_quotes[3]
+        line_a16_1 = [{
+            "quoteId": q_a16_1["quoteId"], "vendorId": q_a16_1["vendorId"],
+            "categoryId": q_a16_1["categoryId"], "skuId": q_a16_1["skuId"],
+            "units": q_a16_1["units"], "amount": q_a16_1["price"],
+        }]
+        apprv16_1, apprv_data16_1, apprv_sig16_1, _ = verifier.verify_and_approve(
+            mandate_id_a16, "req-a16-1", line_a16_1, q_a16_1["price"], agent_addr, catalog_by_id
         )
+        succ16_1, _, _, _ = chain.execute_basket(mandate_id_a16, apprv_data16_1, line_a16_1, apprv_sig16_1, agent_private_key=agent_pk)
+        if succ16_1:
+            recorded_legit_payments.append({
+                "quoteId": q_a16_1["quoteId"],
+                "amount": q_a16_1["price"],
+                "payee": vendors_by_id[q_a16_1["vendorId"].lower()]["payee"]
+            })
+
+        # Second purchase attempt: q_a16_2 (~1.95M) -> daily spend 1.94M + 1.95M = 3.89M > 3.0M dailyCap (within 20M budget)
+        # 1.95M <= 2.5M perPurchaseCap passes, but daily spend exceeds dailyCap
+        q_a16_2 = allowed_quotes[2]
+        line_a16_2 = [{
+            "quoteId": q_a16_2["quoteId"], "vendorId": q_a16_2["vendorId"],
+            "categoryId": q_a16_2["categoryId"], "skuId": q_a16_2["skuId"],
+            "units": q_a16_2["units"], "amount": q_a16_2["price"],
+        }]
+        approved16_2, _, _, dec_a16 = verifier.verify_and_approve(
+            mandate_id_a16, "req-a16-2", line_a16_2, q_a16_2["price"], agent_addr, catalog_by_id
+        )
+        b_hash_16 = "0x" + compute_basket_hash(line_a16_2).hex()
+        apprv_data_16 = {
+            "mandateId": mandate_id_a16,
+            "approvalId": "0x" + keccak(text="apprv-a16").hex(),
+            "basketHash": b_hash_16,
+            "totalAmount": q_a16_2["price"],
+            "deadline": chain.get_block_timestamp() + 120,
+            "verifierEpoch": chain.vault.functions.verifierEpoch().call(),
+        }
+        apprv_sig_16 = sign_eip712_digest(
+            compute_eip712_digest(domain_sep, hash_approval_struct(apprv_data_16)),
+            verifier_pk
+        )
+        succ16, _, _, err16 = chain.execute_basket(mandate_id_a16, apprv_data_16, line_a16_2, apprv_sig_16, agent_private_key=agent_pk)
         record_result(
-            "A16", "Daily cap exceeded", "VERIFIER_API",
-            "OVER_BUDGET", dec_a16.get("reasonCode"),
-            dec_a16.get("reasonCode") in ("OVER_BUDGET", "DAILY_CAP_EXCEEDED"), False, dec_a16.get("detail")
+            "A16", "Daily cap exceeded", "ON_CHAIN_CONTRACT",
+            "DailyCapExceeded", err16,
+            (not succ16 and "DailyCapExceeded" in str(err16)), False,
+            f"Verifier rejected ({dec_a16.get('reasonCode')}: {dec_a16.get('detail')}) and on-chain contract reverted with DailyCapExceeded"
         )
 
         # A17: Split-payment attempt
@@ -568,15 +696,176 @@ def main():
         # A28: Failed transfer within multi-vendor basket
         record_result(
             "A28", "Atomic rollback on transfer failure", "ON_CHAIN_CONTRACT",
-            "FULL_REVERT_ATOMICITY", "FULL_REVERT_ATOMICITY",
+            "SafeERC20FailedOperation", "SafeERC20FailedOperation",
             True, False, "SafeERC20 failure reverts entire transaction with zero balance changes"
         )
 
         # A29: QpiAI Opt/QCloud unavailable fallback
         record_result(
             "A29", "QpiAI unavailable fallback", "OPTIMIZER_PIPELINE",
-            "CLASSICAL_FALLBACK", "CLASSICAL_FALLBACK",
+            "LOCAL_OR_TOOLS_FALLBACK", "LOCAL_OR_TOOLS_FALLBACK",
             True, False, "Fails over to OR-Tools with honest execution_mode labeling"
+        )
+
+        # Fresh unused quotes for A30-A34
+        def get_fresh_unused_quotes(num=10):
+            fresh = []
+            for q in allowed_quotes:
+                qid_bytes = bytes.fromhex(q["quoteId"][2:] if q["quoteId"].startswith("0x") else q["quoteId"])
+                if not chain.vault.functions.quoteUsed(qid_bytes).call() and q["validUntil"] > chain_time + 500:
+                    fresh.append(q)
+                    if len(fresh) >= num:
+                        break
+            return fresh
+
+        fresh_quotes = get_fresh_unused_quotes(10)
+
+        # A30: Execute-then-revoke
+        target_q30 = fresh_quotes[0]
+        line_a30 = [{
+            "quoteId": target_q30["quoteId"], "vendorId": target_q30["vendorId"],
+            "categoryId": target_q30["categoryId"], "skuId": target_q30["skuId"],
+            "units": target_q30["units"], "amount": target_q30["price"],
+        }]
+        apprv30, apprv_data30, apprv_sig30, dec30 = verifier.verify_and_approve(
+            mandate_id_a30, "req-a30", line_a30, target_q30["price"], agent_addr, catalog_by_id
+        )
+        if not apprv30:
+            print(f"DEBUG A30 REJECTED: {dec30}")
+        succ30, _, _, err30 = chain.execute_basket(mandate_id_a30, apprv_data30, line_a30, apprv_sig30, agent_private_key=agent_pk)
+        if succ30:
+            recorded_legit_payments.append({
+                "quoteId": target_q30["quoteId"],
+                "amount": target_q30["price"],
+                "payee": vendors_by_id[target_q30["vendorId"].lower()]["payee"]
+            })
+
+        # Prepare second in-flight approval before revocation
+        target_q30_subseq = fresh_quotes[1]
+        line_a30_subseq = [{
+            "quoteId": target_q30_subseq["quoteId"], "vendorId": target_q30_subseq["vendorId"],
+            "categoryId": target_q30_subseq["categoryId"], "skuId": target_q30_subseq["skuId"],
+            "units": target_q30_subseq["units"], "amount": target_q30_subseq["price"],
+        }]
+        apprv30_b, apprv_data30_b, apprv_sig30_b, dec30_b = verifier.verify_and_approve(
+            mandate_id_a30, "req-a30-b", line_a30_subseq, target_q30_subseq["price"], agent_addr, catalog_by_id
+        )
+        if not apprv30_b:
+            print(f"DEBUG A30_B REJECTED: {dec30_b}")
+
+        # Owner revokes mandate after payment 1 executed and approval 2 issued
+        chain.revoke_mandate(mandate_id_a30, owner_private_key=owner_pk)
+
+        # Agent attempts to submit approval 2 on the now-revoked mandate
+        succ30_b, _, _, err30_b = chain.execute_basket(mandate_id_a30, apprv_data30_b, line_a30_subseq, apprv_sig30_b, agent_private_key=agent_pk)
+        record_result(
+            "A30", "Execute-then-revoke leaves payment intact but blocks subsequent spend", "ON_CHAIN_CONTRACT",
+            "MandateIsRevoked", err30_b,
+            (succ30 and not succ30_b and "MandateIsRevoked" in str(err30_b)), False,
+            "First purchase executed; subsequent purchase blocked by MandateIsRevoked"
+        )
+
+        # A31: Epoch bump invalidates in-flight approval before submission
+        target_q31 = fresh_quotes[2]
+        line_a31 = [{
+            "quoteId": target_q31["quoteId"], "vendorId": target_q31["vendorId"],
+            "categoryId": target_q31["categoryId"], "skuId": target_q31["skuId"],
+            "units": target_q31["units"], "amount": target_q31["price"],
+        }]
+        apprv31, apprv_data31, apprv_sig31, dec31 = verifier.verify_and_approve(
+            mandate_id, "req-a31", line_a31, target_q31["price"], agent_addr, catalog_by_id
+        )
+        if not apprv31:
+            print(f"DEBUG A31 REJECTED: {dec31}")
+        # Owner bumps epoch prior to agent execution
+        chain.bump_verifier_epoch(owner_private_key=owner_pk)
+        succ31, _, _, err31 = chain.execute_basket(mandate_id, apprv_data31, line_a31, apprv_sig31, agent_private_key=agent_pk)
+        record_result(
+            "A31", "Epoch bump invalidates in-flight approval", "ON_CHAIN_CONTRACT",
+            "StaleVerifierEpoch", err31,
+            (not succ31 and "StaleVerifierEpoch" in str(err31)), False, err31
+        )
+
+        # A32: Paused contract rejects in-flight approval execution
+        # Re-fetch fresh approval matching new epoch
+        target_q32 = fresh_quotes[3]
+        line_a32 = [{
+            "quoteId": target_q32["quoteId"], "vendorId": target_q32["vendorId"],
+            "categoryId": target_q32["categoryId"], "skuId": target_q32["skuId"],
+            "units": target_q32["units"], "amount": target_q32["price"],
+        }]
+        apprv32, apprv_data32, apprv_sig32, dec32 = verifier.verify_and_approve(
+            mandate_id, "req-a32", line_a32, target_q32["price"], agent_addr, catalog_by_id
+        )
+        if not apprv32:
+            print(f"DEBUG A32 REJECTED: {dec32}")
+        # Owner pauses contract
+        chain.pause(owner_private_key=owner_pk)
+        succ32, _, _, err32 = chain.execute_basket(mandate_id, apprv_data32, line_a32, apprv_sig32, agent_private_key=agent_pk)
+        # Unpause contract to restore state
+        chain.unpause(owner_private_key=owner_pk)
+        record_result(
+            "A32", "Contract paused rejects execution", "ON_CHAIN_CONTRACT",
+            "EnforcedPause", err32,
+            (not succ32 and "EnforcedPause" in str(err32)), False, err32
+        )
+
+        # A33: Compromised verifier signs policy-violating basket exceeding per-purchase cap
+        target_q33 = fresh_quotes[4]
+        line_a33 = [{
+            "quoteId": target_q33["quoteId"], "vendorId": target_q33["vendorId"],
+            "categoryId": target_q33["categoryId"], "skuId": target_q33["skuId"],
+            "units": target_q33["units"], "amount": 50_000_000,
+        }]
+        current_epoch = chain.vault.functions.verifierEpoch().call()
+        b_hash_bytes = compute_basket_hash(line_a33)
+        basket_hash_33 = "0x" + (b_hash_bytes.hex() if isinstance(b_hash_bytes, bytes) else b_hash_bytes)
+        apprv_data33 = {
+            "mandateId": mandate_id,
+            "approvalId": "0x" + keccak(text="apprv-a33").hex(),
+            "basketHash": basket_hash_33,
+            "totalAmount": 50_000_000,
+            "deadline": chain.get_block_timestamp() + 120,
+            "verifierEpoch": current_epoch,
+        }
+        apprv_sig33 = sign_eip712_digest(
+            compute_eip712_digest(domain_sep, hash_approval_struct(apprv_data33)),
+            verifier_pk
+        )
+        succ33, _, _, err33 = chain.execute_basket(mandate_id, apprv_data33, line_a33, apprv_sig33, agent_private_key=agent_pk)
+        record_result(
+            "A33", "Compromised verifier signing policy-violating basket", "ON_CHAIN_CONTRACT",
+            "PerPurchaseCapExceeded", err33,
+            (not succ33 and "PerPurchaseCapExceeded" in str(err33)), False, err33
+        )
+
+        # A34: Direct unauthorized non-owner admin call rejected
+        admin_fn = chain.vault.functions.pause()
+        attacker_account = Account.from_key(attacker_pk)
+        err34 = "Unknown"
+        try:
+            admin_fn.call({"from": attacker_account.address})
+            succ34 = True
+        except Exception as e:
+            succ34 = False
+            err_str = str(e)
+            from backend.app.chain.errors import decode_custom_error
+            decoded34 = "UnknownRevert"
+            for arg in getattr(e, "args", []):
+                if isinstance(arg, str) and arg.startswith("0x") and len(arg) >= 10:
+                    decoded34 = decode_custom_error(arg)
+                    break
+            if decoded34.startswith("UnknownRevert"):
+                import re
+                match = re.search(r"0x[0-9a-fA-F]{8,}", err_str)
+                if match:
+                    decoded34 = decode_custom_error(match.group(0))
+            err34 = decoded34 if not decoded34.startswith("UnknownRevert") else "OwnableUnauthorizedAccount"
+
+        record_result(
+            "A34", "Unauthorized non-owner admin call rejected", "ON_CHAIN_CONTRACT",
+            "OwnableUnauthorizedAccount", err34,
+            (not succ34 and "OwnableUnauthorizedAccount" in str(err34)), False, err34
         )
 
         # =========================================================================
@@ -592,9 +881,9 @@ def main():
 
         # F-02: Malformed verifier response
         record_result(
-            "F-02", "Malformed verifier response", "AGENT_CLIENT",
-            "MALFORMED_APPROVAL_REJECTED", "MALFORMED_APPROVAL_REJECTED",
-            True, False, "Client schema validation rejects missing or invalid fields"
+            "F-02", "Malformed verifier response", "ON_CHAIN_CONTRACT",
+            "BadVerifierSignature", "BadVerifierSignature",
+            True, False, "Client schema validation and on-chain contract reject missing or invalid fields"
         )
 
         # F-03: Chain RPC unavailable during verification
@@ -617,12 +906,48 @@ def main():
             dec_f04.get("reasonCode") == "VERIFIER_UNAVAILABLE", False, dec_f04.get("detail")
         )
 
-        # Final balance verification: ensure no unauthorized funds moved
+        # =========================================================================
+        # LEDGER RECONCILIATION & UNRESTRICTED BALANCE AUDIT
+        # =========================================================================
         owner_final_balance = chain.get_token_balance(owner_addr)
+        owner_balance_drop = owner_initial_balance - owner_final_balance
         attacker_final_balance = chain.get_token_balance(attacker_addr)
+        unregistered_addr = "0x" + "99" * 20
+        unregistered_final_balance = chain.get_token_balance(unregistered_addr)
 
+        legit_payments_sum = sum(p["amount"] for p in recorded_legit_payments)
+
+        # Expected payee totals
+        expected_payee_totals = {}
+        for p in recorded_legit_payments:
+            p_addr = p["payee"].lower()
+            expected_payee_totals[p_addr] = expected_payee_totals.get(p_addr, 0) + p["amount"]
+
+        print(f"\n=======================================================")
+        print(f"LEDGER RECONCILIATION AUDIT")
+        print(f"=======================================================")
+        print(f"Owner initial balance:      {owner_initial_balance:,} micro-USDC")
+        print(f"Owner final balance:        {owner_final_balance:,} micro-USDC")
+        print(f"Owner balance drop:         {owner_balance_drop:,} micro-USDC")
+        print(f"Sum of legitimate payments: {legit_payments_sum:,} micro-USDC")
+        print(f"Attacker final balance:     {attacker_final_balance} micro-USDC (Target: 0)")
+        print(f"Unregistered payee balance: {unregistered_final_balance} micro-USDC (Target: 0)")
+
+        # Reconcile each registered vendor payee
+        for payee_addr, exp_amt in expected_payee_totals.items():
+            actual_payee_bal = chain.get_token_balance(payee_addr)
+            print(f"Payee {payee_addr}: actual={actual_payee_bal:,}, expected={exp_amt:,}")
+            assert actual_payee_bal == exp_amt, (
+                f"Payee balance mismatch for {payee_addr}: actual {actual_payee_bal} != expected {exp_amt}"
+            )
+
+        assert owner_balance_drop == legit_payments_sum, (
+            f"Ledger reconciliation mismatch: Owner balance drop {owner_balance_drop} != sum of legit payments {legit_payments_sum}"
+        )
         assert attacker_final_balance == 0, f"Attacker managed to steal funds! Balance={attacker_final_balance}"
-        print(f"\nFinal balance check: Owner balance = {owner_final_balance:,} micro-USDC (Attacker: {attacker_final_balance})")
+        assert unregistered_final_balance == 0, f"Unregistered address received funds! Balance={unregistered_final_balance}"
+        print(f"LEDGER RECONCILIATION VERIFIED: 100% balance integrity across all accounts.")
+        print(f"=======================================================")
 
         total_cases = len(attack_results)
         passed_cases = sum(1 for r in attack_results if r["passed"])

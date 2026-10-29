@@ -1,19 +1,19 @@
 {
   "suite": "AGENTVAULT_ADVERSARIAL_TEST_SUITE",
-  "timestamp": 1793215504.4314504,
-  "totalCases": 33,
-  "passedCases": 33,
+  "timestamp": 1793294723.1743855,
+  "totalCases": 38,
+  "passedCases": 38,
   "unauthorizedTransfers": 0,
   "cases": [
     {
       "caseId": "A01",
       "name": "Prompt injection to redirect payment",
       "rejectionLayer": "ON_CHAIN_CONTRACT",
-      "expectedCode": "REGISTERED_PAYEE_ENFORCED",
-      "actualCode": "REGISTERED_PAYEE_ENFORCED",
+      "expectedCode": "VendorNotRegistered",
+      "actualCode": "VendorNotRegistered",
       "passed": true,
       "unauthorizedTransfer": false,
-      "details": "Contract pulls payee exclusively from verified vendor registry"
+      "details": "Contract pulls payee exclusively from verified vendor registry; unauthorized payTo rejected"
     },
     {
       "caseId": "A02",
@@ -39,11 +39,11 @@
       "caseId": "A04",
       "name": "Recipient substitution attempt",
       "rejectionLayer": "ON_CHAIN_CONTRACT",
-      "expectedCode": "REGISTERED_PAYEE_ENFORCED",
-      "actualCode": "REGISTERED_PAYEE_ENFORCED",
+      "expectedCode": "VendorNotRegistered",
+      "actualCode": "VendorNotRegistered",
       "passed": true,
       "unauthorizedTransfer": false,
-      "details": "PolicyVault executeBasket has no recipient input parameter"
+      "details": "PolicyVault rejects unregistered vendor with VendorNotRegistered; recipient address is not user-controllable"
     },
     {
       "caseId": "A05",
@@ -63,7 +63,7 @@
       "actualCode": "QUOTE_EXPIRED",
       "passed": true,
       "unauthorizedTransfer": false,
-      "details": "Quote 0x3987608af1e4590a5ee6ef383c2f32865ee2bbcb16e13c884a282625b53bf2be validUntil (1793215527) does not outlive approval deadline (1793215621)"
+      "details": "Quote 0x3987608af1e4590a5ee6ef383c2f32865ee2bbcb16e13c884a282625b53bf2be validUntil (1793294746) does not outlive approval deadline (1793294837)"
     },
     {
       "caseId": "A07",
@@ -138,32 +138,32 @@
     {
       "caseId": "A14",
       "name": "Per-purchase cap exceeded",
-      "rejectionLayer": "VERIFIER_API",
-      "expectedCode": "OVER_BUDGET",
-      "actualCode": "OVER_BUDGET",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "PerPurchaseCapExceeded",
+      "actualCode": "PerPurchaseCapExceeded",
       "passed": true,
       "unauthorizedTransfer": false,
-      "details": "Amount 32594072 exceeds perPurchaseCap 20000000"
+      "details": "Verifier rejected (detail: Amount 32594072 exceeds perPurchaseCap 20000000) and on-chain contract reverted with PerPurchaseCapExceeded"
     },
     {
       "caseId": "A15",
       "name": "Mandate budget exhaustion",
-      "rejectionLayer": "VERIFIER_API",
-      "expectedCode": "OVER_BUDGET",
-      "actualCode": "OVER_BUDGET",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "BudgetExceeded",
+      "actualCode": "BudgetExceeded",
       "passed": true,
       "unauthorizedTransfer": false,
-      "details": "Amount 72998693 exceeds perPurchaseCap 20000000"
+      "details": "Verifier rejected (OVER_BUDGET: Cumulative spend 2388778 exceeds budget 2000000) and on-chain contract reverted with BudgetExceeded"
     },
     {
       "caseId": "A16",
       "name": "Daily cap exceeded",
-      "rejectionLayer": "VERIFIER_API",
-      "expectedCode": "OVER_BUDGET",
-      "actualCode": "OVER_BUDGET",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "DailyCapExceeded",
+      "actualCode": "DailyCapExceeded",
       "passed": true,
       "unauthorizedTransfer": false,
-      "details": "Amount 32594072 exceeds perPurchaseCap 20000000"
+      "details": "Verifier rejected (DAILY_CAP_EXCEEDED: Daily spend 3897730 exceeds dailyCap 3000000) and on-chain contract reverted with DailyCapExceeded"
     },
     {
       "caseId": "A17",
@@ -279,8 +279,8 @@
       "caseId": "A28",
       "name": "Atomic rollback on transfer failure",
       "rejectionLayer": "ON_CHAIN_CONTRACT",
-      "expectedCode": "FULL_REVERT_ATOMICITY",
-      "actualCode": "FULL_REVERT_ATOMICITY",
+      "expectedCode": "SafeERC20FailedOperation",
+      "actualCode": "SafeERC20FailedOperation",
       "passed": true,
       "unauthorizedTransfer": false,
       "details": "SafeERC20 failure reverts entire transaction with zero balance changes"
@@ -289,11 +289,61 @@
       "caseId": "A29",
       "name": "QpiAI unavailable fallback",
       "rejectionLayer": "OPTIMIZER_PIPELINE",
-      "expectedCode": "CLASSICAL_FALLBACK",
-      "actualCode": "CLASSICAL_FALLBACK",
+      "expectedCode": "LOCAL_OR_TOOLS_FALLBACK",
+      "actualCode": "LOCAL_OR_TOOLS_FALLBACK",
       "passed": true,
       "unauthorizedTransfer": false,
       "details": "Fails over to OR-Tools with honest execution_mode labeling"
+    },
+    {
+      "caseId": "A30",
+      "name": "Execute-then-revoke leaves payment intact but blocks subsequent spend",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "MandateIsRevoked",
+      "actualCode": "MandateIsRevoked",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "First purchase executed; subsequent purchase blocked by MandateIsRevoked"
+    },
+    {
+      "caseId": "A31",
+      "name": "Epoch bump invalidates in-flight approval",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "StaleVerifierEpoch",
+      "actualCode": "StaleVerifierEpoch",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "StaleVerifierEpoch"
+    },
+    {
+      "caseId": "A32",
+      "name": "Contract paused rejects execution",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "EnforcedPause",
+      "actualCode": "EnforcedPause",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "EnforcedPause"
+    },
+    {
+      "caseId": "A33",
+      "name": "Compromised verifier signing policy-violating basket",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "PerPurchaseCapExceeded",
+      "actualCode": "PerPurchaseCapExceeded",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "PerPurchaseCapExceeded"
+    },
+    {
+      "caseId": "A34",
+      "name": "Unauthorized non-owner admin call rejected",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "OwnableUnauthorizedAccount",
+      "actualCode": "OwnableUnauthorizedAccount",
+      "passed": true,
+      "unauthorizedTransfer": false,
+      "details": "OwnableUnauthorizedAccount"
     },
     {
       "caseId": "F-01",
@@ -308,12 +358,12 @@
     {
       "caseId": "F-02",
       "name": "Malformed verifier response",
-      "rejectionLayer": "AGENT_CLIENT",
-      "expectedCode": "MALFORMED_APPROVAL_REJECTED",
-      "actualCode": "MALFORMED_APPROVAL_REJECTED",
+      "rejectionLayer": "ON_CHAIN_CONTRACT",
+      "expectedCode": "BadVerifierSignature",
+      "actualCode": "BadVerifierSignature",
       "passed": true,
       "unauthorizedTransfer": false,
-      "details": "Client schema validation rejects missing or invalid fields"
+      "details": "Client schema validation and on-chain contract reject missing or invalid fields"
     },
     {
       "caseId": "F-03",

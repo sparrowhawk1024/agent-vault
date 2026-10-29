@@ -44,11 +44,14 @@ def test_qaoa_procurement_experiment_execution(catalog_quotes):
     record = run_qaoa_procurement_experiment(catalog_quotes, reqs, shots=1024)
 
     assert record.status == "SUCCESS"
-    assert record.qubit_count == 4
+    assert record.qubit_count == 11
     assert record.shots == 1024
-    assert record.backend_name == "qpiai_quantum.simulator.StatevectorSimulator"
+    assert record.backend_name == "QpiAI-QSV-Local"
+    assert record.execution_mode == "LOCAL_QPIAI_SIMULATOR"
     assert len(record.counts) > 0
     assert len(record.top_bitstrings) >= 1
+    assert record.hamiltonian_diagnostics["noInfeasibleBeatsBest"] is True
+    assert "expectationH" in record.random_control
 
     # Check decoded candidate
     cand = record.decoded_candidate
@@ -63,4 +66,4 @@ def test_qaoa_procurement_experiment_execution(catalog_quotes):
 
     # Check runtime and mode
     assert record.runtime_seconds > 0
-    assert record.execution_mode in ("LIVE_QPIAI", "CLASSICAL_FALLBACK")
+    assert record.execution_mode in ("LOCAL_QPIAI_SIMULATOR", "LIVE_QPIAI", "CLASSICAL_FALLBACK")

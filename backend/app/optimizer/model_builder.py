@@ -13,12 +13,13 @@ from typing import Dict, Any, List, Tuple
 from dataclasses import dataclass
 
 try:
-    from qpiai_opt.opt_modeller import Model, Binary
+    from qpiai_opt.opt_modeller import Model, Binary, quicksum
     QPIAI_OPT_AVAILABLE = True
 except ImportError:
     QPIAI_OPT_AVAILABLE = False
     Model = None
     Binary = None
+    quicksum = None
 
 
 @dataclass
@@ -33,27 +34,26 @@ class ProcurementProblem:
         if not QPIAI_OPT_AVAILABLE:
             raise RuntimeError("qpiai-opt package is not installed.")
 
-        model = Model()
+        model = Model(name="ProcurementProblem")
         n = len(self.quotes)
         x_vars = [Binary(f"x_{i}") for i in range(n)]
-        for v in x_vars:
-            model.add_variable(v)
+        model.add_variables(x_vars)
 
         # 1. Objective: minimize total cost
-        obj_expr = sum(self.quotes[i]["price"] * x_vars[i] for i in range(n))
-        model.set_objective(obj_expr, sense="minimize")
+        obj_expr = quicksum([self.quotes[i]["price"] * x_vars[i] for i in range(n)])
+        model.minimize(obj_expr)
 
         # 2. Coverage constraints per category
         for cat_id, req_units in self.requirements.items():
-            cat_expr = sum(
+            cat_expr = quicksum([
                 self.quotes[i]["units"] * x_vars[i]
                 for i in range(n)
                 if self.quotes[i]["categoryId"] == cat_id
-            )
+            ])
             model.add_constraint(cat_expr >= req_units)
 
         # 3. Maximum basket lines constraint (smart contract cap: 16)
-        line_expr = sum(x_vars)
+        line_expr = quicksum(x_vars)
         model.add_constraint(line_expr <= self.max_lines)
 
         # 4. Budget cap constraint

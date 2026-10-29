@@ -1,0 +1,95 @@
+{
+  "experiment": "QPIAI_OPT_QAOA_NATIVE_ROUTE_EVALUATION",
+  "createdAt": "2026-10-29T15:07:25Z",
+  "sdkInspection": {
+    "qpiaiOptVersion": "0.0.9",
+    "entrypoint": "qpiai_opt.quantum.QAOA",
+    "method": "QAOA.run(qubo_dict, mode='local')",
+    "distinction": "Opt-managed QAOA dispatches directly through qpiai-opt's quantum algorithms module to the underlying QpiAI-QSV-Local simulator, distinct from direct circuit assembly in qpiai_quantum."
+  },
+  "credentials": {
+    "qcloudKeyVerified": true
+  },
+  "reducedInstanceSha256": "a670eccd46e7868d91beae614efc66e88656b2536b78da7d4fd56077cc461114",
+  "executionOutcome": {
+    "status": "SUCCESS",
+    "executionMode": "local",
+    "provider": "qpiai-quantum",
+    "solver": "QAOA",
+    "backend": "QpiAI-QSV-Local",
+    "shots": 1024,
+    "evaluations": 8,
+    "optimizedParameters": [
+      0.05116059634229592,
+      1.2447092016698609
+    ],
+    "objectiveHistory": [
+      10.712651913483995,
+      10.839206257531623,
+      9.672906360293155,
+      10.171994386016289,
+      28.01912300324096,
+      16.75474098468202,
+      4.367805972844708,
+      9.72197375675786
+    ],
+    "bestObjective": -7.17141043389912,
+    "bestBitstring": "0000000000000",
+    "variableAssignment": {
+      "x[0]": 1,
+      "x[1]": 0,
+      "x[2]": 0,
+      "x[3]": 1,
+      "x[4]": 0,
+      "x[5]": 0,
+      "x[6]": 0,
+      "x[7]": 1,
+      "x[8]": 0,
+      "x[9]": 0,
+      "x[10]": 0,
+      "x[11]": 0,
+      "x[12]": 0
+    },
+    "selectedQuoteIndices": [],
+    "selectedQuotes": [],
+    "decodedCostMicroUsdc": 0,
+    "decodedCostUsdc": 0.0,
+    "feasible": false,
+    "optimalityGapPct": -100.0,
+    "classicalOptimumUsdc": 2.12,
+    "computeTimeSeconds": 2.486,
+    "candidatesSampleCount": 5231,
+    "topCandidates": [
+      {
+        "bitstring": "0000000000000",
+        "count": 3,
+        "probability": 0.000326,
+        "objective": 0.0
+      },
+      {
+        "bitstring": "0000000000001",
+        "count": 1,
+        "probability": 0.000109,
+        "objective": -2.43204
+      },
+      {
+        "bitstring": "0000000000010",
+        "count": 1,
+        "probability": 0.000109,
+        "objective": -2.431815
+      },
+      {
+        "bitstring": "0000000000100",
+        "count": 1,
+        "probability": 0.000109,
+        "objective": 0.11988
+      },
+      {
+        "bitstring": "0000000000101",
+        "count": 1,
+        "probability": 0.000109,
+        "objective": 7.68784
+      }
+    ]
+  }
+}

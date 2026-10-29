@@ -30,3 +30,5 @@ evidence/logs/
 *.sqlite
 *.sqlite3
 *.db
+verify_key.py
+qcloud_smoke_test.py

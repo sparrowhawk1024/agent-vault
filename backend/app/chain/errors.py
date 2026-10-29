@@ -42,6 +42,8 @@ ERROR_SELECTORS = {
 ERROR_SELECTORS[keccak(text="EnforcedPause()")[:4].hex()] = "EnforcedPause"
 ERROR_SELECTORS[keccak(text="ExpectedPause()")[:4].hex()] = "ExpectedPause"
 ERROR_SELECTORS[keccak(text="ReentrancyGuardReentrantCall()")[:4].hex()] = "ReentrancyGuardReentrantCall"
+ERROR_SELECTORS[keccak(text="OwnableUnauthorizedAccount(address)")[:4].hex()] = "OwnableUnauthorizedAccount"
+ERROR_SELECTORS[keccak(text="SafeERC20FailedOperation(address)")[:4].hex()] = "SafeERC20FailedOperation"
 
 
 def decode_custom_error(revert_data_hex: str) -> str:

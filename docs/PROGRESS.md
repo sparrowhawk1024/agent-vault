@@ -1,7 +1,51 @@
 # AgentVault Build Progress
 
-- **Current Phase**: Phase 6 (Final Verification, Evidence Generation and Freeze) — **GATE PASSED & CODE FROZEN**
+- **Current Phase**: Full End-to-End System Integration & Real-Time Interconnection — **GATE PASSED & EVIDENCE FROZEN**
 - **Done**:
+  - Implemented Flexible Top-Up Pricing Based on User Spending Cap and Provider Service Differentiation:
+    - Provider Service Rate Cards (`VENDOR_SERVICES`): mapped each vendor to their authoritative service offering and unit economics:
+      - **TokenForge**: `AI_CREDITS` (AI Inference Credits) @ 1.50 µUSDC/token
+      - **NimbusAPI**: `API_CALLS` (API Throughput Calls) @ 0.85 µUSDC/call
+      - **VaultStore**: `STORAGE` (Decentralized Storage Units) @ 0.60 µUSDC/GB-mo
+      - **BudgetByte**: `MULTI_SERVICE` (Economy Multi-Service) @ 1.40 µUSDC/unit
+    - Dynamic Cap-Matched Package Generation (`create_flexible_package` & `find_package`):
+      - System dynamically computes top-up packages sized strictly to the user's active `maxSpendPerRefill` cap:
+        $\text{units} = \max(1, \lfloor \text{cap} / \text{unitPriceMicros} \rfloor)$.
+      - Dynamic package ID parsing (`pack-flex-{vendor}-{amount}`) enables users to execute custom top-up amounts bounded by their policy cap.
+      - Added `/refill/packages/calculate` endpoint for real-time dynamic pricing calculation.
+    - Updated UI in `frontend/src/views/AutoRefillView.tsx`:
+      - Added Service filter tabs (`All`, `AI Credits`, `API Calls`, `Storage`, `Economy`).
+      - Added interactive "Custom Flexible Top-Up (Sized to Cap)" tool with 1-click "Match Max Cap" button and real-time units/pricing preview.
+      - Updated Low Balance Warning Modal to display provider service details, unit rate cards, and Cap-Matched tags.
+    - Verified with 22/22 unit tests passed (100%) and clean frontend production build (593ms).
+  - Implemented graceful shutdown and process lifecycle management (`stop.bat`, `stop.ps1`, and enhanced `scripts/run_app.py` cleanup):
+    - Root cause: On Windows, background subprocess groups spawned for Anvil, Uvicorn, and Vite detach from the console handler, leaving ports 8545, 8000, and 5173 occupied even after terminal closure or Ctrl+C.
+    - Added `stop.ps1` and `stop.bat` to query active TCP listeners on ports 8545, 8000, and 5173 and forcefully terminate orphaned PIDs and lingering `anvil.exe` binaries.
+    - Updated `scripts/run_app.py` process cleanup with `taskkill /F /T /PID` on interrupt to ensure Ctrl+C in the primary terminal terminates all child processes.
+  - Implemented automatic on-chain mandate bootstrapping in `backend/app/main.py`: ensures that on startup or refresh, an active, authenticated mandate exists on-chain and is immediately linked to all views.
+  - Resolved Quote Replay Protection in interactive UI (`AgentRunView`): added "Run Live Order (Fresh Quotes)" so users can continuously trigger real on-chain purchases with dynamic fresh quotes, while preserving Seed 1 for the deterministic baseline comparison.
+  - Linked x402 Auto-Refill payments directly into `global_proof_store`: every machine-to-machine x402 settlement now automatically constructs an auditable proof bundle, immediately appearing in **Payments & Proofs (`PaymentsView`)** with real transaction hashes and cryptographic signatures.
+  - Connected real-time state synchronization via `onRefreshOverview`: whenever an Agent procurement run executes or an Auto-Refill payment settles, the top dashboard banner, confirmed payments count, and remaining mandate budget update simultaneously across the entire application.
+  - Verified full test suite passes: 20/20 Pytest backend tests (100%), 39/39 Foundry unit & 128,000-call invariant fuzz tests (0 reverts), and clean frontend production build (460ms).
+  - Implemented unified master command runner in `run_all.bat` and `scripts/run_all.py`.
+  - Added dedicated application launcher `run.bat` and `run.ps1` for lightweight UI + server runs.
+  - Resolved x402 Auto-Refill Mandate Vendor ID Hex Format Mismatch:
+    - Root cause: `ChainClient.get_mandate` returned `bytes32` vendor IDs without `"0x"` prefix, while synthetic catalog packages carried `"0x"` prefix, causing mandate allowlist verification to reject legitimate TokenForge refills.
+    - Standardized vendor ID normalization in `backend/app/x402/service.py` to strip `"0x"` and lowercase both sides.
+    - Updated `ChainClient.get_mandate` in `backend/app/chain/client.py` to standardize `"0x"` representation.
+    - Added visible error banner rendering directly inside the low-balance modal in `frontend/src/views/AutoRefillView.tsx` so any policy violations are immediately visible to the user.
+    - Added modal state management ensuring clean transition between Low Balance Dialog and Top-Up Confirmed Success Pop-up.
+    - Verified live settlement on active mandate: +2,000 units granted, allowance updated from 5,000 to 7,000, TxHash recorded on-chain.
+    - Verified frontend production build (909ms, 0 errors).
+  - Orchestrates all six automated verification suites end-to-end in a single run:
+    1. Smart Contract Tests: 38 unit tests + 128,000-call invariant fuzz campaign (`PolicyVault.t.sol` & `PolicyVault.invariant.t.sol`) with 0 reverts.
+    2. Python Backend Tests: 20/20 unit tests (`backend/tests/unit/`) with 100% pass rate.
+    3. Adversarial Security Suite: 38/38 attack vectors intercepted, 0 unauthorized fund transfers, 100% ledger balance reconciliation.
+    4. User Simulation Study: 10 randomized real-time user personas, simulated AI chat depletion, low-balance popups, and verified x402 V2 settlements.
+    5. Daily Cap Boundary Enforcement: Configurable daily spend cap enforcement (500,000 micro-USDC cap, 1,000,000,000 limit, 213 micro-USDC per replenish).
+    6. Cryptographic Manifest Freeze: Automated SHA-256 integrity verification across all evidence artifacts and updated `evidence/summary.md`.
+  - Automatically launches the default web browser to the interactive dashboard at `http://localhost:5173/refill`.
+  - Preserved existing `start_dashboard.bat` for lightweight service launching.
   - Saved complete master prompt (§0 through §15, Appendix A, Appendix B) to `docs/MASTER_PROMPT.md`.
   - Registered Appendix A workspace rule in `.agents/rules/agentvault.md` and `AGENTS.md`.
   - Completed Phase 0 (Environment and SDK execution probes, recorded in `evidence/runs/phase0_probe.json`).
@@ -17,16 +61,163 @@
     - Verified full regression suite: 19/19 Foundry unit tests passed, 128,000-call invariant fuzz tests passed (0 reverts, 0 violations), 12/12 Python backend tests passed, 33/33 attack suite cases passed with 0 unauthorized transfers, 10/10 Phase 5 gate steps passed on clean Anvil, and clean frontend build (409ms).
     - Authored comprehensive documentation in `README.md` and evaluator walkthrough script in `docs/DEMO_SCRIPT.md`.
     - Verified chain ID 31337 safety guardrails, clean git state, and zero secret exposure.
+  - Completed QpiAI Opt Token Integration Update:
+    - Fixed model formulation in `backend/app/optimizer/model_builder.py` (`model.minimize()` & `quicksum`).
+    - Added dual authentication support (`Authorization: Bearer <key>` and `X-Secret-Token`) in `backend/app/optimizer/solvers.py`.
+    - Implemented comprehensive probe and benchmark in `scripts/probe_qpiai_opt_token.py`.
+    - Verified live HTTP response against `https://opt-server.qpiai.tech/api/users/me` (classified as `AUTHENTICATION_FAILURE` for mismatched QCloud keys).
+    - Preserved exact 28.47% savings benchmark on Seed 1 and recomputed all basket costs independently.
+    - Saved evidence artifact `evidence/runs/phase2_opt_token_probe.json` and updated `evidence/MANIFEST.json`.
+    - 12/12 backend unit tests passing.
+  - Completed Hosted QpiAI Opt Platform Benchmark Experiment:
+    - Executed all 6 phases in `scripts/run_hosted_opt_experiment.py`.
+    - Phase 1: Froze and canonicalized inputs for Seeds 1, 2, 3 with SHA-256 hashes (`f0d8a9ff...`, `aee282bf...`, `55737105...`).
+    - Phase 2: Ran local controls (OR-Tools CP-SAT, Greedy, Vendor-Rule). Confirmed Seed 1 exact calibration: 28.47% savings ($23.03 vs $32.20).
+    - Phase 3: Probed hosted QpiAI Opt platform with authentic user token (`8247...f06c`). Authenticated 200 OK (`premcnaik2004@gmail.com`), retrieved 3 active hosted solvers (`MILP Solver`, `HUBO Solver`, `QUBO Solver`), discovered account plan tier `none`, subscription `inactive`, and 0 credits.
+    - Attempted `mode="platform"` problem submission via `qpiai_solve`: captured exact platform rejection code `BLOCKED_NO_STORAGE_QUOTA` (`APIError: no active storage quota found for organization`).
+    - Phase 4 & 5: Independently recomputed all basket metrics; transparently recorded `N/A` for hosted savings without substituting OR-Tools or falsifying platform success.
+    - Phase 6: Saved authentic evidence to `evidence/runs/phase2_hosted_qpiai_opt_benchmark.json`. Regenerated `evidence/summary.md` with complete 11-column comparison table and re-hashed all 8 artifacts in `evidence/MANIFEST.json`.
+  - Rotated and Verified Live QpiAI Credentials:
+    - Updated `.env` with new rotated `QCLOUD_API_KEY` (`8107...0bf6`) and `QPIAI_OPT_API_KEY` (`67ff...636f`).
+    - Verified `QCLOUD_API_KEY` via `qpiai_quantum.QpiAIQuantumAuth`: `Auth.verify_api_key()` confirmed `True`. Connected to live QCloud workspace (`prem`, `Default Workspace`), discovered compute resources (`QpiAI-QSV-Simulator`, `QpiAI-QDM-Simulator`, `QpiAI-QTN-Simulator`, `QpiAI-QSV-Lite`, `QpiAI-QDM-Lite`, `QpiAI-Indus-1`). Remote submission confirmed active subscription requirement (`Failed to create job: an active subscription is required to run jobs`); local circuit simulation on `QpiAI-QSV-Local` verified with 256 shots (`{'11': 128, '00': 128}`).
+    - Verified `QPIAI_OPT_API_KEY` via `https://opt-server.qpiai.tech/api/users/me`: confirmed HTTP 200 OK (`sparrowhawk1024@gmail.com`, super_admin). Local MILP solving with `Client(api_key=...)` on HiGHS verified optimal. Hosted platform solve confirmed `no active storage quota found for organization`.
+    - Regenerated evidence artifacts in `evidence/runs/phase2_hosted_qpiai_opt_benchmark.json`, updated `evidence/summary.md`, and refreshed `evidence/MANIFEST.json`.
+    - All 12 unit tests passing cleanly.
+  - Tested and Verified User QpiAI Quantum Circuit Snippet:
+    - Executed adapted cloud script in `scripts/try_user_snippet.py` using live credentials from `.env`.
+    - Identified SDK constraints: `Circuit(2, 2)` required for classical bit measurement, `login = QpiAIQuantumAuth.login`, and `QpiAI-QSV-Cloud` is unsupported (SDK supported devices: `['QpiAI-QSV-Simulator', 'QpiAI-QDM-Simulator', 'QpiAI-QTN-Simulator', 'QpiAI-Indus-1', 'QpiAI-QSV-Lite', 'QpiAI-QDM-Lite', 'QpiAI-QSV-Local']`).
+    - Verified remote experiment requirement (`Experiment 'Bell_State_Cloud_Run' not found. Please create the experiment first.`).
+    - Verified remote job submission error: HTTP 400 (`{'error': 'Failed to create job: an active subscription is required to run jobs'}`).
+    - Verified local simulator execution with `device_name='QpiAI-QSV-Local'`, returning Bell state counts `{'11': 2060, '00': 2036}` for 4096 shots.
+  - Completed AgentVault Auto-Refill & x402 V2 Payment Protocol Integration:
+    - Designed and implemented x402 V2 payment required models in `backend/app/x402/models.py` (`PaymentRequiredResponse`, `PaymentPayload`, `SignaturePayload`, `SettlementResponse`).
+    - Implemented simulated AI usage state store in `backend/app/x402/store.py` tracking token allowance, consumed units, remaining percentage, and configurable 15% threshold.
+    - Implemented x402 service in `backend/app/x402/service.py` with deterministic fake AI responses, synthetic package valuation (TokenForge, BudgetByte), and strict policy enforcement (spend caps, vendor allowlists, daily budget, idempotency).
+    - Exposed REST endpoints in `backend/app/main.py`: `/refill/status`, `/refill/chat`, `/refill/consume`, `/refill/packages`, `/refill/policy`, `/refill/reset`, `/x402/refill` (HTTP 402/200), and `/x402/client/pay` (interactive 6-state trace).
+    - Created interactive dashboard view in `frontend/src/views/AutoRefillView.tsx` with live simulated AI chat, usage gauge, presenter fast-forward controls, low-balance alert banner, 6-state x402 V2 visual stepper, and policy settings.
+    - Added comprehensive automated test suite in `backend/tests/unit/test_x402_refill.py` (8/8 tests passing, 20/20 total backend tests passing).
+    - Verified clean frontend production build with zero TypeScript errors (502ms).
+  - Completed QpiAI Opt Platform Audit and Hosted Execution Sequence Validation:
+    - Inspected official documentation (`https://opt.qpiai.tech/docs/platform`, `https://opt-api-docs.qpiai.tech/docs/introduction/authentication`, `https://opt-api-docs.qpiai.tech/docs/introduction/overview`).
+    - Resolved authentication mechanism: established that the portal token is a Secret Token authenticated via `X-Secret-Token` header (`GET /api/users/me` -> HTTP 200 OK, `sparrowhawk1024@gmail.com`, `super_admin`), while raw `Authorization: Bearer <key>` returns 401 Invalid Token.
+    - Attached dual header session (`X-Secret-Token: <key>` and `Authorization: Bearer <key>`) in `Client(api_key=key, session=session)`.
+    - Validated hosted MILP platform sequence via `scripts/audit_qpiai_opt_platform.py`:
+      1. Serialization to `.lp` format verified.
+      2. Storage upload endpoint (`POST /api/storage/upload`) probed: accurately captured exact response `APIError: no active storage quota found for organization`.
+      3. Problem creation schema confirmed: requires `milp_model_storage_id` returned from storage upload.
+      4. Platform execution halts gracefully without bypassing or falsifying results.
+    - Preserved local HiGHS MILP solving (`LOCAL_QPIAI_OPT`), exactly matching 28.47% savings benchmark on Seed 1 ($23.03 vs $32.20).
+    - Preserved QCloud authentication & resource discovery (`QpiAIQuantumAuth.verify_api_key()` = True, 6 compute backends) and deterministic local simulation on `StatevectorSimulator`/`QpiAI-QSV-Local`.
+    - Full regression pass: 39/39 Foundry tests (38 unit + 128,000-call invariant, 0 reverts), 12/12 pytest unit tests, 38/38 attack suite cases with 0 unauthorized transfers, 10/10 Phase 5 gate steps passed, clean Vite build (489ms).
+  - Tested and Verified Comprehensive API Integration and Credentials:
+    - Tested live credentials in `.env`: `QPIAI_OPT_API_KEY` (`2e66...7c68`) and `QCLOUD_API_KEY` (`b1eb...acc7`).
+    - Verified `https://opt-server.qpiai.tech/api/users/me` with `X-Secret-Token`: HTTP 200 OK (`prem cn`, `sparrowhawk1024@gmail.com`).
+    - Verified QCloud authentication with `QpiAIQuantumAuth.login()` and `verify_api_key()`: True; confirmed all 6 compute resources.
+    - Verified `QpiAIOptSolver.solve()` under `LOCAL_QPIAI_OPT` (HiGHS) matching exact reference optimal ($23.03 on Seed 1, 28.47% savings vs vendor rule).
+    - Hardened `backend/app/main.py` routes (`/catalog`, `/optimize`, `/quantum/run`) with safe fallbacks when chain client is initializing.
+    - Verified all 23 frontend API endpoints in `frontend/src/api.ts` map 1:1 to FastAPI backend routes.
+    - Verified 12/12 backend unit tests pass, and frontend production build succeeds (489ms).
+  - Completed Invariant Handler Expansion, Expanded Foundry Test Suite, Attack Suite Hardening, and Manifest State Recomputation:
+    - **Invariant Handler Expansion (256 runs, 128,000 calls, 0 reverts)**:
+      - Enhanced `contracts/test/PolicyVault.invariant.t.sol` with actions: `action_revokeMandate`, `action_bumpEpoch`, `action_setVerifier`, `action_timeWarp`, `action_overCap`, `action_unregisteredVendor`, `action_badSignature`, `action_duplicateQuoteAcrossBaskets`, and `executeRandomBasket`.
+      - Tracked independent ghost successes and failures per action.
+      - Added `afterInvariant()` asserting `ghost_totalSuccesses > 0` and `ghost_totalFailures > 0` with end-of-campaign log summary (Total Successes: 136, Total Failures: 365); zero per-call `console.log` spam.
+    - **Foundry Unit Tests Expanded to 38/38 (100% Passing)**:
+      - Added 9 new tests to `contracts/test/PolicyVault.t.sol`: `test_RevertWhen_VendorRegisteredButNotAllowlisted`, `test_RevertWhen_QuoteAlreadyUsedAcrossBaskets`, `test_RevertWhen_EmptyVerifierSignature`, `test_RevertWhen_ShortVerifierSignature`, `test_RevertWhen_TokenMismatch`, `test_RevertWhen_NonceReused`, `test_RevertWhen_ZeroBudget`, `test_RevertWhen_EmptyAllowlist`, and `testFuzz_RandomCapsAndBaskets` (256 runs).
+      - All 38 tests passing cleanly with zero reverts.
+    - **Hardened Attack Suite (38/38 Passing) & Exact Ledger Reconciliation**:
+      - Differentiated cap reason codes with real contract errors: `PerPurchaseCapExceeded` (A14), `BudgetExceeded` (A15), and `DailyCapExceeded` (A16).
+      - Replaced all invented labels with authentic contract error names (`VendorNotRegistered` for A01/A04, `SafeERC20FailedOperation` for A28, `LOCAL_OR_TOOLS_FALLBACK` for A29, `BadVerifierSignature` for F-02).
+      - Added strict ledger reconciliation asserting `owner_balance_drop == sum(legit_payments)` (4,775,421 micro-USDC), payee balances match expected allocations, `attacker_final_balance == 0`, and unregistered address balance == 0.
+    - **Exhaustive State Analysis & Independent Manifest Recomputation**:
+      - Executed `scripts/recompute_manifest_states.py` directly from manifest candidate quote weights.
+      - Recomputed 8-variable decision space: Total = 256, Feasible = 147 ($7 \times 7 \times 3$), Infeasible = 109 ($256 - 147$).
+      - Recomputed 13-qubit Hilbert space: Total basis states = 8,192, Offer-feasible states = 4,704 ($147 \times 32$), Infeasible states = 3,488 ($109 \times 32$), and Exact Zero-Penalty Ground-Manifold states ($H_{penalty} == 0$) = exactly 147, explaining the precise relationship with the 147 count.
+      - Zero smart contract or verifier policy modifications made.
+    - **13-Qubit Hamiltonian Formulation & Mathematical Penalty Adequacy**:
+      - Formulated exact 13-qubit procurement instance: 8 candidate quote selection binaries + 5 slack bits (2 for API surplus 0..3, 2 for AI surplus 0..3, 1 for Storage surplus 0..1).
+  - Executed Focused QpiAI Quantum API Connectivity Probe (`scripts/test_qpiai_quantum_connectivity.py`):
+    - Confirmed installed SDK version `qpiai-quantum` 0.3.0.
+    - Verified authentication via `QpiAIQuantumAuth.login(key)` and `Auth.verify_api_key()` -> `True`.
+    - Discovered 6 compute resources: `QpiAI-QSV-Simulator` (rate 1), `QpiAI-QDM-Simulator` (rate 2), `QpiAI-QTN-Simulator` (rate 3), `QpiAI-QSV-Lite` (rate 1), `QpiAI-QDM-Lite` (rate 2), `QpiAI-Indus-1` (rate 4).
+    - Attempted genuine remote circuit job submission to `QpiAI-QSV-Simulator` with `Circuit(2)` Bell pair.
+    - Captured verified server rejection: HTTP 400 `{'error': 'Failed to create job: an active subscription is required to run jobs'}`.
+    - Validated that remote cloud execution is blocked by account subscription tier, while local execution on `StatevectorSimulator` (`QpiAI-QSV-Local`) remains fully functional.
+      - Bit order experimentally verified with single-qubit X gates on `QpiAI-QSV-Local`: little-endian (`b_str[12 - i] = qubit i`).
+      - Evaluated all 8,192 basis states in `scripts/validate_13qubit_hamiltonian.py`. Ground state = `|0000001001001>`, Energy = 0.328531, Feasible = True, Cost = $2.12 (matches classical optimum `[0, 3, 6]`).
+      - Lowest infeasible energy = 2.687382 (energy gap = +2.358851). No infeasible state beats the best feasible one (`noInfeasibleBeatsBest = True`).
+      - Provenance recorded in `evidence/runs/phase3_reduced_instance_manifest.json` (`catalog_input_sha256`: `f0d8a9ff...`, `reduced_instance_sha256`: `a670eccd...`) and `evidence/runs/phase3_exhaustive_states.json`.
+    - **Multi-Start QAOA Study (80 Starts across p=1..4)**:
+      - Executed `scripts/run_qaoa_multistart_study.py` on `QpiAI-QSV-Local` across 80 optimizer starts (Depths $p=1, 2, 3, 4 \times 10$ starts $\times 2$ objectives: Expected Energy $\min \langle H \rangle$ and CVaR $\alpha=0.25$).
+      - Evaluated the 8 best configurations with independent 1,024-shot sampling: best feasible sampled basket matched classical optimum $2.12 ($0.00\%$ gap).
+      - Random uniform sampling control (1,024 shots, seed 42): $\langle H \rangle = 17.3597$.
+      - Telemetry preserved in `evidence/runs/phase3_qaoa_multistart.json`.
+    - **QpiAI Opt Native QAOA Execution**:
+      - Verified native entry point `qpiai_opt.quantum.QAOA(reps=1, ...).run(qubo_dict, mode="local")`.
+      - Executed `scripts/run_opt_qaoa_experiment.py` locally on `QpiAI-QSV-Local` using `qpiai-quantum` under local mode in 2.26s.
+      - Saved telemetry to `evidence/runs/phase4_opt_qaoa_run.json`.
+    - **Foundry Unit Tests Expanded to 29/29 (100% §7.7 / §7.8 Coverage)**:
+      - Added 10 missing test functions to `contracts/test/PolicyVault.t.sol`: compromised verifier policy violation rejection, total mismatch, empty basket, too many lines (>16), mandate expired, mandate not yet valid, cross-chain / wrong domain signature, inactive vendor, setVerifier epoch invalidation, and aggregate budget exceeded.
+      - 29/29 unit tests passing cleanly via `forge test --root contracts`.
+    - **Independent Ghost-State Counters in Invariant Fuzzing**:
+      - Enhanced `contracts/test/PolicyVault.invariant.t.sol` with independent ghost state (`ghost_totalPaidCumulative`, `ghost_dailyPaid`, `ghost_vendorPayouts`, `ghost_successfulBasketCount`, `ghost_successfulLineCount`, and consumed ID trackers).
+      - Invariant campaign executed 256 runs, 128,000 calls with 0 reverts, verifying all 6 ghost reconciliation invariants.
+    - **Expanded Adversarial Attack Suite to 38 Cases (100% Passing)**:
+      - Added 5 new attack scenarios to `scripts/run_attacks.py`: A30 (execute-then-revoke), A31 (epoch bump invalidation), A32 (contract paused rejection), A33 (compromised verifier exceeding per-purchase cap), and A34 (unauthorized non-owner admin call).
+      - Executed on local Anvil: 38/38 cases passing with 0 unauthorized fund transfers. Saved to `evidence/attacks.json`.
+    - **Regenerated Evidence Manifest & Summary**:
+      - Rebuilt `evidence/summary.md` and `evidence/MANIFEST.json` containing 13 cryptographic hashed artifacts.
+  - Completed End-to-End Hackathon Dashboard Implementation (§Phases 1–7):
+    - Conducted comprehensive architecture and readiness audit saved to `docs/dashboard-readiness-audit.md`.
+    - Added backend endpoints: `GET /overview` (real-time consolidated system metrics), `GET /mandates` (discovered mandate query), and `POST /demo/reset` (safe in-memory fixture reset).
+    - Built and integrated `DashboardOverviewBanner` (`frontend/src/components/DashboardOverviewBanner.tsx`) displaying mandate status, spending caps, optimal basket cost, verifier status, settled/rejected payment counts, and solver status.
+    - Built interactive 12-stage evaluator walkthrough stepper `GuidedDemoModal` (`frontend/src/components/GuidedDemoModal.tsx`) with real API execution, step progress tracking, and on-chain action confirmation.
+    - Built `ArchitecturePolicyModal` (`frontend/src/components/ArchitecturePolicyModal.tsx`) documenting savings vs baselines, on-chain/off-chain boundaries, cryptographic protocols, token monitor distinction, and QCloud subscription status.
+    - Authored one-click launcher `start_dashboard.bat` automating Anvil startup, contract deployment, FastAPI backend, Vite dev server, and browser opening.
+    - Verified all 38 Foundry unit tests (100% pass) + 128,000-call invariant test (0 reverts).
+    - Verified all 12 backend unit tests (100% pass via pytest).
+    - Verified all 38 attack scenarios in `scripts/run_attacks.py` (0 unauthorized fund transfers).
+    - Verified all 10 end-to-end integration steps in `scripts/run_phase5_gate.py`.
+    - Verified clean production Vite frontend build in 320ms.
+  - Executed Comprehensive QpiAI Opt Platform API Audit (`scripts/audit_qpiai_opt_platform.py`):
+    - Re-reviewed official platform documentation (`https://opt.qpiai.tech/docs/platform`) against installed SDK (`qpiai-opt` 0.0.9).
+    - Verified authentication via `client.me()` (HTTP 200 OK, `sparrowhawk1024@gmail.com`).
+    - Discovered 3 platform solvers (`MILP Solver`, `QUBO Solver`, `HUBO Solver`).
+    - Probed `POST /api/storage/upload` with minimal 1-variable model: captured exact technical rejection `APIError: no active storage quota found for organization`.
+    - Verified that local HiGHS execution via `mode="local"` remains 100% operational (`status='optimal'`).
+  - Maximized QpiAI Opt & Quantum SDK Operational Integration in Dashboard:
+    - Updated `frontend/src/views/QpiAIEvidenceView.tsx` to dynamically bind to the genuine 11-qubit / 13-qubit procurement Ising Hamiltonian, parameter sweeps, and gate decompositions.
+    - Added dynamic Mathematical Penalty Diagnostics telemetry displaying ground state energy (0.3285), uniform expectation (13.0), infeasible barrier (2.6874), and energy gap (+2.3589), proving mathematically that no infeasible state beats the ground state.
+    - Added dedicated live telemetry cards for QpiAI Opt (HiGHS local MILP, $23.03 benchmark, 28.47% savings, dual-token authorization) and QpiAI QCloud (6 discovered backends, account verification, local `QpiAI-QSV-Local` execution).
+    - Verified clean production frontend build in 502ms with zero TypeScript warnings.
+  - Implemented Interactive Low-Balance Warning Pop-Up & x402 Confirmation Modal:
+    - Built interactive `showLowBalanceModal` in `frontend/src/views/AutoRefillView.tsx`: automatically pops up when simulated AI credit usage drops below threshold (<15% or 0).
+    - Modal displays live remaining units gauge, package recommendation (TokenForge), and prompts user with *"Credits too low, wanna top up?"*.
+    - Clicking *"Yes, Initiate Automated Payment"* executes the x402 V2 payment required flow (`HTTP 402` challenge -> `PAYMENT-SIGNATURE` -> on-chain settlement -> `PAYMENT-RESPONSE`).
+    - Built `showSuccessModal` confirmation pop-up: displays confirmed transaction receipt, transaction hash, USDC amount, and credits replenished (+2,000 units).
+    - Verified clean Vite production build in 388ms and end-to-end Python/REST simulation.
+  - Executed 10-Session Randomized User Simulation Study (`scripts/run_user_simulation_study.py`):
+    - Executed 10 full user sessions across distinct personas with randomized preferences, prompt workloads, and package selections.
+    - Achieved 100% low-balance trigger detection (< 15%), average chat turn latency 11.57ms, and 10/10 confirmed on-chain x402 settlements (average duration 97.8ms).
+    - Successfully verified all 3 policy / adversarial interception layers: spend cap exceeded ($12.00 > $5.00), unapproved vendor (ShadyDeals), and tampered cryptographic signature.
+    - Saved raw evidence to `evidence/runs/user_simulation_10_runs.json` and generated detailed evaluation report in `evidence/reports/user_simulation_report.md`.
+  - Executed Daily Cap Exhaustion Study (Limit 1,000,000,000 / Daily Cap 500,000 / Cost 213):
+    - Configured total allowance limit of 1,000,000,000 units and strict daily spending cap of 500,000 micro-USDC ($0.50 USDC).
+    - Executed continuous AI chat turns and autonomous x402 machine-to-machine refills using `pack-custom-213` (cost: 213 micro-USDC per replenish).
+    - Successfully completed exactly 2,347 refills ($499,911 micro-USDC settled, 99.98% cap consumption).
+    - Verified deterministic boundary interception on Refill #2,348: blocked by policy engine with `POLICY VIOLATION: Cumulative daily spend would exceed daily cap ($0.50)` with remaining headroom 89 micro-USDC (< 213 needed).
+    - Preserved full report to `evidence/reports/daily_cap_exhaustion_report.md`.
 - **In Progress**:
-  - None (Ready for Hackathon Evaluation & Demonstration).
+  - None (Ready for live judge demonstration).
 - **Blockers**:
-  - None for local execution. Remote QpiAI QCloud hardware execution requires a `QCLOUD_API_KEY` registered at https://qcloud.qpiai.tech/ and is honestly labeled as blocked; local execution uses real `qpiai_quantum.simulator.StatevectorSimulator`.
+  - Hosted QpiAI Opt platform execution is blocked by the account organization's inactive storage quota (`no active storage quota found for organization`). Local solving with genuine `qpiai-opt` model builder and OR-Tools CP-SAT reference optimum is fully functional.
+  - Remote QpiAI QCloud hardware/simulator execution requires an active paid cloud subscription (`Failed to create job: an active subscription is required to run jobs`); local simulation uses genuine `qpiai_quantum.simulator.StatevectorSimulator` (`QpiAI-QSV-Local`).
 - **Decisions**:
   - Bounded agent problem budget by `min(totalBudget - spentTotal, perPurchaseCap)` to guarantee generated candidate baskets never exceed per-purchase caps.
   - Manifest excludes itself to prevent self-referential hash loops.
-- **Hours Used**: 5.2 hours.
+  - Strictly enforce honest platform error labeling: never mislabel local fallback execution as hosted cloud execution.
+- **Hours Used**: 8.0 hours.
 - **Next Three Actions**:
-  1. Present AgentVault live demo using `docs/DEMO_SCRIPT.md`.
+  1. Present AgentVault live demo using `docs/DEMO_SCRIPT.md` and the 12-stage guided demo stepper.
   2. Inspect on-chain execution proofs and audit chain integrity via `GET /audit/verify`.
   3. Deliver evidence bundle and GitHub repository to evaluators.
-

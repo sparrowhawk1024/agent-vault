@@ -1,0 +1,191 @@
+{
+  "evidenceType": "QPIAI_OPT_INTEGRATION_AND_BENCHMARK_PROBE",
+  "timestampUtc": "2026-10-29T15:06:11.706325+00:00",
+  "qpiaiOptPackageVersion": "0.0.9",
+  "apiProbe": {
+    "targetUrl": "https://opt-server.qpiai.tech/api",
+    "tokenConfigured": true,
+    "redactedToken": "2e66...7c68",
+    "healthEndpoint": {
+      "statusCode": 200,
+      "response": {
+        "status": "ok"
+      }
+    },
+    "userMeProbe": {
+      "category": "AUTHENTICATED",
+      "statusCode": 200,
+      "detail": "User: sparrowhawk1024@gmail.com"
+    }
+  },
+  "minimalSolve": {
+    "modelName": "MinimalTest",
+    "variables": [
+      "x0",
+      "x1"
+    ],
+    "status": "SUCCESS",
+    "executionMode": "LIVE_QPIAI",
+    "objective": 10.0,
+    "solution": {
+      "x0": 1.0,
+      "x1": 0.0
+    }
+  },
+  "benchmarkCalibration": {
+    "targetRequirement": {
+      "0x1817e4a91a69f332076a1491ca7bfd951fc1bb157d511a370c8e402f247bde00": 15000,
+      "0xfdaa0d5935496bf9340f5737ed946090ea0b4c2206eefeb008f32a7302c7881f": 8000,
+      "0xed8057380bf15f0d28f1e5655867f6697d716ad86b16c6a3fa8ef4bb5c5696c0": 1200
+    },
+    "seed1SavingsVsVendorRulePct": 28.47,
+    "reproducedSeed1SavingsPct": 28.47
+  },
+  "runs": [
+    {
+      "seed": 1,
+      "eligibleQuotesCount": 48,
+      "ortools": {
+        "totalCost": 23029818,
+        "feasible": true,
+        "runtimeMs": 25.5,
+        "recomputedCost": 23029818,
+        "selectedQuoteIds": [
+          "0xbda2c695e61d2c72282341fe3d2bfac13194aec914a0ac1677b5bcb0f2cd9cd5",
+          "0xb21b5736cd251f5a1baa2e6ac6fec84b304e15815427ba873a231896c12205b8",
+          "0x935ee827c5a7e24bf649f5611e2630bd0e48e92f2000cd445acd223f49d03cf0",
+          "0x26a4024f91c61b85a6b9cfc850d1c247a0eb175349ed52cf333aabd0486a7ca7",
+          "0xf3b672ba408c9e5ec5b07ba3b59b595bf211377ce7ef570506fac167f25871f2",
+          "0x1b3b1ebd77be391b9d5be60032be88b80b53f39aab350196237be82cdf164c0c",
+          "0x8f5173d2034290bf550172cdd69e54258376ddf60eb7c96c972e629abf670139"
+        ]
+      },
+      "qpiaiOpt": {
+        "solverName": "qpiai-opt-highs",
+        "executionMode": "LOCAL_QPIAI_OPT",
+        "feasible": true,
+        "totalCost": 23029818,
+        "runtimeMs": 95.76,
+        "recomputedCost": 23029818,
+        "errorDetail": null,
+        "selectedQuoteIds": [
+          "0xbda2c695e61d2c72282341fe3d2bfac13194aec914a0ac1677b5bcb0f2cd9cd5",
+          "0xb21b5736cd251f5a1baa2e6ac6fec84b304e15815427ba873a231896c12205b8",
+          "0x935ee827c5a7e24bf649f5611e2630bd0e48e92f2000cd445acd223f49d03cf0",
+          "0x26a4024f91c61b85a6b9cfc850d1c247a0eb175349ed52cf333aabd0486a7ca7",
+          "0xf3b672ba408c9e5ec5b07ba3b59b595bf211377ce7ef570506fac167f25871f2",
+          "0x1b3b1ebd77be391b9d5be60032be88b80b53f39aab350196237be82cdf164c0c",
+          "0x8f5173d2034290bf550172cdd69e54258376ddf60eb7c96c972e629abf670139"
+        ]
+      },
+      "greedy": {
+        "totalCost": 23308166,
+        "feasible": true,
+        "savingsVsGreedyPct": 1.19
+      },
+      "vendorRule": {
+        "totalCost": 32195318,
+        "feasible": true,
+        "savingsVsVendorRulePct": 28.47
+      }
+    },
+    {
+      "seed": 2,
+      "eligibleQuotesCount": 48,
+      "ortools": {
+        "totalCost": 23070879,
+        "feasible": true,
+        "runtimeMs": 13.58,
+        "recomputedCost": 23070879,
+        "selectedQuoteIds": [
+          "0x8dd10bf73d4fd12a35e3931a9fa13bd141efce45b797d3a69a82bbfe787fcef8",
+          "0x571227eff38196138e06b8ae62e5e4df6136302df96699d9de533095561d9e9e",
+          "0x1dddc85a8dbf483daa8f0c1e17fef3f7fe74be04b236ac4638b363aaf585dd40",
+          "0x8ee6de32dce9b21618b219dc2deee150d8b26e1a8e2229ae3b4b735962a135d7",
+          "0x07c5641fd176276102a519dbdc0302ccb93228b7b4fa42340f3c9443db18f4dc",
+          "0x9b5426b8d8dc4ed6d2e5c49b04b9514ebc8c8b2232004ceb1a614b88aceff707",
+          "0x94d3b4b72c5de36e1a6f55dd1483f1a38134076992e328f629845a3b55ec5640"
+        ]
+      },
+      "qpiaiOpt": {
+        "solverName": "qpiai-opt-highs",
+        "executionMode": "LOCAL_QPIAI_OPT",
+        "feasible": true,
+        "totalCost": 23070879,
+        "runtimeMs": 91.23,
+        "recomputedCost": 23070879,
+        "errorDetail": null,
+        "selectedQuoteIds": [
+          "0x8dd10bf73d4fd12a35e3931a9fa13bd141efce45b797d3a69a82bbfe787fcef8",
+          "0x571227eff38196138e06b8ae62e5e4df6136302df96699d9de533095561d9e9e",
+          "0x1dddc85a8dbf483daa8f0c1e17fef3f7fe74be04b236ac4638b363aaf585dd40",
+          "0x8ee6de32dce9b21618b219dc2deee150d8b26e1a8e2229ae3b4b735962a135d7",
+          "0x07c5641fd176276102a519dbdc0302ccb93228b7b4fa42340f3c9443db18f4dc",
+          "0x9b5426b8d8dc4ed6d2e5c49b04b9514ebc8c8b2232004ceb1a614b88aceff707",
+          "0x94d3b4b72c5de36e1a6f55dd1483f1a38134076992e328f629845a3b55ec5640"
+        ]
+      },
+      "greedy": {
+        "totalCost": 23540053,
+        "feasible": true,
+        "savingsVsGreedyPct": 1.99
+      },
+      "vendorRule": {
+        "totalCost": 31425407,
+        "feasible": true,
+        "savingsVsVendorRulePct": 26.59
+      }
+    },
+    {
+      "seed": 3,
+      "eligibleQuotesCount": 48,
+      "ortools": {
+        "totalCost": 23389998,
+        "feasible": true,
+        "runtimeMs": 78.51,
+        "recomputedCost": 23389998,
+        "selectedQuoteIds": [
+          "0xa47fe95a90e3c18394f7e2b6430216cbfe984d608ceb39a27a976be0bb495805",
+          "0x58a4dcc097715fb7f8b377303c3bc5c2379b29a92fcea498995259906ef4731d",
+          "0x1e158b53b2fd192fea14af7423e519c595e88388f27be59fa7c9547ae2c8154f",
+          "0x9edabb054a428e1089c27136410751197bf5f01a91ca397dc4ce5bf2dc78310c",
+          "0x92cb5bb658f49b11fc1dc7ca4eb72a73c5f1331c02d3bf0b3a8aac5b29e3eceb",
+          "0x0a5a180baad07354ead1fcbf85a5e760c21bb1700dd9016da64dce458d83e642",
+          "0x1dfe3daf24ab8f7f12e52e639ae5194c992a0ec54279893a719b7c96bc8e0289",
+          "0x8c3f9e68dabb0db6caf5c4a33d415ef4f39c7967eb3206471866752a94de08c5",
+          "0x0c65ba38f250b56adf5016a9c117b7e652d130e7d8eb347660b181cbe77afd0a"
+        ]
+      },
+      "qpiaiOpt": {
+        "solverName": "qpiai-opt-highs",
+        "executionMode": "LOCAL_QPIAI_OPT",
+        "feasible": true,
+        "totalCost": 23389998,
+        "runtimeMs": 60.31,
+        "recomputedCost": 23389998,
+        "errorDetail": null,
+        "selectedQuoteIds": [
+          "0xa47fe95a90e3c18394f7e2b6430216cbfe984d608ceb39a27a976be0bb495805",
+          "0x58a4dcc097715fb7f8b377303c3bc5c2379b29a92fcea498995259906ef4731d",
+          "0x1e158b53b2fd192fea14af7423e519c595e88388f27be59fa7c9547ae2c8154f",
+          "0x9edabb054a428e1089c27136410751197bf5f01a91ca397dc4ce5bf2dc78310c",
+          "0x92cb5bb658f49b11fc1dc7ca4eb72a73c5f1331c02d3bf0b3a8aac5b29e3eceb",
+          "0x0a5a180baad07354ead1fcbf85a5e760c21bb1700dd9016da64dce458d83e642",
+          "0x1dfe3daf24ab8f7f12e52e639ae5194c992a0ec54279893a719b7c96bc8e0289",
+          "0x8c3f9e68dabb0db6caf5c4a33d415ef4f39c7967eb3206471866752a94de08c5",
+          "0x0c65ba38f250b56adf5016a9c117b7e652d130e7d8eb347660b181cbe77afd0a"
+        ]
+      },
+      "greedy": {
+        "totalCost": 23565051,
+        "feasible": true,
+        "savingsVsGreedyPct": 0.74
+      },
+      "vendorRule": {
+        "totalCost": 30916347,
+        "feasible": true,
+        "savingsVsVendorRulePct": 24.34
+      }
+    }
+  ]
+}
