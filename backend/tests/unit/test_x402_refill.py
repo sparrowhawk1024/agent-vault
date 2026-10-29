@@ -297,3 +297,72 @@ def test_flexible_pricing_user_cap_matching(fresh_store, service):
     assert fresh_store.total_allowance == 5_000 + 1_000_000
 
 
+def test_fixed_base_topup_tiers(fresh_store, service):
+    """Verify fixed base top-up tiers: $5 (350 credits), $10, $20, $40, $50."""
+    from backend.app.x402.service import find_package, get_available_refill_packages
+
+    packages = {p.packageId: p for p in get_available_refill_packages()}
+
+    # 1. Cheapest base tier: $5 -> 350 credits
+    assert "pack-base-5" in packages
+    p5 = packages["pack-base-5"]
+    assert p5.priceUsdc == 5.00
+    assert p5.priceMicroUsdc == 5_000_000
+    assert p5.units == 350
+
+    # 2. $10 tier
+    assert "pack-base-10" in packages
+    p10 = packages["pack-base-10"]
+    assert p10.priceUsdc == 10.00
+    assert p10.priceMicroUsdc == 10_000_000
+    assert p10.units == 750
+
+    # 3. $20 tier
+    assert "pack-base-20" in packages
+    p20 = packages["pack-base-20"]
+    assert p20.priceUsdc == 20.00
+    assert p20.priceMicroUsdc == 20_000_000
+    assert p20.units == 1_600
+
+    # 4. $40 tier
+    assert "pack-base-40" in packages
+    p40 = packages["pack-base-40"]
+    assert p40.priceUsdc == 40.00
+    assert p40.priceMicroUsdc == 40_000_000
+    assert p40.units == 3_500
+
+    # 5. $50 tier
+    assert "pack-base-50" in packages
+    p50 = packages["pack-base-50"]
+    assert p50.priceUsdc == 50.00
+    assert p50.priceMicroUsdc == 50_000_000
+    assert p50.units == 5_000
+
+    # 6. Settle $5 (350 credits) tier
+    accept = service.create_payment_required_challenge("pack-base-5").accepts[0]
+    nonce = int(time.time() * 1000) + 123
+    sig_payload = SignaturePayload(
+        payer="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        payTo=accept.payTo,
+        asset=accept.asset,
+        amount=accept.amount,
+        nonce=nonce,
+        validUntil=int(time.time()) + 120,
+        signature="0x" + "a" * 130,
+    )
+    payload = PaymentPayload(
+        x402Version=2,
+        scheme="exact",
+        network=accept.network,
+        payload=sig_payload,
+    )
+    b64_header = base64.b64encode(payload.model_dump_json().encode("utf-8")).decode("utf-8")
+
+    success, settlement, err, credit = service.verify_and_settle(b64_header, "pack-base-5")
+    assert success
+    assert settlement.status == "settled"
+    assert credit["unitsGranted"] == 350
+    assert fresh_store.total_allowance == 5_000 + 350
+
+
+

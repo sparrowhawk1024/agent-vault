@@ -85,8 +85,8 @@ class SettlementResponse(BaseModel):
 
 class AutoRefillPolicy(BaseModel):
     enabled: bool = False
-    maxSpendPerRefill: int = 5_000_000   # 5 USDC
-    maxDailySpend: int = 15_000_000      # 15 USDC
+    maxSpendPerRefill: int = 5_000_000   # 5 USDC default (matches cheapest base tier: $5 -> 350 credits)
+    maxDailySpend: int = 50_000_000      # 50 USDC default
     approvedVendor: str = "tokenforge"   # Only allowlisted vendor
     refillThresholdPct: float = 15.0     # Trigger top-up at 15%
     spentToday: int = 0

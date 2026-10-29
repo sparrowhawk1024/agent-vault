@@ -146,8 +146,94 @@ def get_available_refill_packages(policy: Optional[AutoRefillPolicy] = None) -> 
     active_policy = policy or global_refill_store.policy
     user_cap = active_policy.maxSpendPerRefill if active_policy else 5_000_000
 
-    # 1. Base canonical packages (preserved for tests and benchmarks)
+    # 1. Fixed Base Packages (User specified tiers: $5 -> 350 credits, $10, $20, $40, $50)
     packages = [
+        RefillPackage(
+            packageId="pack-base-5",
+            name="Starter Refill ($5)",
+            vendorId=tf_vid,
+            vendorName="TokenForge (Verified Vendor)",
+            units=350,
+            priceMicroUsdc=5_000_000,  # $5.00 USDC exact
+            priceUsdc=5.00,
+            unitPriceMicros=5_000_000 / 350,  # 14,285.7 µUSDC/token
+            isRecommended=True,
+            isAllowedVendor=True,
+            description="Cheapest fixed base tier: exactly 350 credits for $5.00 USDC.",
+            serviceType="AI_CREDITS",
+            serviceName="AI Inference Credits",
+            unitLabel="tokens",
+            isCapFlexible=False,
+        ),
+        RefillPackage(
+            packageId="pack-base-10",
+            name="Standard Refill ($10)",
+            vendorId=tf_vid,
+            vendorName="TokenForge (Verified Vendor)",
+            units=750,
+            priceMicroUsdc=10_000_000,  # $10.00 USDC exact
+            priceUsdc=10.00,
+            unitPriceMicros=10_000_000 / 750,  # 13,333.3 µUSDC/token
+            isRecommended=False,
+            isAllowedVendor=True,
+            description="Standard fixed base tier: 750 credits for $10.00 USDC.",
+            serviceType="AI_CREDITS",
+            serviceName="AI Inference Credits",
+            unitLabel="tokens",
+            isCapFlexible=False,
+        ),
+        RefillPackage(
+            packageId="pack-base-20",
+            name="Pro Refill ($20)",
+            vendorId=tf_vid,
+            vendorName="TokenForge (Verified Vendor)",
+            units=1_600,
+            priceMicroUsdc=20_000_000,  # $20.00 USDC exact
+            priceUsdc=20.00,
+            unitPriceMicros=20_000_000 / 1_600,  # 12,500.0 µUSDC/token
+            isRecommended=False,
+            isAllowedVendor=True,
+            description="Pro fixed base tier: 1,600 credits for $20.00 USDC.",
+            serviceType="AI_CREDITS",
+            serviceName="AI Inference Credits",
+            unitLabel="tokens",
+            isCapFlexible=False,
+        ),
+        RefillPackage(
+            packageId="pack-base-40",
+            name="Business Refill ($40)",
+            vendorId=tf_vid,
+            vendorName="TokenForge (Verified Vendor)",
+            units=3_500,
+            priceMicroUsdc=40_000_000,  # $40.00 USDC exact
+            priceUsdc=40.00,
+            unitPriceMicros=40_000_000 / 3_500,  # 11,428.6 µUSDC/token
+            isRecommended=False,
+            isAllowedVendor=True,
+            description="Business fixed base tier: 3,500 credits for $40.00 USDC.",
+            serviceType="AI_CREDITS",
+            serviceName="AI Inference Credits",
+            unitLabel="tokens",
+            isCapFlexible=False,
+        ),
+        RefillPackage(
+            packageId="pack-base-50",
+            name="Enterprise Refill ($50)",
+            vendorId=tf_vid,
+            vendorName="TokenForge (Verified Vendor)",
+            units=5_000,
+            priceMicroUsdc=50_000_000,  # $50.00 USDC exact
+            priceUsdc=50.00,
+            unitPriceMicros=50_000_000 / 5_000,  # 10,000.0 µUSDC/token
+            isRecommended=False,
+            isAllowedVendor=True,
+            description="Enterprise maximum fixed base tier: 5,000 credits for $50.00 USDC.",
+            serviceType="AI_CREDITS",
+            serviceName="AI Inference Credits",
+            unitLabel="tokens",
+            isCapFlexible=False,
+        ),
+        # Legacy & multi-service packages preserved for tests and benchmarks
         RefillPackage(
             packageId="pack-custom-213",
             name="Custom Stream Refill (213 µUSDC)",

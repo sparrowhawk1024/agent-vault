@@ -2,6 +2,17 @@
 
 - **Current Phase**: Full End-to-End System Integration & Real-Time Interconnection — **GATE PASSED & EVIDENCE FROZEN**
 - **Done**:
+  - Implemented Fixed Base Top-Up Tiers ($5 for 350 credits, $10, $20, $40, $50):
+    - Configured standard fixed base tiers in `backend/app/x402/service.py`:
+      - **$5 Tier (Cheapest Base / Starter)**: exactly 350 credits ($5.00 USDC = 5,000,000 µUSDC)
+      - **$10 Tier (Standard)**: 750 credits ($10.00 USDC = 10,000,000 µUSDC)
+      - **$20 Tier (Pro)**: 1,600 credits ($20.00 USDC = 20,000,000 µUSDC)
+      - **$40 Tier (Business)**: 3,500 credits ($40.00 USDC = 40,000,000 µUSDC)
+      - **$50 Tier (Enterprise Max)**: 5,000 credits ($50.00 USDC = 50,000,000 µUSDC)
+    - Default package selection and recommendation initialized to `pack-base-5` ($5 -> 350 credits).
+    - Updated active on-chain mandate caps to 50 USDC per purchase and 100 USDC total budget to seamlessly support tiers up to $50.
+    - Updated `AutoRefillView.tsx` with automatic policy cap alignment when user explicitly approves higher tiers ($10, $20, $40, $50).
+    - Verified with 23/23 passing unit tests and clean frontend build (580ms).
   - Implemented Flexible Top-Up Pricing Based on User Spending Cap and Provider Service Differentiation:
     - Provider Service Rate Cards (`VENDOR_SERVICES`): mapped each vendor to their authoritative service offering and unit economics:
       - **TokenForge**: `AI_CREDITS` (AI Inference Credits) @ 1.50 µUSDC/token

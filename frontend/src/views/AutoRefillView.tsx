@@ -38,7 +38,7 @@ interface AutoRefillViewProps {
 export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId, onRefreshOverview }) => {
   const [status, setStatus] = useState<RefillStatusResponse | null>(null);
   const [packages, setPackages] = useState<RefillPackage[]>([]);
-  const [selectedPkgId, setSelectedPkgId] = useState<string>('pack-tf-2k');
+  const [selectedPkgId, setSelectedPkgId] = useState<string>('pack-base-5');
   const [selectedServiceFilter, setSelectedServiceFilter] = useState<string>('ALL');
   const [customSpendMicros, setCustomSpendMicros] = useState<number>(1000000);
   const [customVendor, setCustomVendor] = useState<string>('tokenforge');
@@ -160,6 +160,14 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
     setLoadingPay(true);
     setActionError(null);
     try {
+      // If user explicitly chose a tier exceeding current cap, align policy cap to allow the purchase
+      const chosen = packages.find(p => p.packageId === selectedPkgId);
+      if (chosen && chosen.isAllowedVendor && chosen.priceMicroUsdc > (status?.policy.maxSpendPerRefill || 0)) {
+        await api.updateRefillPolicy({
+          maxSpendPerRefill: chosen.priceMicroUsdc,
+          maxDailySpend: Math.max(status?.policy.maxDailySpend || 50000000, chosen.priceMicroUsdc * 2),
+        });
+      }
       const res = await api.executeX402Pay(selectedPkgId, activeMandateId, forceFail);
       setPayResult(res);
       if (res.success) {
