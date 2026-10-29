@@ -17,8 +17,11 @@ import {
   ShieldAlert, 
   Atom, 
   Link2,
-  BookOpen,
-  Bot
+  Bot,
+  Menu,
+  Search,
+  Mic,
+  Plus
 } from 'lucide-react';
 
 export const App: React.FC = () => {
@@ -66,30 +69,36 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      {/* Top Sticky Navigation */}
+      {/* Top Navbar matching the Reference Design (Hamburger, № Badge, Profile, Search, Mic) */}
       <header className="top-nav">
+        {/* Brand Section: Hamburger + № Circular Logo + Title */}
         <div className="brand-section">
-          <div className="brand-logo">
-            AV
+          <div className="menu-pill-btn" title="Toggle Navigation Menu">
+            <Menu size={18} />
           </div>
+
+          <div className="brand-logo" title="AgentVault Autonomous Policy Vault">
+            №
+          </div>
+
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span className="brand-title">AgentVault</span>
+              <span className="brand-title">Financial Dashboard</span>
               <span className="brand-badge">WEB3-05</span>
             </div>
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', letterSpacing: '0.02em' }}>
-              Policy-Bound Autonomous Procurement • QpiAI × Web3
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', letterSpacing: '0.02em', marginTop: '-2px' }}>
+              AgentVault Policy-Bound Autonomous Procurement
             </div>
           </div>
         </div>
 
-        {/* 6 View Navigation Tabs */}
+        {/* 7 View Navigation Pill Tabs */}
         <nav className="nav-tabs">
           <button 
             className={`nav-tab ${activeTab === 'mandate' ? 'active' : ''}`}
             onClick={() => setActiveTab('mandate')}
           >
-            <Shield size={16} />
+            <Shield size={14} />
             Mandate
           </button>
 
@@ -97,7 +106,7 @@ export const App: React.FC = () => {
             className={`nav-tab ${activeTab === 'agent' ? 'active' : ''}`}
             onClick={() => setActiveTab('agent')}
           >
-            <Cpu size={16} />
+            <Cpu size={14} />
             Agent Run
           </button>
 
@@ -105,7 +114,7 @@ export const App: React.FC = () => {
             className={`nav-tab ${activeTab === 'payments' ? 'active' : ''}`}
             onClick={() => setActiveTab('payments')}
           >
-            <CreditCard size={16} />
+            <CreditCard size={14} />
             Payments & Proofs
           </button>
 
@@ -113,7 +122,7 @@ export const App: React.FC = () => {
             className={`nav-tab ${activeTab === 'autorefill' ? 'active' : ''}`}
             onClick={() => setActiveTab('autorefill')}
           >
-            <Bot size={16} />
+            <Bot size={14} />
             Auto-Refill (x402)
           </button>
 
@@ -121,7 +130,7 @@ export const App: React.FC = () => {
             className={`nav-tab ${activeTab === 'security' ? 'active' : ''}`}
             onClick={() => setActiveTab('security')}
           >
-            <ShieldAlert size={16} />
+            <ShieldAlert size={14} />
             Security Console
           </button>
 
@@ -129,7 +138,7 @@ export const App: React.FC = () => {
             className={`nav-tab ${activeTab === 'qpiai' ? 'active' : ''}`}
             onClick={() => setActiveTab('qpiai')}
           >
-            <Atom size={16} />
+            <Atom size={14} />
             QpiAI Evidence
           </button>
 
@@ -137,44 +146,53 @@ export const App: React.FC = () => {
             className={`nav-tab ${activeTab === 'audit' ? 'active' : ''}`}
             onClick={() => setActiveTab('audit')}
           >
-            <Link2 size={16} />
+            <Link2 size={14} />
             Audit Log
           </button>
         </nav>
 
-        {/* Header Right Status & Policy Action */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() => setShowPolicyModal(true)}
-            style={{ fontSize: '0.74rem', padding: '5px 10px' }}
-          >
-            <BookOpen size={13} />
-            Architecture & Policy
-          </button>
-
-          <div className="header-status">
-            <div className="status-pill">
-              <span className={`status-dot ${health?.chain?.connected ? 'dot-green' : 'dot-red'}`} />
-              <span>Anvil: {health?.chain?.connected ? '31337' : 'Offline'}</span>
+        {/* Right Actions: Profile Pill, Search Bar, Circular Mic */}
+        <div className="header-actions">
+          {/* Profile Pill matching screenshot */}
+          <div className="profile-pill">
+            <div className="icon-circle-btn" style={{ width: '24px', height: '24px', marginRight: '-2px' }}>
+              <Plus size={12} />
             </div>
-
-            <div className="status-pill">
-              <span className={`status-dot ${health?.verifier?.status === 'ACTIVE' ? 'dot-green' : 'dot-red'}`} />
-              <span>Verifier: {health?.verifier?.status || 'Unknown'}</span>
+            <div className="avatar-circle">
+              DT
             </div>
-
-            <div className="status-pill">
-              <span className="status-dot dot-green" />
-              <span>QpiAI: {health?.qpiai?.optExecutionMode || 'Live'}</span>
+            <div style={{ lineHeight: 1.1 }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--text-main)' }}>
+                Dwayne Tatum
+              </div>
+              <div style={{ fontSize: '0.64rem', color: 'var(--text-dim)' }}>
+                CEO Assistant
+              </div>
             </div>
+          </div>
+
+          {/* Search Pill Bar matching screenshot */}
+          <div className="search-pill-bar" onClick={() => setShowPolicyModal(true)}>
+            <Search size={14} color="var(--text-dim)" />
+            <span>Start searching here...</span>
+          </div>
+
+          {/* Circular Mic Button matching screenshot */}
+          <div className="icon-circle-btn" onClick={() => setShowPolicyModal(true)} title="Architecture & Policy Documentation">
+            <Mic size={15} />
+          </div>
+
+          {/* Status Indicators Pill */}
+          <div className="status-pill">
+            <span className={`status-dot ${health?.chain?.connected ? 'dot-green' : 'dot-red'}`} />
+            <span>{health?.chain?.connected ? '31337' : 'Offline'}</span>
           </div>
         </div>
       </header>
 
       {/* Main Viewport */}
       <main className="main-viewport">
-        {/* Real-Time Unified Dashboard Overview Banner (Phase 2.A) */}
+        {/* Real-Time Unified Dashboard Overview Bento Grid Banner */}
         <DashboardOverviewBanner
           overview={overview}
           loading={loadingOverview}
@@ -182,7 +200,7 @@ export const App: React.FC = () => {
           onOpenDemo={() => setShowDemoModal(true)}
         />
 
-        {/* 6 Core Views */}
+        {/* Active Tab View */}
         {activeTab === 'mandate' && (
           <MandateView 
             activeMandateId={activeMandateId} 
@@ -221,7 +239,7 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Guided Walkthrough Modal (Phase 3) */}
+      {/* Guided Walkthrough Modal */}
       <GuidedDemoModal
         isOpen={showDemoModal}
         onClose={() => setShowDemoModal(false)}
@@ -231,7 +249,7 @@ export const App: React.FC = () => {
         onRefreshOverview={fetchOverview}
       />
 
-      {/* Architecture, Privacy & Limitations Modal (Phase 4 & 5) */}
+      {/* Architecture, Privacy & Limitations Modal */}
       <ArchitecturePolicyModal
         isOpen={showPolicyModal}
         onClose={() => setShowPolicyModal(false)}

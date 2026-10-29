@@ -321,7 +321,7 @@ export const GuidedDemoModal: React.FC<Props> = ({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          background: 'rgba(14, 19, 31, 0.8)'
+          background: 'var(--bg-card-subtle)'
         }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -480,7 +480,7 @@ export const GuidedDemoModal: React.FC<Props> = ({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          background: 'rgba(14, 19, 31, 0.8)'
+          background: 'var(--bg-card-subtle)'
         }}>
           <button
             className="btn btn-secondary btn-sm"

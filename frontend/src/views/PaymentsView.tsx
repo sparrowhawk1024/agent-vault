@@ -65,9 +65,9 @@ export const PaymentsView: React.FC = () => {
                     onClick={() => setSelectedProof(p)}
                     style={{
                       padding: '14px 16px',
-                      borderRadius: '10px',
-                      background: isSelected ? 'rgba(0, 242, 254, 0.08)' : 'rgba(14, 19, 31, 0.6)',
-                      border: isSelected ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
+                      borderRadius: '12px',
+                      background: isSelected ? 'var(--accent-terracotta-soft)' : 'var(--bg-card-subtle)',
+                      border: isSelected ? '1px solid var(--accent-terracotta)' : '1px solid var(--border-subtle)',
                       cursor: 'pointer',
                       transition: 'all 0.2s ease',
                     }}
