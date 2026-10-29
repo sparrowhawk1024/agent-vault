@@ -107,9 +107,9 @@ export const AuditLogView: React.FC = () => {
               <div 
                 key={entry.index}
                 style={{ 
-                  background: 'var(--bg-card-subtle)', 
+                  background: 'rgba(14, 19, 31, 0.65)', 
                   border: '1px solid var(--border-subtle)', 
-                  borderRadius: '12px', 
+                  borderRadius: '10px', 
                   padding: '14px 18px' 
                 }}
               >

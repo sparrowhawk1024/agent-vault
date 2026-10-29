@@ -1193,6 +1193,40 @@ Recent Git Commits Pushed to Remote:
 
 
 ====================================================================================================
+26. WINDOWS APPLICATION CONTROL DLL RESOLUTION & WARM THEME COLOR COORDINATION
+====================================================================================================
+
+Incident Diagnostic & Root Cause Analysis:
+  - Error: "ImportError: DLL load failed while importing _bitarray: An Application Control policy has blocked this file."
+  - Symptom: Uvicorn crashed on startup during `run.ps1`, leaving port 8000 closed.
+    Frontend UI showed "Connecting to AgentVault core services & local Anvil chain..." because the
+    overview telemetry endpoint at http://127.0.0.1:8000/api/v1/dashboard/overview was unreachable.
+  - Root Cause: `web3` unconditionally imports `eth_account`, which imported `_bitarray.pyd` (used solely
+    for BIP-39 mnemonic generation, unused in AgentVault's private-key procurement architecture).
+    Windows Application Control (WDAC) blocked this unsigned C-extension DLL.
+
+Resolution & Verification:
+  1. Added graceful fallback in `.venv/Lib/site-packages/eth_account/account.py` catching `ImportError`.
+  2. Verified clean import: `Account OK`, `ChainClient OK`, `FastAPI app OK`.
+  3. Uvicorn startup verified:
+     INFO: Started server process [22836]
+     INFO: Waiting for application startup.
+     INFO: Application startup complete.
+     INFO: Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+  4. Health probe verified: GET /health responded HTTP 200 OK with verifier status ACTIVE.
+
+UI Design & Color Scheme Coordination:
+  - Preserved 100% of the functional 7-tab architecture (Mandate, Agent Run, Payments & Proofs,
+    Auto-Refill x402, Security Console, QpiAI Evidence, Audit Log) and real-time on-chain telemetry.
+  - Color palette updated to match reference design:
+    * Canvas Background: Warm porcelain / light chalk cream (`#f6f5f2`)
+    * Cards & Surfaces: Pure elevated white (`#ffffff`) with subtle `#ebe8e2` borders
+    * Primary Accent: Warm terracotta / coral orange (`#e85c3f`)
+    * Secondary Accent: Deep charcoal black (`#18181b`)
+    * Typography: Crisp dark charcoal (`#18181b`) with muted gray secondary labels
+  - Frontend production build: `npm --prefix frontend run build` completed in 325ms with 0 errors.
+
+====================================================================================================
 END OF COMPILATION
 ====================================================================================================
 

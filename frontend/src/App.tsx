@@ -11,22 +11,18 @@ import { DashboardOverviewBanner } from './components/DashboardOverviewBanner';
 import { GuidedDemoModal } from './components/GuidedDemoModal';
 import { ArchitecturePolicyModal } from './components/ArchitecturePolicyModal';
 import { 
-  LayoutDashboard,
   Shield, 
   Cpu, 
   CreditCard, 
   ShieldAlert, 
   Atom, 
   Link2,
-  Bot,
-  Menu,
-  Search,
-  Mic,
-  Plus
+  BookOpen,
+  Bot
 } from 'lucide-react';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'mandate' | 'agent' | 'payments' | 'autorefill' | 'security' | 'qpiai' | 'audit'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'mandate' | 'agent' | 'payments' | 'autorefill' | 'security' | 'qpiai' | 'audit'>('mandate');
   const [health, setHealth] = useState<SystemHealth | null>(null);
   const [overview, setOverview] = useState<DashboardOverview | null>(null);
   const [loadingOverview, setLoadingOverview] = useState<boolean>(false);
@@ -70,53 +66,30 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      {/* Top Navbar matching the Reference Design (Hamburger, № Badge, Profile, Search, Mic) */}
+      {/* Top Sticky Navigation */}
       <header className="top-nav">
-        {/* Brand Section: Hamburger + № Circular Logo + Title */}
         <div className="brand-section">
-          <div 
-            className="menu-pill-btn" 
-            onClick={() => setActiveTab('dashboard')} 
-            title="Dashboard Overview"
-          >
-            <Menu size={17} />
+          <div className="brand-logo">
+            AV
           </div>
-
-          <div 
-            className="brand-logo" 
-            onClick={() => setActiveTab('dashboard')} 
-            style={{ cursor: 'pointer' }}
-            title="AgentVault Policy Vault"
-          >
-            №
-          </div>
-
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span className="brand-title">Financial Dashboard</span>
+              <span className="brand-title">AgentVault</span>
               <span className="brand-badge">WEB3-05</span>
             </div>
-            <div style={{ fontSize: '0.67rem', color: 'var(--text-dim)', letterSpacing: '0.01em', marginTop: '-2px' }}>
-              CEO Assistant • Policy-Bound Autonomous Procurement
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', letterSpacing: '0.02em' }}>
+              Policy-Bound Autonomous Procurement • QpiAI × Web3
             </div>
           </div>
         </div>
 
-        {/* View Navigation Pill Tabs */}
+        {/* 6 View Navigation Tabs */}
         <nav className="nav-tabs">
-          <button 
-            className={`nav-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
-            onClick={() => setActiveTab('dashboard')}
-          >
-            <LayoutDashboard size={14} />
-            Dashboard
-          </button>
-
           <button 
             className={`nav-tab ${activeTab === 'mandate' ? 'active' : ''}`}
             onClick={() => setActiveTab('mandate')}
           >
-            <Shield size={14} />
+            <Shield size={16} />
             Mandate
           </button>
 
@@ -124,7 +97,7 @@ export const App: React.FC = () => {
             className={`nav-tab ${activeTab === 'agent' ? 'active' : ''}`}
             onClick={() => setActiveTab('agent')}
           >
-            <Cpu size={14} />
+            <Cpu size={16} />
             Agent Run
           </button>
 
@@ -132,105 +105,84 @@ export const App: React.FC = () => {
             className={`nav-tab ${activeTab === 'payments' ? 'active' : ''}`}
             onClick={() => setActiveTab('payments')}
           >
-            <CreditCard size={14} />
-            Payments
+            <CreditCard size={16} />
+            Payments & Proofs
           </button>
 
           <button 
             className={`nav-tab ${activeTab === 'autorefill' ? 'active' : ''}`}
             onClick={() => setActiveTab('autorefill')}
           >
-            <Bot size={14} />
-            x402 Refill
+            <Bot size={16} />
+            Auto-Refill (x402)
           </button>
 
           <button 
             className={`nav-tab ${activeTab === 'security' ? 'active' : ''}`}
             onClick={() => setActiveTab('security')}
           >
-            <ShieldAlert size={14} />
-            Security
+            <ShieldAlert size={16} />
+            Security Console
           </button>
 
           <button 
             className={`nav-tab ${activeTab === 'qpiai' ? 'active' : ''}`}
             onClick={() => setActiveTab('qpiai')}
           >
-            <Atom size={14} />
-            QpiAI
+            <Atom size={16} />
+            QpiAI Evidence
           </button>
 
           <button 
             className={`nav-tab ${activeTab === 'audit' ? 'active' : ''}`}
             onClick={() => setActiveTab('audit')}
           >
-            <Link2 size={14} />
-            Audit
+            <Link2 size={16} />
+            Audit Log
           </button>
         </nav>
 
-        {/* Right Actions: Profile Pill, Search Bar, Circular Mic */}
-        <div className="header-actions">
-          {/* Profile Pill matching screenshot */}
-          <div className="profile-pill">
-            <div 
-              className="icon-circle-btn" 
-              onClick={() => setShowDemoModal(true)}
-              style={{ width: '22px', height: '22px', marginRight: '-2px' }}
-              title="Launch Guided Demo"
-            >
-              <Plus size={11} />
-            </div>
-            <div className="avatar-circle">
-              DT
-            </div>
-            <div style={{ lineHeight: 1.1 }}>
-              <div style={{ fontSize: '0.76rem', fontWeight: 700, color: 'var(--text-main)' }}>
-                Dwayne Tatum
-              </div>
-              <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>
-                CEO Assistant
-              </div>
-            </div>
-          </div>
-
-          {/* Search Pill Bar matching screenshot */}
-          <div className="search-pill-bar" onClick={() => setShowPolicyModal(true)}>
-            <Search size={13} color="var(--text-dim)" />
-            <span>Start searching here...</span>
-          </div>
-
-          {/* Circular Mic Button matching screenshot */}
-          <div 
-            className="icon-circle-btn" 
-            onClick={() => setShowPolicyModal(true)} 
-            title="Policy & Architecture Documentation"
+        {/* Header Right Status & Policy Action */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <button
+            className="btn btn-secondary btn-sm"
+            onClick={() => setShowPolicyModal(true)}
+            style={{ fontSize: '0.74rem', padding: '5px 10px' }}
           >
-            <Mic size={14} />
-          </div>
+            <BookOpen size={13} />
+            Architecture & Policy
+          </button>
 
-          {/* Status Indicators Pill */}
-          <div className="status-pill">
-            <span className={`status-dot ${health?.chain?.connected ? 'dot-green' : 'dot-red'}`} />
-            <span>{health?.chain?.connected ? '31337' : 'Offline'}</span>
+          <div className="header-status">
+            <div className="status-pill">
+              <span className={`status-dot ${health?.chain?.connected ? 'dot-green' : 'dot-red'}`} />
+              <span>Anvil: {health?.chain?.connected ? '31337' : 'Offline'}</span>
+            </div>
+
+            <div className="status-pill">
+              <span className={`status-dot ${health?.verifier?.status === 'ACTIVE' ? 'dot-green' : 'dot-red'}`} />
+              <span>Verifier: {health?.verifier?.status || 'Unknown'}</span>
+            </div>
+
+            <div className="status-pill">
+              <span className="status-dot dot-green" />
+              <span>QpiAI: {health?.qpiai?.optExecutionMode || 'Live'}</span>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Viewport */}
       <main className="main-viewport">
-        {/* Main Bento Grid Dashboard View (When 'dashboard' is active) */}
-        {activeTab === 'dashboard' && (
-          <DashboardOverviewBanner
-            overview={overview}
-            loading={loadingOverview}
-            onRefresh={fetchOverview}
-            onOpenDemo={() => setShowDemoModal(true)}
-            onNavigateTab={(t) => setActiveTab(t)}
-          />
-        )}
+        {/* Real-Time Unified Dashboard Overview Banner (Phase 2.A) */}
+        <DashboardOverviewBanner
+          overview={overview}
+          loading={loadingOverview}
+          onRefresh={fetchOverview}
+          onOpenDemo={() => setShowDemoModal(true)}
+        />
 
-        {/* Dedicated Tab Views (Without any duplicate banner above them) */}
+        {/* 6 Core Views */}
         {activeTab === 'mandate' && (
           <MandateView 
             activeMandateId={activeMandateId} 
@@ -269,7 +221,7 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      {/* Guided Walkthrough Modal */}
+      {/* Guided Walkthrough Modal (Phase 3) */}
       <GuidedDemoModal
         isOpen={showDemoModal}
         onClose={() => setShowDemoModal(false)}
@@ -279,7 +231,7 @@ export const App: React.FC = () => {
         onRefreshOverview={fetchOverview}
       />
 
-      {/* Architecture, Privacy & Limitations Modal */}
+      {/* Architecture, Privacy & Limitations Modal (Phase 4 & 5) */}
       <ArchitecturePolicyModal
         isOpen={showPolicyModal}
         onClose={() => setShowPolicyModal(false)}

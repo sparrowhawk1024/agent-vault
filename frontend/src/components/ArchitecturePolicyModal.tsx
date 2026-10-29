@@ -40,7 +40,7 @@ export const ArchitecturePolicyModal: React.FC<Props> = ({ isOpen, onClose }) =>
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          background: 'var(--bg-card-subtle)'
+          background: 'rgba(14, 19, 31, 0.8)'
         }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -146,7 +146,7 @@ export const ArchitecturePolicyModal: React.FC<Props> = ({ isOpen, onClose }) =>
           borderTop: '1px solid var(--border-subtle)',
           display: 'flex',
           justifyContent: 'flex-end',
-          background: 'var(--bg-card-subtle)'
+          background: 'rgba(14, 19, 31, 0.8)'
         }}>
           <button className="btn btn-primary btn-sm" onClick={onClose}>
             Close Specification
