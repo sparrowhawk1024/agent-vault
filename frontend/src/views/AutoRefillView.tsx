@@ -38,7 +38,7 @@ interface AutoRefillViewProps {
 export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId, onRefreshOverview }) => {
   const [status, setStatus] = useState<RefillStatusResponse | null>(null);
   const [packages, setPackages] = useState<RefillPackage[]>([]);
-  const [selectedPkgId, setSelectedPkgId] = useState<string>('pack-base-5');
+  const [selectedPkgId, setSelectedPkgId] = useState<string>('pack-tf-2k');
   const [selectedServiceFilter, setSelectedServiceFilter] = useState<string>('ALL');
   const [customSpendDollars, setCustomSpendDollars] = useState<number>(5.0);
   const [customVendor, setCustomVendor] = useState<string>('tokenforge');
@@ -170,6 +170,10 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
       }
       const res = await api.executeX402Pay(selectedPkgId, activeMandateId, forceFail);
       setPayResult(res);
+      // Fetch fresh status and update local state FIRST so all displays and gauges reflect the credited tokens immediately
+      const updated = await api.getRefillStatus();
+      setStatus(updated);
+
       if (res.success) {
         setShowLowBalanceModal(false);
         setHasDismissedModal(true);
@@ -178,8 +182,6 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
       } else {
         setActionError(res.error || 'Payment settlement rejected by policy engine');
       }
-      const updated = await api.getRefillStatus();
-      setStatus(updated);
     } catch (err: any) {
       setActionError(err.message || 'Payment execution failed');
     } finally {
@@ -1073,7 +1075,10 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
                   +{payResult?.creditRecord?.unitsGranted?.toLocaleString() || '2,000'} Units
                 </div>
                 <div style={{ fontSize: '0.85rem', color: '#e2e8f0' }}>
-                  New Balance: <strong style={{ color: '#38bdf8' }}>{remaining.toLocaleString()} units ({pct}%)</strong>
+                  New Balance: <strong style={{ color: '#38bdf8' }}>
+                    {(payResult?.newRemainingUnits ?? payResult?.creditRecord?.remainingUnits ?? remaining).toLocaleString()} units
+                    {payResult?.newTotalAllowance ? ` (${Math.round(((payResult.newRemainingUnits ?? payResult.creditRecord?.remainingUnits ?? remaining) / payResult.newTotalAllowance) * 100)}%)` : ` (${pct}%)`}
+                  </strong>
                 </div>
               </div>
 

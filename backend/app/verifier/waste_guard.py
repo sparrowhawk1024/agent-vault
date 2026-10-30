@@ -124,6 +124,15 @@ class WasteGuard:
                 metadata,
             )
 
+        # Fail closed if benchmark solver stopped at FEASIBLE instead of proving OPTIMAL (e.g. timeout / incomplete search)
+        if bench_res.status != "OPTIMAL":
+            return (
+                False,
+                "VERIFIER_UNAVAILABLE",
+                f"Waste-benchmark solver status is '{bench_res.status}' (not OPTIMAL); failing closed per verification policy",
+                metadata,
+            )
+
         ref_opt_cost = bench_res.total_cost
         ref_opt_coverage = bench_res.coverage
         metadata["referenceOptimalCost"] = ref_opt_cost
