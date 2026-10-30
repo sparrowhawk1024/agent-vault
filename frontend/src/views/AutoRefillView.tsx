@@ -40,7 +40,7 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
   const [packages, setPackages] = useState<RefillPackage[]>([]);
   const [selectedPkgId, setSelectedPkgId] = useState<string>('pack-base-5');
   const [selectedServiceFilter, setSelectedServiceFilter] = useState<string>('ALL');
-  const [customSpendMicros, setCustomSpendMicros] = useState<number>(1000000);
+  const [customSpendDollars, setCustomSpendDollars] = useState<number>(5.0);
   const [customVendor, setCustomVendor] = useState<string>('tokenforge');
   const [showFlexibleBuilder, setShowFlexibleBuilder] = useState<boolean>(false);
   const [inputPrompt, setInputPrompt] = useState<string>('');
@@ -572,31 +572,58 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
                   </div>
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2px' }}>
-                      <label style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Spend (µUSDC):</label>
+                      <label style={{ fontSize: '0.7rem', color: '#94a3b8' }}>Spend ($ USDC):</label>
                       <button
-                        onClick={() => setCustomSpendMicros(status?.policy.maxSpendPerRefill || 5000000)}
-                        style={{ background: 'transparent', border: 'none', color: '#38bdf8', fontSize: '0.65rem', cursor: 'pointer', textDecoration: 'underline' }}
+                        onClick={() => setCustomSpendDollars((status?.policy.maxSpendPerRefill || 5000000) / 1e6)}
+                        style={{ background: 'transparent', border: 'none', color: '#e85c3f', fontSize: '0.65rem', cursor: 'pointer', textDecoration: 'underline', fontWeight: 600 }}
                       >
                         Max Cap (${((status?.policy.maxSpendPerRefill || 5000000)/1e6).toFixed(2)})
                       </button>
                     </div>
                     <input
                       type="number"
-                      min={100}
-                      max={status?.policy.maxSpendPerRefill || 5000000}
-                      step={1000}
-                      value={customSpendMicros}
-                      onChange={(e) => setCustomSpendMicros(Math.max(1, parseInt(e.target.value) || 0))}
+                      min={0.5}
+                      max={(status?.policy.maxSpendPerRefill || 5000000) / 1e6}
+                      step={0.5}
+                      value={customSpendDollars}
+                      onChange={(e) => setCustomSpendDollars(Math.max(0.1, parseFloat(e.target.value) || 0))}
                       style={{
                         width: '100%',
-                        background: '#0f172a',
-                        border: '1px solid #334155',
+                        background: '#ffffff',
+                        border: '1px solid #dcd7ce',
                         borderRadius: '4px',
-                        color: '#f8fafc',
+                        color: '#1a1816',
                         fontSize: '0.75rem',
                         padding: '4px 6px'
                       }}
                     />
+                    {/* Quick preset buttons: $5, $10, $20, $50 */}
+                    <div style={{ display: 'flex', gap: '4px', marginTop: '4px' }}>
+                      {[5, 10, 20, 50].map((amt) => {
+                        const maxCap = (status?.policy.maxSpendPerRefill || 5000000) / 1e6;
+                        const isDisabled = amt > maxCap;
+                        return (
+                          <button
+                            key={amt}
+                            onClick={() => setCustomSpendDollars(amt)}
+                            disabled={isDisabled}
+                            style={{
+                              flex: 1,
+                              padding: '2px 0',
+                              fontSize: '0.65rem',
+                              borderRadius: '3px',
+                              border: customSpendDollars === amt ? '1px solid #e85c3f' : '1px solid #e2ddd5',
+                              background: customSpendDollars === amt ? 'rgba(232, 92, 63, 0.12)' : '#f6f5f2',
+                              color: isDisabled ? '#a8a29e' : customSpendDollars === amt ? '#e85c3f' : '#4a443e',
+                              cursor: isDisabled ? 'not-allowed' : 'pointer',
+                              fontWeight: customSpendDollars === amt ? 700 : 500
+                            }}
+                          >
+                            ${amt}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
 
@@ -604,13 +631,14 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
                 {(() => {
                   const info = VENDOR_RATES[customVendor] || VENDOR_RATES.tokenforge;
                   const maxCap = status?.policy.maxSpendPerRefill || 5000000;
+                  const customSpendMicros = Math.round(customSpendDollars * 1e6);
                   const isExceeded = customSpendMicros > maxCap;
                   const units = Math.max(1, Math.floor(customSpendMicros / info.rate));
-                  const costUsdc = customSpendMicros / 1e6;
+                  const costUsdc = customSpendDollars;
                   return (
                     <div style={{
-                      background: isExceeded ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)',
-                      border: `1px solid ${isExceeded ? '#ef4444' : '#10b981'}`,
+                      background: isExceeded ? 'rgba(239, 68, 68, 0.08)' : 'rgba(22, 163, 74, 0.08)',
+                      border: `1px solid ${isExceeded ? '#ef4444' : '#16a34a'}`,
                       borderRadius: '4px',
                       padding: '6px 8px',
                       fontSize: '0.7rem',
@@ -619,14 +647,14 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
                       alignItems: 'center'
                     }}>
                       <div>
-                        <span style={{ color: '#f8fafc', fontWeight: 600 }}>{units.toLocaleString()} {info.unitLabel}</span>
-                        <span style={{ color: '#94a3b8' }}> @ ${costUsdc.toFixed(6)} USDC ({info.rate} µUSDC/{info.unitLabel})</span>
+                        <span style={{ color: '#1a1816', fontWeight: 600 }}>{units.toLocaleString()} {info.unitLabel}</span>
+                        <span style={{ color: '#78716c' }}> @ ${costUsdc.toFixed(2)} USDC</span>
                       </div>
                       <button
                         onClick={() => handleApplyFlexiblePackage(customVendor, customSpendMicros)}
                         disabled={isExceeded}
                         style={{
-                          background: isExceeded ? '#64748b' : '#0284c7',
+                          background: isExceeded ? '#a8a29e' : '#e85c3f',
                           color: '#fff',
                           border: 'none',
                           borderRadius: '4px',
@@ -648,7 +676,7 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
           {/* Package Selection */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
             {packages
-              .filter(pkg => selectedServiceFilter === 'ALL' || pkg.serviceType === selectedServiceFilter)
+              .filter(pkg => pkg.packageId !== 'pack-custom-213' && (selectedServiceFilter === 'ALL' || pkg.serviceType === selectedServiceFilter))
               .map((pkg) => {
                 const isSelected = selectedPkgId === pkg.packageId;
                 return (
@@ -658,8 +686,8 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
                     style={{
                       padding: '8px 12px',
                       borderRadius: '6px',
-                      border: `1px solid ${isSelected ? '#0284c7' : '#334155'}`,
-                      background: isSelected ? 'rgba(2, 132, 199, 0.12)' : '#0f172a',
+                      border: `1px solid ${isSelected ? '#e85c3f' : '#334155'}`,
+                      background: isSelected ? 'rgba(232, 92, 63, 0.12)' : '#0f172a',
                       cursor: 'pointer',
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -676,12 +704,12 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
                         {pkg.serviceName && <span className="badge badge-cyan" style={{ fontSize: '0.62rem' }}>{pkg.serviceName}</span>}
                       </div>
                       <div style={{ fontSize: '0.72rem', color: '#94a3b8', marginTop: '2px' }}>
-                        {pkg.units.toLocaleString()} {pkg.unitLabel || 'credits'} | {pkg.unitPriceMicros.toFixed(1)} µUSDC/{pkg.unitLabel || 'token'} | Provider: {pkg.vendorName.split(' ')[0]}
+                        {pkg.units.toLocaleString()} {pkg.unitLabel || 'credits'} | Provider: {pkg.vendorName.split(' ')[0]}
                       </div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#38bdf8' }}>
-                        ${pkg.priceUsdc < 0.01 ? pkg.priceUsdc.toFixed(6) : pkg.priceUsdc.toFixed(2)}
+                      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#e85c3f' }}>
+                        ${pkg.priceUsdc.toFixed(2)}
                       </div>
                       <div style={{ fontSize: '0.68rem', color: '#64748b' }}>USDC</div>
                     </div>
@@ -858,7 +886,7 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
                   </span>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '240px', overflowY: 'auto' }}>
-                  {packages.filter(p => p.isAllowedVendor).map(pkg => {
+                  {packages.filter(p => p.isAllowedVendor && p.packageId !== 'pack-custom-213').map(pkg => {
                     const isSel = selectedPkgId === pkg.packageId;
                     return (
                       <div 
@@ -867,8 +895,8 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
                         style={{
                           padding: '10px 14px',
                           borderRadius: '8px',
-                          border: `1px solid ${isSel ? '#38bdf8' : '#1e293b'}`,
-                          background: isSel ? 'rgba(56, 189, 248, 0.12)' : '#090d16',
+                          border: `1px solid ${isSel ? '#e85c3f' : '#1e293b'}`,
+                          background: isSel ? 'rgba(232, 92, 63, 0.12)' : '#090d16',
                           cursor: 'pointer',
                           display: 'flex',
                           justifyContent: 'space-between',
@@ -883,12 +911,12 @@ export const AutoRefillView: React.FC<AutoRefillViewProps> = ({ activeMandateId,
                             {pkg.serviceName && <span className="badge badge-cyan" style={{ fontSize: '0.62rem' }}>{pkg.serviceName}</span>}
                           </div>
                           <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-                            +{pkg.units.toLocaleString()} {pkg.unitLabel || 'credits'} | Provider: {pkg.vendorName.split(' ')[0]} ({pkg.unitPriceMicros.toFixed(1)} µUSDC/{pkg.unitLabel || 'token'})
+                            +{pkg.units.toLocaleString()} {pkg.unitLabel || 'credits'} | Provider: {pkg.vendorName.split(' ')[0]}
                           </span>
                         </div>
                         <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#38bdf8' }}>
-                            ${pkg.priceUsdc < 0.01 ? pkg.priceUsdc.toFixed(6) : pkg.priceUsdc.toFixed(2)}
+                          <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#e85c3f' }}>
+                            ${pkg.priceUsdc.toFixed(2)}
                           </span>
                           <span style={{ fontSize: '0.7rem', color: '#64748b', display: 'block' }}>USDC</span>
                         </div>

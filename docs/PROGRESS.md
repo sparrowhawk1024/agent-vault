@@ -279,8 +279,13 @@
     - Successfully completed exactly 2,347 refills ($499,911 micro-USDC settled, 99.98% cap consumption).
     - Verified deterministic boundary interception on Refill #2,348: blocked by policy engine with `POLICY VIOLATION: Cumulative daily spend would exceed daily cap ($0.50)` with remaining headroom 89 micro-USDC (< 213 needed).
     - Preserved full report to `evidence/reports/daily_cap_exhaustion_report.md`.
+  - Resolved Windows Application Control DLL blocker and refined Auto-Refill (x402) Pricing UX:
+    - Patched `eth_account.account` to gracefully handle `_bitarray` DLL import block under Windows AppLocker/WDAC (avoiding mnemonic dependencies for direct signing).
+    - Refactored Auto-Refill top-up pricing from micro-units (µUSDC) to standard Dollar ($ USDC) increments with quick-select preset pills ($5, $10, $20, $50).
+    - Isolated internal benchmark stress-test package (`pack-custom-213` @ $0.000213) from user-facing package selector and low-balance modal.
+    - Verified all 23 backend unit tests, 39 smart contract tests (including 128,000 invariant fuzz calls), and clean production frontend build.
 - **In Progress**:
-  - None (Ready for live judge demonstration).
+  - Live demonstration & presentation preparation.
 - **Blockers**:
   - Hosted QpiAI Opt platform execution is blocked by the account organization's inactive storage quota (`no active storage quota found for organization`). Local solving with genuine `qpiai-opt` model builder and OR-Tools CP-SAT reference optimum is fully functional.
   - Remote QpiAI QCloud hardware/simulator execution requires an active paid cloud subscription (`Failed to create job: an active subscription is required to run jobs`); local simulation uses genuine `qpiai_quantum.simulator.StatevectorSimulator` (`QpiAI-QSV-Local`).
@@ -288,7 +293,7 @@
   - Bounded agent problem budget by `min(totalBudget - spentTotal, perPurchaseCap)` to guarantee generated candidate baskets never exceed per-purchase caps.
   - Manifest excludes itself to prevent self-referential hash loops.
   - Strictly enforce honest platform error labeling: never mislabel local fallback execution as hosted cloud execution.
-- **Hours Used**: 8.0 hours.
+- **Hours Used**: 8.2 hours.
 - **Next Three Actions**:
   1. Present AgentVault live demo using `docs/DEMO_SCRIPT.md` and the 12-stage guided demo stepper.
   2. Inspect on-chain execution proofs and audit chain integrity via `GET /audit/verify`.
